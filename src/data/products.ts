@@ -1,116 +1,424 @@
-export interface PriceEntry {
-  volume: string;
-  price: string;
+/**
+ * Product catalogue — typed source of truth for the storefront.
+ *
+ * Data mirrors docs/PRODUCT_CATALOG.md verbatim (names, prices in BDT, status).
+ * Do NOT edit prices/names/status here without a corresponding change to that
+ * document. UI components must read from this file, never hardcode products.
+ *
+ * Optional attributes (notes, longevity, gender, …) are listed in the catalogue
+ * as "Future Product Attributes". They are modelled as optional so the UI can
+ * progressively enhance product pages as the business supplies the data, with
+ * graceful fallbacks until then.
+ */
+
+export type ProductSize = '3ml' | '6ml' | '12ml';
+
+export type ProductStatus = 'available' | 'out-of-stock' | 'coming-soon';
+
+export type CategorySlug =
+  | 'most-wanted'
+  | 'new-arrivals'
+  | 'oud'
+  | 'floral'
+  | 'fruit'
+  | 'packages';
+
+export type Gender = 'men' | 'women' | 'unisex';
+
+export type FragranceFamily =
+  | 'fresh'
+  | 'woody'
+  | 'sweet'
+  | 'oriental'
+  | 'floral'
+  | 'fruity'
+  | 'citrus'
+  | 'aquatic'
+  | 'oud';
+
+export interface PriceBySize {
+  '3ml'?: number;
+  '6ml'?: number;
+  '12ml'?: number;
 }
 
-export interface FeaturedProduct {
+export interface Product {
+  /** Stable URL slug, e.g. "blue-mask" → /products/blue-mask */
+  slug: string;
   name: string;
-  description: string;
-  prices: PriceEntry[];
-}
-
-export interface TableProduct {
-  name: string;
-  prices: { volume: string; price: string }[];
+  category: CategorySlug;
+  prices: PriceBySize;
   description?: string;
-  stockout?: boolean;
-  isBengali?: boolean;
-  subtext?: string;
+  status: ProductStatus;
+
+  // ----- Merchandising flags -----
+  bestSeller?: boolean;
+  newArrival?: boolean;
+  featured?: boolean;
+
+  // ----- Future/optional attributes (PRODUCT_CATALOG.md) -----
+  family?: FragranceFamily;
+  gender?: Gender;
+  topNotes?: string[];
+  middleNotes?: string[];
+  baseNotes?: string[];
+  longevity?: string;
+  projection?: string;
+  season?: string[];
+  occasion?: string[];
+  /** Marks products described as "Unique" in the catalogue. */
+  unique?: boolean;
 }
 
-export const featuredProducts: FeaturedProduct[] = [
-  {
-    name: 'Vampire Blood',
-    description:
-      'ফ্রুটি, বেরি, মিষ্টি ও হালকা উডি নোটের এক বোল্ড ও রহস্যময় সুগন্ধ। এর আকর্ষণীয় ঘ্রাণ আপনাকে ভিড়ের মধ্যেও সহজেই আলাদা পরিচয় এনে দেবে।',
-    prices: [
-      { volume: '3ML', price: '300/-' },
-      { volume: '6ML', price: '600/-' },
-      { volume: '12ML', price: '1100/-' },
-      { volume: '24ML', price: '2000/-' },
-    ],
-  },
-  {
-    name: 'Dior Arabia',
-    description: 'উডি, অ্যাম্বারি ও স্পাইসি — রাজকীয়, গভীর ও দীর্ঘস্থায়ী সুগন্ধ।',
-    prices: [
-      { volume: '3ML', price: '200/-' },
-      { volume: '6ML', price: '400/-' },
-      { volume: '12ML', price: '750/-' },
-      { volume: '24ML', price: '1300/-' },
-    ],
-  },
-  {
-    name: 'Dunhil Desire',
-    description: 'উডি, অ্যাম্বারি ও স্পাইসি — রাজকীয়, গভীর ও দীর্ঘস্থায়ী সুগন্ধ।',
-    prices: [
-      { volume: '3ML', price: '200/-' },
-      { volume: '6ML', price: '400/-' },
-      { volume: '12ML', price: '750/-' },
-      { volume: '24ML', price: '1300/-' },
-    ],
-  },
-  {
-    name: 'Al Fares',
-    description: 'উডি, স্পাইসি ও অ্যাম্বারি — রাজকীয়, শক্তিশালী ও দীর্ঘস্থায়ী সুগন্ধ।',
-    prices: [
-      { volume: '3ML', price: '100/-' },
-      { volume: '6ML', price: '200/-' },
-      { volume: '12ML', price: '400/-' },
-      { volume: '24ML', price: '800/-' },
-      { volume: '50ML', price: '1600/-' },
-    ],
-  },
-];
+/** Kebab-case slug from a product name. */
+export function slugify(name: string): string {
+  return name
+    .toLowerCase()
+    .replace(/['’.]/g, '')
+    .replace(/[^a-z0-9]+/g, '-')
+    .replace(/^-+|-+$/g, '');
+}
 
-export const newArrivals: TableProduct[] = [
-  { name: 'Blue Seduction', prices: [{ volume: '3ML', price: '220/-' }, { volume: '6ML', price: '430/-' }, { volume: '12ML', price: '850/-' }], description: 'ফ্রেশ, অ্যাকুয়াটিক ও হালকা মিষ্টি টাইপের সুগন্ধ। গরম আবহাওয়া, অফিস ও দৈনন্দিন ব্যবহারের জন্য খুব উপযুক্ত।' },
-  { name: 'Imagination', prices: [{ volume: '3ML', price: '180/-' }, { volume: '6ML', price: '350/-' }, { volume: '12ML', price: '720/-' }], description: 'ফ্রেশ, সাইট্রাস ও টি-ভিত্তিক — পরিষ্কার, এলিগ্যান্ট, দৈনন্দিন ব্যবহারের জন্য দারুণ।' },
-  { name: 'CR7', prices: [{ volume: '3ML', price: '150/-' }, { volume: '6ML', price: '300/-' }, { volume: '12ML', price: '570/-' }], description: 'ফ্রেশ, অ্যারোম্যাটিক ও হালকা মিষ্টি — স্পোর্টি, এনার্জেটিক, দৈনন্দিন ব্যবহারের জন্য ভালো।' },
-  { name: 'Wood Sea Sage Men', prices: [{ volume: '3ML', price: '150/-' }, { volume: '6ML', price: '300/-' }, { volume: '12ML', price: '570/-' }], description: 'উডি, অ্যাকুয়াটিক ও ফ্রেশ — পরিষ্কার, ন্যাচারাল, মার্জিত সুগন্ধ।' },
-  { name: "D'Gentleman", prices: [{ volume: '3ML', price: '130/-' }, { volume: '6ML', price: '260/-' }, { volume: '12ML', price: '500/-' }], description: 'স্পাইসি ও অ্যাম্বারি — এলিগ্যান্ট, আত্মবিশ্বাসী ও জেন্টলম্যানসুলভ সুগন্ধ।' },
-  { name: 'Zamzam', prices: [{ volume: '3ML', price: '140/-' }, { volume: '6ML', price: '280/-' }, { volume: '12ML', price: '560/-' }], description: 'ফ্রেশ, মস্কি ও হালকা ফ্লোরাল — প্রশান্তিদায়ক, পরিচ্ছন্ন ও মার্জিত সুগন্ধ।' },
-  { name: 'Blazzers Extreme', prices: [{ volume: '3ML', price: '140/-' }, { volume: '6ML', price: '280/-' }, { volume: '12ML', price: '560/-' }], description: 'স্পাইসি, উডি ও অ্যাম্বারি — বোল্ড, শক্তিশালী ও দীর্ঘস্থায়ী সুগন্ধ।' },
-  { name: 'Blazzers Addicts', prices: [{ volume: '3ML', price: '140/-' }, { volume: '6ML', price: '280/-' }, { volume: '12ML', price: '560/-' }], description: 'মিষ্টি, অ্যাম্বারি ও উডি — আকর্ষণীয়, আধুনিক।' },
-  { name: '212 NYC', prices: [{ volume: '3ML', price: '180/-' }, { volume: '6ML', price: '360/-' }, { volume: '12ML', price: '720/-' }], description: 'ফ্রেশ, সাইট্রাস, গ্রিন ও উডি — আধুনিক, প্রাণবন্ত ও দৈনন্দিন ব্যবহারের জন্য উপযুক্ত সুগন্ধ।' },
-  { name: 'Hawas For Him', prices: [{ volume: '3ML', price: '200/-' }, { volume: '6ML', price: '400/-' }, { volume: '12ML', price: '800/-' }], description: 'ফ্রেশ, অ্যাকুয়াটিক, ফ্রুটি ও অ্যাম্বারি — আকর্ষণীয়, এনার্জেটিক ও দীর্ঘস্থায়ী সুগন্ধ।' },
-  { name: 'Black XS', prices: [{ volume: '3ML', price: '200/-' }, { volume: '6ML', price: '400/-' }, { volume: '12ML', price: '800/-' }], description: 'মিষ্টি, স্পাইসি ও উডি — বোল্ড, সেডাক্টিভ ও রাতের ব্যবহারের জন্য উপযুক্ত সুগন্ধ।' },
-  { name: 'Armani Si', prices: [{ volume: '3ML', price: '200/-' }, { volume: '6ML', price: '400/-' }, { volume: '12ML', price: '800/-' }], description: 'ফ্রুটি, ফ্লোরাল ও ভ্যানিলা' },
-  { name: 'White Oud', prices: [{ volume: '3ML', price: '200/-' }, { volume: '6ML', price: '400/-' }, { volume: '12ML', price: '800/-' }], description: 'উডি, মস্কি ও হালকা মিষ্টি — পরিচ্ছন্ন, মার্জিত ও দীর্ঘস্থায়ী সুগন্ধ।' },
-  { name: 'Axe', prices: [{ volume: '3ML', price: '150/-' }, { volume: '6ML', price: '300/-' }, { volume: '12ML', price: '570/-' }], description: '—' },
-  { name: 'Hillboy', prices: [{ volume: '3ML', price: '110/-' }, { volume: '6ML', price: '220/-' }, { volume: '12ML', price: '440/-' }], description: '—' },
-  { name: 'Afrin', prices: [{ volume: '3ML', price: '120/-' }, { volume: '6ML', price: '240/-' }, { volume: '12ML', price: '480/-' }], description: 'সফট, মার্জিত ও মনোমুগ্ধকর সুগন্ধ।' },
-  { name: 'Sunman', prices: [{ volume: '3ML', price: '110/-' }, { volume: '6ML', price: '220/-' }, { volume: '12ML', price: '440/-' }], description: '—' },
-  { name: 'Hawas Ice', prices: [{ volume: '3ML', price: '220/-' }, { volume: '6ML', price: '440/-' }, { volume: '12ML', price: '880/-' }], description: 'ফ্রেশ, অ্যাকুয়াটিক ও সাইট্রাস — শীতল, প্রাণবন্ত ও আধুনিক সুগন্ধ।' },
-  { name: 'Hawas Fire', prices: [{ volume: '3ML', price: '250/-' }, { volume: '6ML', price: '490/-' }, { volume: '12ML', price: '730/-' }], description: 'স্পাইসি, অ্যাম্বারি ও উডি — বোল্ড, শক্তিশালী ও আকর্ষণীয় সুগন্ধ।' },
-  { name: 'Ocean Blue', prices: [{ volume: '3ML', price: '300/-' }, { volume: '6ML', price: '600/-' }, { volume: '12ML', price: '750/-' }], description: 'ফ্রেশ, অ্যাকুয়াটিক ও সাইট্রাস — শীতল, প্রাণবন্ত ও দৈনন্দিন ব্যবহারের জন্য উপযুক্ত সুগন্ধ।' },
-  { name: 'Blue De Channel', prices: [{ volume: '3ML', price: '200/-' }, { volume: '6ML', price: '400/-' }, { volume: '12ML', price: '800/-' }], description: 'ফ্রেশ, সাইট্রাস, উডি ও অ্যাম্বারি — এলিগ্যান্ট, আত্মবিশ্বাসী ও সব উপলক্ষের জন্য উপযুক্ত সুগন্ধ।' },
-  { name: 'Red African', prices: [{ volume: '3ML', price: '150/-' }, { volume: '6ML', price: '300/-' }, { volume: '12ML', price: '500/-' }], description: 'চকোলেটি, উষ্ণ, আকর্ষণীয় ও দীর্ঘস্থায়ী সুগন্ধ।', stockout: true },
-];
+/* Helper to keep the dataset terse and readable. */
+const p = (
+  name: string,
+  category: CategorySlug,
+  prices: PriceBySize,
+  status: ProductStatus,
+  extra: Partial<Product> = {},
+): Product => ({
+  slug: extra.slug ?? slugify(name),
+  name,
+  category,
+  prices,
+  status,
+  ...extra,
+});
 
-export const previousCollection: TableProduct[] = [
-  { name: 'Sultan', prices: [{ volume: '3ML', price: '300/-' }, { volume: '6ML', price: '600/-' }, { volume: '12ML', price: '750/-' }] },
-  { name: 'Ferrari', prices: [{ volume: '3ML', price: '100/-' }, { volume: '6ML', price: '200/-' }, { volume: '12ML', price: '400/-' }] },
-  { name: 'Jesmin', prices: [{ volume: '3ML', price: '100/-' }, { volume: '6ML', price: '200/-' }, { volume: '12ML', price: '400/-' }] },
-  { name: 'Kashmeri Oud', prices: [{ volume: '3ML', price: '100/-' }, { volume: '6ML', price: '200/-' }, { volume: '12ML', price: '400/-' }] },
-  { name: 'Denim', prices: [{ volume: '3ML', price: '100/-' }, { volume: '6ML', price: '200/-' }, { volume: '12ML', price: '400/-' }] },
-  { name: 'Shalimar', prices: [{ volume: '3ML', price: '200/-' }, { volume: '6ML', price: '400/-' }, { volume: '12ML', price: '800/-' }] },
-  { name: 'Oud Al Layl', prices: [{ volume: '3ML', price: '100/-' }, { volume: '6ML', price: '200/-' }, { volume: '12ML', price: '400/-' }], stockout: true },
-  { name: 'Green Bakhoor', prices: [{ volume: '3ML', price: '150/-' }, { volume: '6ML', price: '300/-' }, { volume: '12ML', price: '500/-' }], stockout: true },
-  { name: 'Shaikha', prices: [{ volume: '3ML', price: '110/-' }, { volume: '6ML', price: '220/-' }, { volume: '12ML', price: '440/-' }] },
-];
+export const products: Product[] = [
+  // ===================== MOST WANTED =====================
+  p(
+    'Blue Mask',
+    'most-wanted',
+    { '3ml': 350, '6ml': 700, '12ml': 1400 },
+    'available',
+    {
+      bestSeller: true,
+      featured: true,
+      family: 'aquatic',
+      gender: 'men',
+      description:
+        'A signature fresh-aquatic blend — crisp, confident and effortless for daily wear.',
+    },
+  ),
 
-export const flowerCollection: TableProduct[] = [
-  { name: 'Royal Rose', prices: [{ volume: '3ML', price: '200/-' }, { volume: '6ML', price: '400/-' }, { volume: '12ML', price: '800/-' }] },
-  { name: 'কাঁঠগোলাপ', prices: [{ volume: '3ML', price: '150/-' }, { volume: '6ML', price: '300/-' }, { volume: '12ML', price: '570/-' }], isBengali: true },
-  { name: 'জেসমিন', prices: [{ volume: '3ML', price: '100/-' }, { volume: '6ML', price: '200/-' }, { volume: '12ML', price: '400/-' }], isBengali: true },
-  { name: 'বকুল', prices: [{ volume: '3ML', price: '100/-' }, { volume: '6ML', price: '200/-' }, { volume: '12ML', price: '400/-' }], isBengali: true },
-  { name: 'কদম', prices: [{ volume: '3ML', price: '150/-' }, { volume: '6ML', price: '300/-' }, { volume: '12ML', price: '570/-' }], isBengali: true },
-  { name: 'চন্দন', prices: [{ volume: '3ML', price: '150/-' }, { volume: '6ML', price: '300/-' }, { volume: '12ML', price: '570/-' }], isBengali: true },
-  { name: 'লেমন', prices: [{ volume: '3ML', price: '140/-' }, { volume: '6ML', price: '280/-' }, { volume: '12ML', price: '560/-' }], isBengali: true },
-  { name: 'জান্নাতুল ফুল', prices: [{ volume: '3ML', price: '140/-' }, { volume: '6ML', price: '280/-' }, { volume: '12ML', price: '560/-' }], isBengali: true },
-  { name: 'কাঁচা বেলি', prices: [{ volume: '3ML', price: '100/-' }, { volume: '6ML', price: '200/-' }, { volume: '12ML', price: '400/-' }], isBengali: true },
-  { name: 'সালমা', prices: [{ volume: '3ML', price: '150/-' }, { volume: '6ML', price: '300/-' }, { volume: '12ML', price: '570/-' }], isBengali: true },
-  { name: 'সিসিলিয়ান', prices: [{ volume: '3ML', price: '150/-' }, { volume: '6ML', price: '300/-' }, { volume: '12ML', price: '570/-' }], isBengali: true },
-  { name: 'পুষ্পরাণী', prices: [{ volume: '3ML', price: '130/-' }, { volume: '6ML', price: '260/-' }, { volume: '12ML', price: '500/-' }], isBengali: true, subtext: '(অ্যারাবিয়ান টাইপ)' },
+  // ===================== NEW ARRIVALS =====================
+  p('Blue Seduction', 'new-arrivals', { '3ml': 220, '6ml': 430, '12ml': 850 }, 'available', {
+    newArrival: true,
+    family: 'aquatic',
+    gender: 'men',
+    description: 'Fresh, aquatic and lightly sweet. Excellent for hot weather, office and daily wear.',
+  }),
+  p('Imagination', 'new-arrivals', { '3ml': 180, '6ml': 350, '12ml': 720 }, 'available', {
+    newArrival: true,
+    family: 'citrus',
+    gender: 'unisex',
+    description: 'Fresh citrus with tea notes. Clean, elegant and perfect for everyday use.',
+  }),
+  p('CR7', 'new-arrivals', { '3ml': 150, '6ml': 300, '12ml': 570 }, 'available', {
+    newArrival: true,
+    family: 'fresh',
+    gender: 'men',
+    description: 'Fresh, aromatic and lightly sweet. Sporty and energetic.',
+  }),
+  p('Wood Sea Sage Men', 'new-arrivals', { '3ml': 150, '6ml': 300, '12ml': 570 }, 'available', {
+    family: 'woody',
+    gender: 'men',
+    description: 'Woody, aquatic and fresh. Clean and natural.',
+  }),
+  p("D' Gentleman", 'new-arrivals', { '3ml': 130, '6ml': 260, '12ml': 500 }, 'available', {
+    slug: 'd-gentleman',
+    family: 'oriental',
+    gender: 'men',
+    description: 'Spicy and amber. Elegant gentleman fragrance.',
+  }),
+  p('Zamzam', 'new-arrivals', { '3ml': 140, '6ml': 280, '12ml': 560 }, 'available', {
+    family: 'floral',
+    gender: 'unisex',
+    description: 'Fresh, musky with soft floral notes. Clean and relaxing.',
+  }),
+  p('Blazzers Extreme', 'new-arrivals', { '3ml': 140, '6ml': 280, '12ml': 560 }, 'available', {
+    family: 'woody',
+    gender: 'men',
+    description: 'Spicy, woody and amber. Strong, bold and long lasting.',
+  }),
+  p('Blazzers Addicts', 'new-arrivals', { '3ml': 140, '6ml': 280, '12ml': 560 }, 'available', {
+    family: 'sweet',
+    gender: 'men',
+    description: 'Sweet, amber and woody. Attractive and modern.',
+  }),
+  p('212 NYC', 'new-arrivals', { '3ml': 180, '6ml': 360, '12ml': 720 }, 'available', {
+    family: 'citrus',
+    gender: 'men',
+    description: 'Fresh citrus, green and woody. Modern and vibrant.',
+  }),
+  p('Hawas For Him', 'new-arrivals', { '3ml': 200, '6ml': 400, '12ml': 800 }, 'available', {
+    bestSeller: true,
+    family: 'aquatic',
+    gender: 'men',
+    description: 'Fresh aquatic fruity amber fragrance. Long lasting.',
+  }),
+  p('Black XS', 'new-arrivals', { '3ml': 200, '6ml': 400, '12ml': 800 }, 'available', {
+    family: 'sweet',
+    gender: 'men',
+    description: 'Sweet, spicy and woody. Perfect for evening wear.',
+  }),
+  p('Armani Si', 'new-arrivals', { '3ml': 200, '6ml': 400, '12ml': 800 }, 'available', {
+    family: 'fruity',
+    gender: 'women',
+    description: 'Fruity, floral and vanilla.',
+  }),
+  p('Dior Arabia (Unique)', 'new-arrivals', { '3ml': 220, '6ml': 440, '12ml': 850 }, 'available', {
+    slug: 'dior-arabia',
+    unique: true,
+    featured: true,
+    family: 'oriental',
+    gender: 'unisex',
+    description: 'Premium unique fragrance.',
+  }),
+  p('White Oud', 'new-arrivals', { '3ml': 200, '6ml': 400, '12ml': 800 }, 'available', {
+    family: 'oud',
+    gender: 'unisex',
+    description: 'Woody, musky and lightly sweet. Elegant.',
+  }),
+  p('Axe Original', 'new-arrivals', { '3ml': 150, '6ml': 300, '12ml': 570 }, 'available', {
+    family: 'fresh',
+    gender: 'men',
+    description: 'Fresh masculine fragrance.',
+  }),
+  p('Hillboy (Unique)', 'new-arrivals', { '3ml': 110, '6ml': 220, '12ml': 440 }, 'available', {
+    slug: 'hillboy',
+    unique: true,
+    family: 'fresh',
+    gender: 'men',
+    description: 'Unique signature fragrance.',
+  }),
+  p('Afrin (Unique)', 'new-arrivals', { '3ml': 120, '6ml': 240, '12ml': 480 }, 'available', {
+    slug: 'afrin',
+    unique: true,
+    family: 'floral',
+    gender: 'unisex',
+    description: 'Soft, elegant and charming.',
+  }),
+  p('Sunman (Unique)', 'new-arrivals', { '3ml': 110, '6ml': 220, '12ml': 440 }, 'available', {
+    slug: 'sunman',
+    unique: true,
+    family: 'fresh',
+    gender: 'men',
+    description: 'Unique signature fragrance.',
+  }),
+  p('Hawas Ice', 'new-arrivals', { '3ml': 220, '6ml': 440, '12ml': 880 }, 'available', {
+    family: 'aquatic',
+    gender: 'men',
+    description: 'Fresh aquatic citrus. Cool and energetic.',
+  }),
+  p('Hawas Fire', 'new-arrivals', { '3ml': 250, '6ml': 490, '12ml': 730 }, 'available', {
+    family: 'oriental',
+    gender: 'men',
+    description: 'Spicy, amber and woody. Bold fragrance.',
+  }),
+  p('Ocean Blue', 'new-arrivals', { '3ml': 300, '6ml': 600, '12ml': 750 }, 'available', {
+    family: 'aquatic',
+    gender: 'men',
+    description: 'Fresh aquatic citrus. Daily wear.',
+  }),
+  p('Blue De Channel', 'new-arrivals', { '3ml': 200, '6ml': 400, '12ml': 800 }, 'available', {
+    bestSeller: true,
+    family: 'woody',
+    gender: 'men',
+    description: 'Fresh citrus, woody and amber. Elegant and versatile.',
+  }),
+  p('Red African', 'new-arrivals', { '3ml': 150, '6ml': 300, '12ml': 500 }, 'out-of-stock', {
+    family: 'sweet',
+    gender: 'unisex',
+    description: 'Chocolate, warm and long lasting.',
+  }),
+  p('Sultan', 'new-arrivals', { '3ml': 300, '6ml': 600, '12ml': 750 }, 'available', {
+    family: 'oriental',
+    gender: 'unisex',
+    description: 'Premium fragrance.',
+  }),
+  p('Ferrari', 'new-arrivals', { '3ml': 100, '6ml': 200, '12ml': 400 }, 'available', {
+    family: 'fresh',
+    gender: 'men',
+    description: 'Fresh masculine fragrance.',
+  }),
+  p('Green Love', 'new-arrivals', { '3ml': 110, '6ml': 220, '12ml': 440 }, 'available', {
+    family: 'fresh',
+    gender: 'unisex',
+    description: 'Fresh green fragrance.',
+  }),
+  p('Sauvage', 'new-arrivals', { '3ml': 130, '6ml': 260, '12ml': 500 }, 'available', {
+    bestSeller: true,
+    family: 'fresh',
+    gender: 'men',
+    description: 'Inspired by Dior Sauvage.',
+  }),
+  p('Erba Pura', 'new-arrivals', { '3ml': 120, '6ml': 240, '12ml': 480 }, 'available', {
+    family: 'fruity',
+    gender: 'unisex',
+    description: 'Fruity luxury fragrance.',
+  }),
+  p('Blue Musk', 'new-arrivals', {}, 'coming-soon', {
+    family: 'fresh',
+    description: 'Coming soon.',
+  }),
+  p('Hawas Diva', 'new-arrivals', { '3ml': 220, '6ml': 400, '12ml': 850 }, 'available', {
+    family: 'floral',
+    gender: 'women',
+    description: 'Premium feminine fragrance.',
+  }),
+  p('X Signature', 'new-arrivals', { '3ml': 100, '6ml': 200, '12ml': 400 }, 'available', {
+    family: 'woody',
+    gender: 'unisex',
+    description: 'Signature fragrance.',
+  }),
+  p('Eskada', 'new-arrivals', {}, 'coming-soon', {
+    family: 'fruity',
+    description: 'Coming soon.',
+  }),
+  p('Cool Water', 'new-arrivals', { '3ml': 150, '6ml': 300, '12ml': 600 }, 'available', {
+    family: 'aquatic',
+    gender: 'men',
+    description: 'Fresh aquatic fragrance.',
+  }),
+  p('Al Faris', 'new-arrivals', { '3ml': 100, '6ml': 200, '12ml': 400 }, 'available', {
+    family: 'oriental',
+    gender: 'unisex',
+    description: 'Premium Arabic fragrance.',
+  }),
+  p('Dunhil Desire', 'new-arrivals', { '3ml': 220, '6ml': 400, '12ml': 850 }, 'available', {
+    family: 'woody',
+    gender: 'men',
+    description: 'Luxury masculine fragrance.',
+  }),
+  p('Denim', 'new-arrivals', { '3ml': 100, '6ml': 200, '12ml': 400 }, 'available', {
+    family: 'woody',
+    gender: 'men',
+    description: 'Classic masculine fragrance.',
+  }),
+  p('Shalimar', 'new-arrivals', { '3ml': 200, '6ml': 400, '12ml': 800 }, 'available', {
+    family: 'oriental',
+    gender: 'women',
+    description: 'Classic oriental fragrance.',
+  }),
+  p('Ajmal', 'new-arrivals', { '3ml': 110, '6ml': 220, '12ml': 400 }, 'available', {
+    family: 'oriental',
+    gender: 'unisex',
+    description: 'Premium Arabic fragrance.',
+  }),
+  p('Open Black', 'new-arrivals', { '3ml': 110, '6ml': 220, '12ml': 400 }, 'available', {
+    family: 'woody',
+    gender: 'men',
+    description: 'Warm masculine fragrance.',
+  }),
+  p('Jupi', 'new-arrivals', { '3ml': 100, '6ml': 200, '12ml': 400 }, 'available', {
+    family: 'fresh',
+    gender: 'unisex',
+    description: 'Everyday fragrance.',
+  }),
+
+  // ===================== OUD COLLECTION =====================
+  p('Kashmeri Oud', 'oud', { '3ml': 100, '6ml': 200, '12ml': 400 }, 'available', {
+    family: 'oud',
+    gender: 'unisex',
+    description: 'Warm, woody oud with a smooth, refined character.',
+  }),
+  p('Golden Kosturi', 'oud', { '3ml': 350, '6ml': 700, '12ml': 1400 }, 'available', {
+    featured: true,
+    family: 'oud',
+    gender: 'unisex',
+    description: 'A rich, luxurious musk-oud blend — deep and long lasting.',
+  }),
+  p('Shaikha', 'oud', { '3ml': 110, '6ml': 220, '12ml': 440 }, 'available', {
+    family: 'oud',
+    gender: 'unisex',
+    description: 'Elegant oriental oud with a soft, powdery finish.',
+  }),
+
+  // ===================== FLORAL COLLECTION =====================
+  p('Royal Rose', 'floral', { '3ml': 200, '6ml': 400, '12ml': 800 }, 'available', {
+    featured: true,
+    family: 'floral',
+    gender: 'women',
+    description: 'Rose, floral and musky. Royal fragrance.',
+  }),
+  p('Kathgolap', 'floral', { '3ml': 150, '6ml': 300, '12ml': 570 }, 'available', {
+    family: 'floral',
+    gender: 'women',
+    description: 'Floral fragrance.',
+  }),
+  p('Jasmine', 'floral', { '3ml': 100, '6ml': 200, '12ml': 400 }, 'available', {
+    family: 'floral',
+    gender: 'women',
+    description: 'Floral fragrance.',
+  }),
+  p('Bokul', 'floral', { '3ml': 100, '6ml': 200, '12ml': 400 }, 'available', {
+    family: 'floral',
+    gender: 'women',
+    description: 'Floral fragrance.',
+  }),
+  p('Kadam', 'floral', { '3ml': 150, '6ml': 300, '12ml': 570 }, 'available', {
+    family: 'floral',
+    gender: 'women',
+    description: 'Floral fragrance.',
+  }),
+  p('Chandan', 'floral', { '3ml': 150, '6ml': 300, '12ml': 570 }, 'available', {
+    family: 'woody',
+    gender: 'unisex',
+    description: 'Sandalwood fragrance.',
+  }),
+  p('Lemon', 'floral', { '3ml': 140, '6ml': 280, '12ml': 560 }, 'available', {
+    family: 'citrus',
+    gender: 'unisex',
+    description: 'Fresh citrus fragrance.',
+  }),
+  p('Jannatul Ful', 'floral', { '3ml': 140, '6ml': 280, '12ml': 560 }, 'available', {
+    family: 'floral',
+    gender: 'women',
+    description: 'Floral fragrance.',
+  }),
+  p('Kancha Beli', 'floral', { '3ml': 100, '6ml': 200, '12ml': 400 }, 'available', {
+    family: 'floral',
+    gender: 'women',
+    description: 'Floral fragrance.',
+  }),
+  p('Salma', 'floral', { '3ml': 150, '6ml': 300, '12ml': 570 }, 'available', {
+    family: 'floral',
+    gender: 'women',
+    description: 'Floral fragrance.',
+  }),
+  p('Sicilian', 'floral', { '3ml': 150, '6ml': 300, '12ml': 570 }, 'available', {
+    family: 'floral',
+    gender: 'unisex',
+    description: 'Floral fragrance.',
+  }),
+  p('Pushporani (Arabian Type)', 'floral', { '3ml': 130, '6ml': 260, '12ml': 500 }, 'available', {
+    slug: 'pushporani',
+    family: 'floral',
+    gender: 'women',
+    description: 'Arabian floral fragrance.',
+  }),
+
+  // ===================== FRUIT COLLECTION =====================
+  p('Mango', 'fruit', { '3ml': 100, '6ml': 200, '12ml': 400 }, 'available', {
+    family: 'fruity',
+    gender: 'unisex',
+    description: 'Juicy, sweet mango — playful and fresh.',
+  }),
+  p('Lychee', 'fruit', { '3ml': 100, '6ml': 200, '12ml': 400 }, 'available', {
+    family: 'fruity',
+    gender: 'unisex',
+    description: 'Soft, sweet lychee — light and cheerful.',
+  }),
 ];

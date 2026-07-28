@@ -1,121 +1,114 @@
-import type { Metadata } from 'next';
-import { Cormorant_Garamond, Noto_Serif_Bengali, Outfit, Plus_Jakarta_Sans } from 'next/font/google';
+import type { Metadata, Viewport } from 'next';
+import { Playfair_Display, Cormorant_Garamond, Inter, Noto_Serif_Bengali } from 'next/font/google';
 import { cn } from '@/lib/utils';
+import { site } from '@/data/site';
+import { EnquiryBagProvider } from '@/components/bag/EnquiryBagProvider';
+import { EnquiryDrawer } from '@/components/bag/EnquiryDrawer';
+import { Navbar } from '@/components/layout/Navbar';
+import { Footer } from '@/components/layout/Footer';
+import { WhatsappFAB } from '@/components/ui/WhatsappFAB';
+import { OrganizationJsonLd } from '@/components/seo/JsonLd';
 import './globals.css';
 
-const plusJakarta = Plus_Jakarta_Sans({
+const inter = Inter({
   subsets: ['latin'],
   variable: '--font-sans',
-  weight: ['300', '400', '500', '600', '700', '800'],
+  display: 'swap',
+});
+
+const playfair = Playfair_Display({
+  subsets: ['latin'],
+  variable: '--font-display',
+  weight: ['400', '500', '600', '700'],
+  display: 'swap',
 });
 
 const cormorant = Cormorant_Garamond({
   subsets: ['latin'],
-  variable: '--font-display',
-  weight: ['400', '500', '600', '700'],
+  variable: '--font-serif',
+  weight: ['400', '500', '600'],
   style: ['normal', 'italic'],
+  display: 'swap',
 });
 
-const notoSerifBengali = Noto_Serif_Bengali({
+const notoBengali = Noto_Serif_Bengali({
   subsets: ['bengali'],
   variable: '--font-bengali',
-  weight: ['400', '500', '600', '700'],
-});
-
-const outfit = Outfit({
-  subsets: ['latin'],
-  variable: '--font-accent',
-  weight: ['300', '400', '500', '600', '700'],
+  weight: ['400', '500', '600'],
+  display: 'swap',
 });
 
 export const metadata: Metadata = {
-  metadataBase: new URL('https://kahf-treasure.vercel.app'),
-  title: 'KAHF TREASURE — প্রিমিয়াম আতর ও ইসলামী পণ্যের সংগ্রহ | বাংলাদেশ',
-  description:
-    'KAHF Treasure — বাংলাদেশের সেরা প্রিমিয়াম আতর, মধু, ইসলামী বই ও পণ্যের অনলাইন শপ। সঠিক গুণমান, সঠিক মূল্য। ৫০+ সুগন্ধি, রয়্যাল প্যাকেজ, দ্রুত ডেলিভারি।',
-  applicationName: 'KAHF Treasure',
-  authors: [{ name: 'KAHF Treasure', url: 'https://kahf-treasure.vercel.app' }],
-  generator: 'Next.js',
-  keywords: [
-    'আতর', 'attar', 'premium attar', 'bangladesh attar', 'perfume oil', 'KAHF Treasure',
-    'islamic products', 'সুগন্ধি', 'প্রিমিয়াম সুগন্ধি', 'মধু', 'ইসলামী বই', 'halal perfume',
-    'fragrance', 'oud', 'musk', 'royal package', 'bangladesh online shop'
-  ],
-  creator: 'KAHF Treasure',
-  publisher: 'KAHF Treasure',
-  formatDetection: {
-    email: false,
-    address: false,
-    telephone: true,
+  metadataBase: new URL(site.url),
+  title: {
+    default: `${site.name} — ${site.tagline}`,
+    template: `%s · ${site.name}`,
   },
+  description: site.description,
+  applicationName: site.name,
+  keywords: [
+    'attar',
+    'alcohol-free attar',
+    'premium attar Bangladesh',
+    'perfume oil',
+    'oud',
+    'KAHF Treasure',
+    'long lasting fragrance',
+    'islamic fragrance',
+  ],
+  authors: [{ name: site.name, url: site.url }],
+  creator: site.name,
+  publisher: site.name,
+  alternates: { canonical: '/' },
   openGraph: {
     type: 'website',
-    locale: 'bn_BD',
-    url: 'https://kahf-treasure.vercel.app',
-    siteName: 'KAHF Treasure',
-    title: 'KAHF TREASURE — প্রিমিয়াম আতর ও ইসলামী পণ্যের সংগ্রহ',
-    description: 'বাংলাদেশের সেরা প্রিমিয়াম আতর, মধু, ইসলামী বই ও পণ্যের অনলাইন শপ। সঠিক গুণমান, সঠিক মূল্য।',
-    images: [
-      {
-        url: 'https://i.ibb.co/svsK5LKw/Kahf-logo.jpg',
-        width: 1200,
-        height: 630,
-        alt: 'KAHF Treasure — Premium Attar & Islamic Products',
-        type: 'image/jpeg',
-      },
-    ],
+    locale: site.locale,
+    url: site.url,
+    siteName: site.name,
+    title: `${site.name} — ${site.tagline}`,
+    description: site.description,
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'KAHF TREASURE — প্রিমিয়াম আতর ও ইসলামী পণ্যের সংগ্রহ',
-    description: 'বাংলাদেশের সেরা প্রিমিয়াম আতর, মধু, ইসলামী বই ও পণ্যের অনলাইন শপ। সঠিক গুণমান, সঠিক মূল্য।',
-    images: ['https://i.ibb.co/svsK5LKw/Kahf-logo.jpg'],
-    creator: '@KahfTreasure',
+    title: `${site.name} — ${site.tagline}`,
+    description: site.description,
   },
   robots: {
     index: true,
     follow: true,
-    googleBot: {
-      index: true,
-      follow: true,
-      'max-video-preview': -1,
-      'max-image-preview': 'large',
-      'max-snippet': -1,
-    },
-  },
-  icons: {
-    icon: 'https://i.ibb.co/svsK5LKw/Kahf-logo.jpg',
-    apple: [
-      { url: 'https://i.ibb.co/svsK5LKw/Kahf-logo.jpg', sizes: '180x180', type: 'image/jpeg' },
-    ],
-  },
-  other: {
-    'theme-color': '#050505',
-    'msapplication-TileColor': '#D4AF37',
-    'apple-mobile-web-app-capable': 'yes',
-    'apple-mobile-web-app-status-bar-style': 'black-translucent',
+    googleBot: { index: true, follow: true, 'max-image-preview': 'large', 'max-snippet': -1 },
   },
 };
 
-export default function RootLayout({
-  children,
-}: Readonly<{
-  children: React.ReactNode;
-}>) {
+export const viewport: Viewport = {
+  themeColor: '#ffffff',
+  colorScheme: 'light',
+};
+
+export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html
-      lang="bn"
+      lang="en"
       suppressHydrationWarning
-      className={cn(
-        'font-bengali',
-        plusJakarta.variable,
-        cormorant.variable,
-        notoSerifBengali.variable,
-        outfit.variable
-      )}
+      className={cn(inter.variable, playfair.variable, cormorant.variable, notoBengali.variable)}
     >
-      <body className="antialiased leading-relaxed overflow-x-hidden">
-        {children}
+      <body className="min-h-dvh bg-canvas antialiased">
+        <OrganizationJsonLd />
+        <a
+          href="#main"
+          className="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-[100] focus:rounded-lg focus:bg-ink focus:px-4 focus:py-2 focus:text-sm focus:text-white"
+        >
+          Skip to content
+        </a>
+        <EnquiryBagProvider>
+          <Navbar />
+          <main id="main" className="pt-[76px]">
+            {children}
+          </main>
+          <Footer />
+          <EnquiryDrawer />
+          <WhatsappFAB />
+        </EnquiryBagProvider>
       </body>
     </html>
   );

@@ -1,62 +1,177 @@
-"use client";
+'use client';
 
-import React, { useState, useEffect } from 'react';
-import { cn } from '@/lib/utils';
+import * as React from 'react';
 import Link from 'next/link';
+import { usePathname } from 'next/navigation';
+import { Menu, Search, ShoppingBag, X } from 'lucide-react';
+import { cn } from '@/lib/utils';
+import { mainNav, site } from '@/data/site';
+import { useEnquiryBag } from '@/components/bag/EnquiryBagProvider';
+import { SearchOverlay } from './SearchOverlay';
 
 export function Navbar() {
-  const [scrolled, setScrolled] = useState(false);
-  const [menuOpen, setMenuOpen] = useState(false);
+  const pathname = usePathname();
+  const { count, setOpen: setBagOpen } = useEnquiryBag();
+  const [scrolled, setScrolled] = React.useState(false);
+  const [menuOpen, setMenuOpen] = React.useState(false);
+  const [searchOpen, setSearchOpen] = React.useState(false);
 
-  useEffect(() => {
-    const handleScroll = () => {
-      setScrolled(window.scrollY > 40);
-    };
-    window.addEventListener('scroll', handleScroll, { passive: true });
-    return () => window.removeEventListener('scroll', handleScroll);
+  // Solidify nav after slight scroll.
+  React.useEffect(() => {
+    const onScroll = () => setScrolled(window.scrollY > 24);
+    onScroll();
+    window.addEventListener('scroll', onScroll, { passive: true });
+    return () => window.removeEventListener('scroll', onScroll);
   }, []);
 
-  const closeMenu = () => setMenuOpen(false);
+  // Close the mobile menu whenever the route actually changes. Guarding on a
+  // ref means we only call setState on a real transition, not every render.
+  const lastPath = React.useRef(pathname);
+  React.useEffect(() => {
+    if (lastPath.current !== pathname) {
+      lastPath.current = pathname;
+      setMenuOpen(false);
+    }
+  }, [pathname]);
+
+  // Lock body scroll + Esc-to-close while the mobile menu is open.
+  React.useEffect(() => {
+    if (!menuOpen) return;
+    const prev = document.body.style.overflow;
+    document.body.style.overflow = 'hidden';
+    const onKey = (e: KeyboardEvent) => e.key === 'Escape' && setMenuOpen(false);
+    document.addEventListener('keydown', onKey);
+    return () => {
+      document.body.style.overflow = prev;
+      document.removeEventListener('keydown', onKey);
+    };
+  }, [menuOpen]);
+
+  const isActive = (href: string) =>
+    href === '/' ? pathname === '/' : pathname.startsWith(href);
 
   return (
-    <nav 
-      className={cn(
-        "fixed top-0 left-0 w-full z-50 transition-all duration-300",
-        scrolled ? "bg-[rgba(10,10,10,0.85)] backdrop-blur-xl border-b border-[rgba(212,175,55,0.15)] py-3 shadow-[0_4px_30px_rgba(0,0,0,0.5)]" : "bg-transparent py-5"
-      )}
-      role="navigation" 
-      aria-label="Main Navigation"
-    >
-      <div className="container mx-auto px-4 max-w-7xl flex items-center justify-between">
-        <Link href="#" className="font-display text-[1.4rem] md:text-[1.8rem] font-semibold tracking-[0.1em] text-[var(--color-gold-400)] uppercase" aria-label="KAHF Treasure Home">
-          KAHF TREASURE
-        </Link>
-        
-        <button 
-          className="md:hidden flex flex-col justify-center items-center w-[30px] h-[30px] cursor-pointer bg-transparent border-none z-[201]"
-          onClick={() => setMenuOpen(!menuOpen)}
-          aria-label="Toggle navigation menu" 
-          aria-expanded={menuOpen}
+    <>
+      <header
+        className={cn(
+          'fixed inset-x-0 top-0 z-50 transition-all duration-300 ease-[var(--ease-lux)]',
+          scrolled || menuOpen
+            ? 'border-b border-line bg-canvas/90 backdrop-blur-xl'
+            : 'border-b border-transparent bg-transparent',
+        )}
+        style={{ ['--nav-h' as string]: '76px' }}
+      >
+        <nav
+          className="mx-auto flex h-[76px] max-w-7xl items-center justify-between px-5 sm:px-6 lg:px-8"
+          aria-label="Main"
         >
-          <span className={cn("w-full h-[2px] bg-[var(--color-gold-400)] transition-all duration-300 rounded-full", menuOpen ? "rotate-45 translate-y-[8px]" : "mb-[6px]")}></span>
-          <span className={cn("w-full h-[2px] bg-[var(--color-gold-400)] transition-all duration-300 rounded-full mb-[6px]", menuOpen ? "opacity-0" : "")}></span>
-          <span className={cn("w-full h-[2px] bg-[var(--color-gold-400)] transition-all duration-300 rounded-full", menuOpen ? "-rotate-45 -translate-y-[8px]" : "")}></span>
-        </button>
+          {/* Left: mobile menu toggle */}
+          <button
+            type="button"
+            className="flex h-10 w-10 items-center justify-center rounded-full text-ink lg:hidden"
+            onClick={() => setMenuOpen((o) => !o)}
+            aria-label={menuOpen ? 'Close menu' : 'Open menu'}
+            aria-expanded={menuOpen}
+          >
+            {menuOpen ? <X size={22} /> : <Menu size={22} />}
+          </button>
 
-        <ul 
+          {/* Brand */}
+          <Link
+            href="/"
+            className="absolute left-1/2 -translate-x-1/2 lg:static lg:translate-x-0"
+            aria-label={`${site.name} — home`}
+          >
+            <span className="font-display text-xl tracking-[0.15em] text-ink sm:text-2xl">
+              KAHF <span className="text-[var(--color-gold-deep)]">TREASURE</span>
+            </span>
+          </Link>
+
+          {/* Center: primary links (desktop) */}
+          <ul className="hidden items-center gap-8 lg:flex">
+            {mainNav.map((item) => (
+              <li key={item.href}>
+                <Link
+                  href={item.href}
+                  className={cn(
+                    'relative text-sm tracking-wide text-ink-soft transition-colors hover:text-ink',
+                    'after:absolute after:-bottom-1.5 after:left-0 after:h-px after:bg-[var(--color-gold)] after:transition-all after:duration-300 after:content-[""]',
+                    isActive(item.href) ? 'text-ink after:w-full' : 'after:w-0 hover:after:w-full',
+                  )}
+                >
+                  {item.label}
+                </Link>
+              </li>
+            ))}
+          </ul>
+
+          {/* Right: actions */}
+          <div className="flex items-center gap-1 sm:gap-2">
+            <button
+              type="button"
+              onClick={() => setSearchOpen(true)}
+              className="flex h-10 w-10 items-center justify-center rounded-full text-ink transition-colors hover:bg-surface"
+              aria-label="Search fragrances"
+            >
+              <Search size={20} />
+            </button>
+            <button
+              type="button"
+              onClick={() => setBagOpen(true)}
+              className="relative flex h-10 w-10 items-center justify-center rounded-full text-ink transition-colors hover:bg-surface"
+              aria-label={`Enquiry bag${count ? `, ${count} item${count > 1 ? 's' : ''}` : ', empty'}`}
+            >
+              <ShoppingBag size={20} />
+              {count > 0 && (
+                <span className="absolute -right-0.5 -top-0.5 flex h-5 min-w-5 items-center justify-center rounded-full bg-[var(--color-gold-deep)] px-1 text-[0.65rem] font-semibold text-white">
+                  {count}
+                </span>
+              )}
+            </button>
+          </div>
+        </nav>
+      </header>
+
+      {/* Mobile menu panel */}
+      <div
+        className={cn(
+          'fixed inset-0 z-40 lg:hidden',
+          menuOpen ? 'pointer-events-auto' : 'pointer-events-none',
+        )}
+        aria-hidden={!menuOpen}
+      >
+        <div
           className={cn(
-            "fixed md:static inset-0 bg-[rgba(6,6,6,0.98)] md:bg-transparent backdrop-blur-2xl md:backdrop-blur-none flex-col md:flex-row items-center justify-center md:justify-end gap-10 md:gap-8 transition-all duration-500 ease-in-out md:flex z-[200]",
-            menuOpen ? "flex opacity-100 visible" : "hidden opacity-0 invisible md:opacity-100 md:visible"
+            'absolute inset-0 bg-ink/20 transition-opacity duration-300',
+            menuOpen ? 'opacity-100' : 'opacity-0',
           )}
-          role="menubar"
+          onClick={() => setMenuOpen(false)}
+        />
+        <div
+          className={cn(
+            'absolute inset-x-0 top-[76px] origin-top border-b border-line bg-canvas transition-all duration-300 ease-[var(--ease-lux)]',
+            menuOpen ? 'translate-y-0 opacity-100' : '-translate-y-4 opacity-0',
+          )}
         >
-          <li role="none"><Link href="#most-wanted" onClick={closeMenu} className="text-[1.1rem] md:text-[0.75rem] font-accent font-medium text-[var(--text-secondary)] px-4 py-[7px] rounded-full uppercase tracking-[0.12em] whitespace-nowrap transition-all duration-[var(--transition-base)] hover:text-[var(--color-gold-300)] hover:bg-[rgba(201,168,76,0.08)] relative" role="menuitem">Most Wanted</Link></li>
-          <li role="none"><Link href="#new-arrivals" onClick={closeMenu} className="text-[1.1rem] md:text-[0.75rem] font-accent font-medium text-[var(--text-secondary)] px-4 py-[7px] rounded-full uppercase tracking-[0.12em] whitespace-nowrap transition-all duration-[var(--transition-base)] hover:text-[var(--color-gold-300)] hover:bg-[rgba(201,168,76,0.08)] relative" role="menuitem">New Arrivals</Link></li>
-          <li role="none"><Link href="#collections" onClick={closeMenu} className="text-[1.1rem] md:text-[0.75rem] font-accent font-medium text-[var(--text-secondary)] px-4 py-[7px] rounded-full uppercase tracking-[0.12em] whitespace-nowrap transition-all duration-[var(--transition-base)] hover:text-[var(--color-gold-300)] hover:bg-[rgba(201,168,76,0.08)] relative" role="menuitem">Collections</Link></li>
-          <li role="none"><Link href="#packages" onClick={closeMenu} className="text-[1.1rem] md:text-[0.75rem] font-accent font-medium text-[var(--text-secondary)] px-4 py-[7px] rounded-full uppercase tracking-[0.12em] whitespace-nowrap transition-all duration-[var(--transition-base)] hover:text-[var(--color-gold-300)] hover:bg-[rgba(201,168,76,0.08)] relative" role="menuitem">Packages</Link></li>
-          <li role="none"><Link href="#contact" onClick={closeMenu} className="text-[1.2rem] md:text-[0.75rem] font-accent font-semibold text-[#080604] bg-[linear-gradient(135deg,#E8D48B,#C9A84C,#A68A3E)] px-6 py-[9px] rounded-full transition-all duration-[var(--transition-base)] tracking-[0.08em] hover:-translate-y-[2px] hover:shadow-[0_6px_24px_rgba(201,168,76,0.35)] inline-block uppercase" role="menuitem">যোগাযোগ</Link></li>
-        </ul>
+          <ul className="flex flex-col px-5 py-4">
+            {mainNav.map((item) => (
+              <li key={item.href}>
+                <Link
+                  href={item.href}
+                  className={cn(
+                    'block border-b border-line py-4 font-display text-xl text-ink',
+                    isActive(item.href) && 'text-[var(--color-gold-deep)]',
+                  )}
+                >
+                  {item.label}
+                </Link>
+              </li>
+            ))}
+          </ul>
+        </div>
       </div>
-    </nav>
+
+      <SearchOverlay open={searchOpen} onClose={() => setSearchOpen(false)} />
+    </>
   );
 }

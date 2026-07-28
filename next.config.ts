@@ -2,16 +2,11 @@ import type { NextConfig } from 'next';
 
 const nextConfig: NextConfig = {
   images: {
-    remotePatterns: [
-      {
-        protocol: 'https',
-        hostname: 'i.ibb.co',
-      },
-      {
-        protocol: 'https',
-        hostname: 'coresg-normal.trae.ai',
-      },
-    ],
+    // Modern formats for when real product photography is added.
+    formats: ['image/avif', 'image/webp'],
+    // Remote image hosts. Add the business CDN here when real 1:1 product
+    // photography is available (BRAND_GUIDELINES.md » Product Images).
+    remotePatterns: [],
   },
 };
 
