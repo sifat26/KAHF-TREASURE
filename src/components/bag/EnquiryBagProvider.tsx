@@ -51,19 +51,21 @@ export function EnquiryBagProvider({ children }: { children: React.ReactNode }) 
 
   // Load persisted state on mount.
   React.useEffect(() => {
-    try {
-      const raw = localStorage.getItem(STORAGE_KEY);
-      if (raw) {
-        const parsed = JSON.parse(raw) as Partial<EnquiryBagState>;
-        setState({
-          items: Array.isArray(parsed.items) ? parsed.items : [],
-          wishlist: Array.isArray(parsed.wishlist) ? parsed.wishlist : [],
-        });
+    React.startTransition(() => {
+      try {
+        const raw = localStorage.getItem(STORAGE_KEY);
+        if (raw) {
+          const parsed = JSON.parse(raw) as Partial<EnquiryBagState>;
+          setState({
+            items: Array.isArray(parsed.items) ? parsed.items : [],
+            wishlist: Array.isArray(parsed.wishlist) ? parsed.wishlist : [],
+          });
+        }
+      } catch {
+        /* ignore corrupt storage */
       }
-    } catch {
-      /* ignore corrupt storage */
-    }
-    setHydrated(true);
+      setHydrated(true);
+    });
   }, []);
 
   // Persist on change (after hydration to avoid clobbering).

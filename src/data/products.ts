@@ -21,7 +21,8 @@ export type CategorySlug =
   | 'oud'
   | 'floral'
   | 'fruit'
-  | 'packages';
+  | 'packages'
+  | 'unique';
 
 export type Gender = 'men' | 'women' | 'unisex';
 

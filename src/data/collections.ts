@@ -25,60 +25,57 @@ export interface Collection {
 
 export const collections: Collection[] = [
   {
-    slug: 'most-wanted',
-    title: 'Most Wanted',
-    tagline: 'The fragrances everyone is reaching for',
-    description:
-      'Our most-loved signatures — the scents our customers return to again and again.',
+    slug: 'oud',
+    title: 'OUD',
+    tagline: 'Deep, rich and luxurious agarwood',
+    description: 'Rich oud compositions with warmth and depth — refined fragrances for those who love a lasting trail.',
     kind: 'category',
-    category: 'most-wanted',
+    category: 'oud',
     order: 1,
   },
   {
-    slug: 'new-arrivals',
-    title: 'New Arrivals',
-    tagline: 'Freshly added to the collection',
-    description:
-      'The latest additions to the KAHF Treasure library — modern, versatile and ready for daily wear.',
+    slug: 'floral',
+    title: 'FLORAL',
+    tagline: 'Soft, elegant and velvet rose',
+    description: 'Delicate florals inspired by royal gardens and tradition — graceful scents for every occasion.',
     kind: 'category',
-    category: 'new-arrivals',
+    category: 'floral',
     order: 2,
   },
   {
-    slug: 'oud',
-    title: 'Oud Collection',
-    tagline: 'Deep, woody and luxurious',
-    description:
-      'Rich oud compositions with warmth and depth — refined fragrances for those who love a lasting trail.',
+    slug: 'fruity',
+    title: 'FRUITY',
+    tagline: 'Bright, sweet and playful accords',
+    description: 'Juicy, uplifting fruit accords that feel vibrant, light, and cheerful.',
     kind: 'category',
-    category: 'oud',
+    category: 'fruit',
     order: 3,
   },
   {
-    slug: 'floral',
-    title: 'Floral Collection',
-    tagline: 'Soft, elegant and timeless',
-    description:
-      'Delicate florals inspired by gardens and tradition — graceful scents for every day.',
+    slug: 'fresh',
+    title: 'FRESH',
+    tagline: 'Crisp citrus and crushed mint',
+    description: 'Invigorating fresh daily wear attars crafted for clean, uplifting energy.',
     kind: 'category',
-    category: 'floral',
+    category: 'new-arrivals',
     order: 4,
   },
   {
-    slug: 'fruit',
-    title: 'Fruit Collection',
-    tagline: 'Bright, sweet and playful',
-    description: 'Juicy, uplifting fruit accords that feel light and cheerful.',
+    slug: 'arabian',
+    title: 'ARABIAN',
+    tagline: 'Traditional Middle Eastern splendor',
+    description: 'Opulent oriental blends inspired by historic Arabian perfume craftsmanship.',
     kind: 'category',
-    category: 'fruit',
+    category: 'most-wanted',
     order: 5,
   },
   {
-    slug: 'best-sellers',
-    title: 'Best Sellers',
-    tagline: 'Customer favourites',
-    description: 'The fragrances our customers rate and reorder the most.',
-    kind: 'best-sellers',
+    slug: 'woody',
+    title: 'WOODY',
+    tagline: 'Warm sandalwood and cedarwood',
+    description: 'Earthy, ground sandalwood and smoky cedarwood profiles for sophisticated fragrance lovers.',
+    kind: 'category',
+    category: 'unique',
     order: 6,
   },
 ];
@@ -89,12 +86,46 @@ export function getCollection(slug: string): Collection | undefined {
 
 /** Resolve which products belong to a collection. */
 export function collectionMatcher(collection: Collection): (product: Product) => boolean {
-  switch (collection.kind) {
+  switch (collection.slug) {
+    case 'most-wanted':
     case 'best-sellers':
       return (product) => Boolean(product.bestSeller);
     case 'new-arrivals':
       return (product) => Boolean(product.newArrival) || product.category === 'new-arrivals';
-    case 'category':
+    case 'oud':
+      return (product) =>
+        product.family === 'oud' ||
+        product.category === 'oud' ||
+        product.name.toLowerCase().includes('oud');
+    case 'floral':
+      return (product) =>
+        product.family === 'floral' ||
+        product.category === 'floral' ||
+        product.name.toLowerCase().includes('rose') ||
+        product.name.toLowerCase().includes('jasmine');
+    case 'fruity':
+      return (product) =>
+        product.family === 'fruity' ||
+        product.category === 'fruit' ||
+        product.name.toLowerCase().includes('apple') ||
+        product.name.toLowerCase().includes('orange');
+    case 'fresh':
+      return (product) =>
+        product.family === 'fresh' ||
+        product.family === 'aquatic' ||
+        product.name.toLowerCase().includes('fresh') ||
+        product.name.toLowerCase().includes('blue');
+    case 'arabian':
+      return (product) =>
+        product.family === 'oriental' ||
+        product.family === 'oud' ||
+        product.category === 'most-wanted' ||
+        product.category === 'oud';
+    case 'woody':
+      return (product) =>
+        product.family === 'woody' ||
+        product.category === 'unique' ||
+        product.name.toLowerCase().includes('wood');
     default:
       return (product) => product.category === collection.category;
   }

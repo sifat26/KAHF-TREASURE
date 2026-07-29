@@ -22,7 +22,6 @@ export function SearchOverlay({ open, onClose }: { open: boolean; onClose: () =>
     if (open && !wasOpen.current) {
       wasOpen.current = true;
       setQuery('');
-      // Focus the field once the overlay is painted.
       const t = setTimeout(() => inputRef.current?.focus(), 50);
       return () => clearTimeout(t);
     }
@@ -62,9 +61,21 @@ export function SearchOverlay({ open, onClose }: { open: boolean; onClose: () =>
           exit={{ opacity: 0 }}
           transition={{ duration: 0.2 }}
         >
-          <div className="absolute inset-0 bg-ink/30 backdrop-blur-sm" onClick={onClose} />
+          {/* Backdrop */}
+          <div
+            className="absolute inset-0"
+            style={{ background: 'rgba(0,0,0,0.7)', backdropFilter: 'blur(4px)' }}
+            onClick={onClose}
+          />
+
+          {/* Panel */}
           <motion.div
-            className="relative mt-0 h-fit w-full max-w-2xl bg-canvas p-5 shadow-[var(--shadow-soft)] sm:mt-24 sm:rounded-[var(--radius-card)]"
+            className="relative mt-0 h-fit w-full max-w-2xl p-5 sm:mt-24 sm:rounded-[20px]"
+            style={{
+              background: 'var(--color-surface)',
+              border: '1px solid var(--color-border)',
+              boxShadow: 'var(--shadow-soft)',
+            }}
             initial={reduce ? undefined : { y: -20, opacity: 0 }}
             animate={reduce ? undefined : { y: 0, opacity: 1 }}
             exit={reduce ? undefined : { y: -20, opacity: 0 }}
@@ -73,25 +84,40 @@ export function SearchOverlay({ open, onClose }: { open: boolean; onClose: () =>
             aria-modal="true"
             aria-label="Search fragrances"
           >
-            <form onSubmit={submit} className="flex items-center gap-3 border-b border-line pb-4">
-              <Search size={20} className="text-muted" />
+            <form
+              onSubmit={submit}
+              className="flex items-center gap-3 pb-4"
+              style={{ borderBottom: '1px solid var(--color-border)' }}
+            >
+              <Search size={20} style={{ color: 'var(--color-muted)' }} />
               <input
                 ref={inputRef}
                 value={query}
                 onChange={(e) => setQuery(e.target.value)}
                 placeholder="Search fragrances, notes, collections…"
-                className="w-full bg-transparent text-lg text-ink outline-none placeholder:text-muted/70"
+                className="w-full bg-transparent text-lg outline-none"
+                style={{
+                  color: 'var(--color-text-primary)',
+                }}
                 aria-label="Search query"
               />
-              <button type="button" onClick={onClose} aria-label="Close search" className="text-muted hover:text-ink">
+              <button
+                type="button"
+                onClick={onClose}
+                aria-label="Close search"
+                style={{ color: 'var(--color-muted)' }}
+              >
                 <X size={20} />
               </button>
             </form>
 
             <div className="mt-4 max-h-[50vh] overflow-y-auto">
               {query.trim().length > 0 && results.length === 0 && (
-                <p className="py-8 text-center text-sm text-muted">
-                  No fragrances match “{query}”. Try a different word.
+                <p
+                  className="py-8 text-center text-sm"
+                  style={{ color: 'var(--color-muted)' }}
+                >
+                  No fragrances match &ldquo;{query}&rdquo;. Try a different word.
                 </p>
               )}
               <ul className="flex flex-col">
@@ -100,21 +126,41 @@ export function SearchOverlay({ open, onClose }: { open: boolean; onClose: () =>
                     <Link
                       href={`/products/${product.slug}`}
                       onClick={onClose}
-                      className="flex items-center gap-4 rounded-xl p-2 transition-colors hover:bg-surface"
+                      className="flex items-center gap-4 rounded-[14px] p-2 transition-colors"
+                      style={{ color: 'inherit' }}
+                      onMouseEnter={(e) => {
+                        (e.currentTarget as HTMLAnchorElement).style.background =
+                          'var(--color-card)';
+                      }}
+                      onMouseLeave={(e) => {
+                        (e.currentTarget as HTMLAnchorElement).style.background =
+                          'transparent';
+                      }}
                     >
                       <ProductBottle
                         name={product.name}
                         family={product.family}
-                        className="h-14 w-14 shrink-0 rounded-lg"
+                        className="h-14 w-14 shrink-0 rounded-[10px]"
                         compact
                       />
                       <span className="min-w-0 flex-1">
-                        <span className="block truncate font-medium text-ink">{product.name}</span>
-                        <span className="block text-xs capitalize text-muted">
+                        <span
+                          className="block truncate font-medium"
+                          style={{ color: 'var(--color-text-primary)' }}
+                        >
+                          {product.name}
+                        </span>
+                        <span
+                          className="block text-xs capitalize"
+                          style={{ color: 'var(--color-muted)' }}
+                        >
                           {product.family ?? 'Attar'} · {product.category.replace('-', ' ')}
                         </span>
                       </span>
-                      <PriceDisplay prices={product.prices} className="shrink-0 text-sm" />
+                      <PriceDisplay
+                        prices={product.prices}
+                        className="shrink-0 text-sm"
+                      />
                     </Link>
                   </li>
                 ))}
@@ -122,13 +168,20 @@ export function SearchOverlay({ open, onClose }: { open: boolean; onClose: () =>
               {query.trim().length > 0 && results.length > 0 && (
                 <button
                   onClick={submit}
-                  className="mt-2 w-full rounded-xl bg-surface py-3 text-sm font-medium text-ink transition-colors hover:bg-surface-2"
+                  className="mt-2 w-full rounded-[14px] py-3 text-sm font-medium transition-colors"
+                  style={{
+                    background: 'var(--color-card)',
+                    color: 'var(--color-text-secondary)',
+                  }}
                 >
-                  See all results for “{query}”
+                  See all results for &ldquo;{query}&rdquo;
                 </button>
               )}
               {query.trim().length === 0 && (
-                <p className="px-2 py-6 text-sm text-muted">
+                <p
+                  className="px-2 py-6 text-sm"
+                  style={{ color: 'var(--color-muted)' }}
+                >
                   Start typing to explore our fragrance library.
                 </p>
               )}

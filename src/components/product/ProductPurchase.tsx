@@ -1,15 +1,15 @@
 'use client';
 
-import * as React from 'react';
-import { Heart, Minus, Plus, Share2, Check } from 'lucide-react';
+import { useEnquiryBag } from '@/components/bag/EnquiryBagProvider';
+import { WhatsAppIcon } from '@/components/icons/SocialIcons';
+import { StockBadge } from '@/components/ui/Badge';
+import { Button, ButtonLink } from '@/components/ui/Button';
 import type { Product, ProductSize } from '@/data/products';
 import { availableSizes, formatPrice, formatSize, isOrderable } from '@/lib/format';
-import { orderProductUrl } from '@/lib/whatsapp';
-import { Button, ButtonLink } from '@/components/ui/Button';
-import { StockBadge } from '@/components/ui/Badge';
-import { WhatsAppIcon } from '@/components/icons/SocialIcons';
-import { useEnquiryBag } from '@/components/bag/EnquiryBagProvider';
 import { cn } from '@/lib/utils';
+import { orderProductUrl } from '@/lib/whatsapp';
+import { Check, Heart, Minus, Plus, Share2 } from 'lucide-react';
+import * as React from 'react';
 
 /**
  * Purchase panel — size selector, quantity, add-to-bag, WhatsApp order,
@@ -50,38 +50,57 @@ export function ProductPurchase({ product }: { product: Product }) {
   return (
     <div>
       {/* Price */}
-      <div className="flex items-baseline gap-3">
-        <span className="font-display text-3xl text-ink">
+      <div className='flex items-baseline gap-3'>
+        <span className='font-display text-3xl text-ink sm:text-4xl'>
           {currentPrice ? formatPrice(currentPrice) : 'Price on request'}
         </span>
-        {size && <span className="text-sm text-muted">/ {formatSize(size)}</span>}
+        {size && <span className='text-sm text-muted'>/ {formatSize(size)}</span>}
       </div>
 
-      <div className="mt-2">
-        <StockBadge status={product.status} size="md" />
+      <div className='mt-2'>
+        <StockBadge status={product.status} size='md' />
       </div>
 
       {/* Size selector */}
       {sizes.length > 0 && (
-        <div className="mt-6">
-          <span className="mb-2 block text-xs font-medium uppercase tracking-[0.16em] text-muted">
-            Size
-          </span>
-          <div className="flex flex-wrap gap-2">
+        <div className='mt-6'>
+          <div className='mb-2 flex items-center justify-between gap-3'>
+            <span className='block text-xs font-medium uppercase tracking-[0.16em] text-muted'>Size</span>
+            {size && (
+              <span className='text-xs font-medium uppercase tracking-[0.16em]' style={{ color: 'var(--color-gold)' }}>
+                Selected: {formatSize(size)}
+              </span>
+            )}
+          </div>
+          <div className='flex flex-wrap gap-2'>
             {sizes.map((s) => (
               <button
                 key={s}
                 onClick={() => setSize(s)}
                 aria-pressed={size === s}
                 className={cn(
-                  'flex min-w-[4.5rem] flex-col items-center rounded-[var(--radius-btn)] border px-4 py-2.5 transition-colors',
+                  'relative flex flex-col items-center border px-4 py-2.5 pr-8 text-left transition-all duration-300',
                   size === s
-                    ? 'border-ink bg-ink text-white'
-                    : 'border-line text-ink-soft hover:border-ink',
+                    ? 'border-line text-ink shadow-[0_0_0_1px_rgba(200,169,106,0.12)]'
+                    : 'border-line bg-transparent text-ink-soft',
                 )}
+                style={{
+                  minWidth: '4.5rem',
+                  borderRadius: 'var(--radius-btn)',
+                  backgroundColor: size === s ? 'var(--color-gold-tint)' : 'transparent',
+                  borderColor: size === s ? 'var(--color-gold)' : 'var(--color-border)',
+                }}
               >
-                <span className="text-sm font-medium">{formatSize(s)}</span>
-                <span className={cn('text-xs', size === s ? 'text-white/70' : 'text-muted')}>
+                {size === s && (
+                  <span
+                    className='absolute right-2 top-2 rounded-full p-1'
+                    style={{ backgroundColor: 'var(--color-gold)', color: 'var(--color-background)' }}
+                  >
+                    <Check size={10} />
+                  </span>
+                )}
+                <span className='text-sm font-medium'>{formatSize(s)}</span>
+                <span className={cn('text-xs', size === s ? 'text-ink-soft' : 'text-muted')}>
                   {formatPrice(product.prices[s]!)}
                 </span>
               </button>
@@ -92,73 +111,62 @@ export function ProductPurchase({ product }: { product: Product }) {
 
       {/* Quantity + actions */}
       {orderable && size && (
-        <div className="mt-6 flex flex-col gap-3">
-          <div className="flex items-center gap-4">
-            <span className="text-xs font-medium uppercase tracking-[0.16em] text-muted">Qty</span>
-            <div className="flex items-center rounded-full border border-line">
+        <div className='mt-6 flex flex-col gap-3'>
+          <div className='flex items-center gap-4'>
+            <span className='text-xs font-medium uppercase tracking-[0.16em] text-muted'>Qty</span>
+            <div className='flex items-center rounded-full border border-line bg-canvas'>
               <button
                 onClick={() => setQty((q) => Math.max(1, q - 1))}
-                aria-label="Decrease quantity"
-                className="flex h-10 w-10 items-center justify-center text-muted hover:text-ink"
+                aria-label='Decrease quantity'
+                className='flex h-10 w-10 items-center justify-center text-muted transition-colors hover:text-ink'
               >
                 <Minus size={16} />
               </button>
-              <span className="w-8 text-center text-sm font-medium">{qty}</span>
+              <span className='w-8 text-center text-sm font-medium'>{qty}</span>
               <button
                 onClick={() => setQty((q) => q + 1)}
-                aria-label="Increase quantity"
-                className="flex h-10 w-10 items-center justify-center text-muted hover:text-ink"
+                aria-label='Increase quantity'
+                className='flex h-10 w-10 items-center justify-center text-muted transition-colors hover:text-ink'
               >
                 <Plus size={16} />
               </button>
             </div>
           </div>
 
-          <div className="flex gap-3">
-            <Button full size="lg" onClick={() => addItem(product, size, qty)}>
+          <div className='flex gap-3'>
+            <Button full size='lg' onClick={() => addItem(product, size, qty)}>
               Add to Enquiry Bag
             </Button>
           </div>
-          <ButtonLink
-            href={orderProductUrl(product, size)}
-            external
-            variant="gold"
-            size="lg"
-            full
-          >
+          <ButtonLink href={orderProductUrl(product, size)} external variant='gold' size='lg' full>
             <WhatsAppIcon size={18} /> Order on WhatsApp
           </ButtonLink>
         </div>
       )}
 
       {!orderable && (
-        <div className="mt-6">
-          <ButtonLink
-            href={orderProductUrl(product)}
-            external
-            variant="secondary"
-            size="lg"
-            full
-          >
+        <div className='mt-6'>
+          <ButtonLink href={orderProductUrl(product)} external variant='secondary' size='lg' full>
             <WhatsAppIcon size={18} /> Ask about availability
           </ButtonLink>
         </div>
       )}
 
       {/* Secondary actions */}
-      <div className="mt-4 flex items-center gap-5 text-sm">
+      <div className='mt-4 flex items-center gap-5 text-sm'>
         <button
           onClick={() => toggleWishlist(product.slug)}
           aria-pressed={wished}
-          className="inline-flex items-center gap-2 text-muted transition-colors hover:text-ink"
+          className='inline-flex items-center gap-2 text-muted transition-colors hover:text-ink'
         >
-          <Heart size={16} className={cn(wished && 'fill-[var(--color-gold)] text-[var(--color-gold)]')} />
+          <Heart
+            size={16}
+            className={cn(wished && 'fill-current')}
+            style={wished ? { color: 'var(--color-gold)' } : undefined}
+          />
           {wished ? 'Saved' : 'Save'}
         </button>
-        <button
-          onClick={share}
-          className="inline-flex items-center gap-2 text-muted transition-colors hover:text-ink"
-        >
+        <button onClick={share} className='inline-flex items-center gap-2 text-muted transition-colors hover:text-ink'>
           {copied ? <Check size={16} /> : <Share2 size={16} />}
           {copied ? 'Link copied' : 'Share'}
         </button>

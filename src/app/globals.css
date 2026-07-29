@@ -1,61 +1,139 @@
 @import 'tailwindcss';
 
 /*
-  KAHF Treasure — Design System
+  KAHF Treasure — Design System v2.0
   Source of truth: docs/BRAND_GUIDELINES.md
-  Light, luxury aesthetic: white surfaces, ink text, gold accent, generous whitespace.
+  Dark luxury aesthetic: near-black surfaces, warm text, soft gold accent, generous whitespace.
+
+  TOKEN ARCHITECTURE
+  ─────────────────────────────────────────────────────────────────────────────
+  Layer 1 — Primitive values        Raw hex / rgba values, never used directly
+  Layer 2 — Semantic tokens         Role-named: --color-background, --color-text-primary …
+  Layer 3 — Legacy aliases          Old names (ink, canvas, line …) mapped to semantic
+                                    tokens so existing component classes continue to work
+                                    without edits.
+  ─────────────────────────────────────────────────────────────────────────────
 */
 
 @theme {
-  /* ---- Brand colours (BRAND_GUIDELINES.md » Color Palette) ---- */
-  --color-ink: #0b0b0b; /* Primary — near-black */
-  --color-ink-soft: #1e1e1e; /* Text primary */
-  --color-gold: #c8a96a; /* Secondary — champagne gold */
-  --color-gold-deep: #a8894b; /* Gold, pressed/darker states */
-  --color-gold-soft: #e7d8bb; /* Gold tint for borders/backgrounds */
-  --color-canvas: #ffffff; /* Background */
-  --color-surface: #f7f7f7; /* Raised surface */
-  --color-surface-2: #f1efea; /* Warm surface (sand) */
-  --color-muted: #666666; /* Text secondary */
-  --color-line: #e5e5e5; /* Border */
-  --color-emerald: #0f766e; /* Optional accent */
+  /* ═══════════════════════════════════════════════════════
+     LAYER 1 — PRIMITIVE PALETTE  (BRAND_GUIDELINES.md)
+     Never reference these in components; use semantic tokens.
+     ═══════════════════════════════════════════════════════ */
+
+  /* Backgrounds */
+  --primitive-bg-base:        #0F0F0D;
+  --primitive-bg-surface:     #1B1A17;
+  --primitive-bg-surface-2:   #222118;
+  --primitive-bg-card:        #1C1B18;
+
+  /* Text */
+  --primitive-text-primary:   #F6F3EC;
+  --primitive-text-secondary: #B8B1A5;
+  --primitive-text-muted:     #8D8578;
+
+  /* Gold */
+  --primitive-gold:           #C8A96A;
+  --primitive-gold-hover:     #B89245;
+  --primitive-gold-tint:      rgba(200, 169, 106, 0.10);
+
+  /* Border */
+  --primitive-border:         rgba(200, 169, 106, 0.18);
 
   /* Status */
-  --color-success: #16a34a;
-  --color-warning: #f59e0b;
-  --color-error: #dc2626;
+  --primitive-success:        #22c55e;
+  --primitive-warning:        #f59e0b;
+  --primitive-error:          #ef4444;
 
-  /* ---- Typography ---- */
+
+  /* ═══════════════════════════════════════════════════════
+     LAYER 2 — SEMANTIC TOKENS
+     These are the canonical names. Use these in new code.
+     ═══════════════════════════════════════════════════════ */
+
+  /* — Layout surfaces — */
+  --color-background:   #0F0F0D;          /* Page background */
+  --color-surface:      #1B1A17;          /* Raised surface (nav, footer, sheet) */
+  --color-surface-2:    #222118;          /* Deeper raised surface (alt sections) */
+  --color-card:         #1C1B18;          /* Product / content cards */
+
+  /* — Text — */
+  --color-text-primary:   #F6F3EC;        /* Body copy, headings */
+  --color-text-secondary: #B8B1A5;        /* Supporting copy, labels */
+  --color-muted:          #8D8578;        /* Placeholders, meta, captions */
+
+  /* — Accent (gold) — */
+  --color-accent:         #C8A96A;        /* Primary gold accent */
+  --color-accent-hover:   #B89245;        /* Gold on hover / pressed */
+  --color-accent-tint:    rgba(200, 169, 106, 0.10); /* Subtle gold bg fill */
+
+  /* — Border — */
+  --color-border:         rgba(200, 169, 106, 0.18); /* Thin gold-tinted border */
+
+  /* — Status — */
+  --color-success:  #22c55e;
+  --color-warning:  #f59e0b;
+  --color-error:    #ef4444;
+
+
+  /* ═══════════════════════════════════════════════════════
+     LAYER 3 — LEGACY ALIASES
+     Map old names → semantic tokens so existing Tailwind
+     classes (text-ink, bg-canvas, border-line …) keep
+     compiling with zero component edits.
+     ═══════════════════════════════════════════════════════ */
+
+  /* Old "canvas / ink" names */
+  --color-canvas:    var(--color-background);
+  --color-ink:       var(--color-text-primary);
+  --color-ink-soft:  var(--color-text-secondary);
+
+  /* Old border name */
+  --color-line:      var(--color-border);
+
+  /* Old gold names */
+  --color-gold:      var(--color-accent);
+  --color-gold-deep: var(--color-accent-hover);
+  --color-gold-soft: var(--color-accent-tint);
+
+  /* Optional accent (kept for backward compat) */
+  --color-emerald:   #0f766e;
+
+
+  /* ── Typography ── */
   --font-display: var(--font-display); /* Playfair Display */
-  --font-serif: var(--font-serif); /* Cormorant Garamond */
-  --font-sans: var(--font-sans); /* Inter */
+  --font-serif:   var(--font-serif);   /* Cormorant Garamond */
+  --font-sans:    var(--font-sans);    /* Inter */
   --font-bengali: var(--font-bengali); /* Noto Serif Bengali */
 
-  /* ---- Radius (BRAND_GUIDELINES.md » Border Radius) ---- */
-  --radius-btn: 12px;
+  /* ── Radius (BRAND_GUIDELINES.md » 12–16 px) ── */
+  --radius-btn:   12px;
   --radius-input: 12px;
-  --radius-card: 16px;
+  --radius-card:  16px;
   --radius-image: 18px;
 
-  /* ---- Soft shadows only ---- */
-  --shadow-card: 0 1px 2px rgba(11, 11, 11, 0.04), 0 8px 24px rgba(11, 11, 11, 0.06);
-  --shadow-card-hover: 0 2px 6px rgba(11, 11, 11, 0.06), 0 18px 44px rgba(11, 11, 11, 0.1);
-  --shadow-soft: 0 10px 40px rgba(11, 11, 11, 0.08);
+  /* ── Soft shadows (warm-dark: no white bloom) ── */
+  --shadow-card:       0 1px 3px rgba(0, 0, 0, 0.30), 0 6px 20px rgba(0, 0, 0, 0.25);
+  --shadow-card-hover: 0 2px 8px rgba(0, 0, 0, 0.40), 0 16px 40px rgba(0, 0, 0, 0.35);
+  --shadow-soft:       0 10px 40px rgba(0, 0, 0, 0.35);
 
-  /* ---- Motion (150–300ms per guidelines) ---- */
+  /* ── Motion (150–300 ms per BRAND_GUIDELINES.md) ── */
   --ease-lux: cubic-bezier(0.22, 1, 0.36, 1);
 
-  /* ---- Layout ---- */
+  /* ── Layout ── */
   --nav-h: 76px;
 }
 
-/* ======== BASE ======== */
+
+/* ═══════════════════════════════════════════════════════════════
+   BASE
+   ═══════════════════════════════════════════════════════════════ */
 :root {
-  color-scheme: light;
+  color-scheme: dark;
 }
 
 * {
-  border-color: var(--color-line);
+  border-color: var(--color-border);
 }
 
 html {
@@ -63,30 +141,37 @@ html {
   /* Offset in-page anchors so the sticky nav never covers a heading */
   scroll-padding-top: calc(var(--nav-h) + 16px);
   -webkit-text-size-adjust: 100%;
+  overflow-x: hidden;
+  max-width: 100vw;
 }
 
 body {
-  background-color: var(--color-canvas);
-  color: var(--color-ink-soft);
+  background-color: var(--color-background);
+  color: var(--color-text-primary);
   font-family: var(--font-sans), ui-sans-serif, system-ui, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-rendering: optimizeLegibility;
+  overflow-x: hidden;
+  max-width: 100vw;
 }
 
 ::selection {
-  background: var(--color-gold);
-  color: #fff;
+  background: var(--color-accent);
+  color: var(--color-background);
 }
 
 /* Accessible, on-brand focus ring for keyboard users */
 :focus-visible {
-  outline: 2px solid var(--color-gold-deep);
+  outline: 2px solid var(--color-accent);
   outline-offset: 2px;
   border-radius: 4px;
 }
 
-/* ======== TYPOGRAPHIC HELPERS ======== */
+
+/* ═══════════════════════════════════════════════════════════════
+   TYPOGRAPHIC HELPERS
+   ═══════════════════════════════════════════════════════════════ */
 .font-display {
   font-family: var(--font-display), ui-serif, Georgia, serif;
   letter-spacing: -0.01em;
@@ -98,46 +183,53 @@ body {
   font-family: var(--font-bengali), var(--font-sans), sans-serif;
 }
 
-/* Eyebrow / kicker label used across sections */
+/* Eyebrow / kicker label — small all-caps label above section headings */
 .eyebrow {
   font-family: var(--font-sans), sans-serif;
   text-transform: uppercase;
   letter-spacing: 0.28em;
   font-size: 0.7rem;
   font-weight: 500;
-  color: var(--color-gold-deep);
+  color: var(--color-accent);
 }
 
-/* Thin gold rule used as a decorative divider */
+/* Thin gold rule used as a decorative section divider */
 .gold-rule {
   height: 1px;
   background: linear-gradient(
     90deg,
     transparent,
-    var(--color-gold) 20%,
-    var(--color-gold) 80%,
+    var(--color-accent) 20%,
+    var(--color-accent) 80%,
     transparent
   );
+  opacity: 0.5;
 }
 
-/* ======== SCROLLBAR ======== */
+
+/* ═══════════════════════════════════════════════════════════════
+   SCROLLBAR
+   ═══════════════════════════════════════════════════════════════ */
 ::-webkit-scrollbar {
-  width: 10px;
-  height: 10px;
+  width: 8px;
+  height: 8px;
 }
 ::-webkit-scrollbar-track {
   background: var(--color-surface);
 }
 ::-webkit-scrollbar-thumb {
-  background: #d9d2c4;
+  background: rgba(200, 169, 106, 0.25);
   border: 2px solid var(--color-surface);
   border-radius: 9999px;
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: var(--color-gold);
+  background: var(--color-accent);
 }
 
-/* ======== REVEAL-ON-SCROLL (progressive enhancement) ======== */
+
+/* ═══════════════════════════════════════════════════════════════
+   REDUCED MOTION
+   ═══════════════════════════════════════════════════════════════ */
 /* Elements start hidden ONLY when JS/motion is active; see Reveal component.
    If the user prefers reduced motion, everything is shown immediately. */
 @media (prefers-reduced-motion: reduce) {
@@ -153,12 +245,16 @@ body {
   }
 }
 
-/* ======== UTILITIES ======== */
-/* Subtle grain-free luxury texture: a barely-there warm vignette for hero areas */
+
+/* ═══════════════════════════════════════════════════════════════
+   UTILITIES
+   ═══════════════════════════════════════════════════════════════ */
+
+/* Warm radial glow for hero / featured areas — no heavy gradient */
 .lux-vignette {
   background:
-    radial-gradient(120% 80% at 50% 0%, rgba(200, 169, 106, 0.08), transparent 60%),
-    linear-gradient(180deg, var(--color-surface-2), var(--color-canvas));
+    radial-gradient(ellipse 80% 60% at 50% 0%, rgba(200, 169, 106, 0.07), transparent 70%),
+    var(--color-background);
 }
 
 /* Hide scrollbar for horizontal rails while keeping scroll */

@@ -33,7 +33,9 @@ export function RecentlyViewed({ currentSlug }: { currentSlug: string }) {
       .map((slug) => products.find((p) => p.slug === slug))
       .filter((p): p is Product => Boolean(p))
       .slice(0, 4);
-    setItems(list);
+    React.startTransition(() => {
+      setItems(list);
+    });
 
     // Then record the current product at the front.
     const next = [currentSlug, ...prev].slice(0, MAX);

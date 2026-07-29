@@ -1,64 +1,73 @@
-import { Hero } from '@/components/home/Hero';
-import { TrustBar } from '@/components/home/TrustBar';
-import { ProductShowcase } from '@/components/home/ProductShowcase';
-import { BrandStory } from '@/components/home/BrandStory';
-import { WhyChooseUs } from '@/components/home/WhyChooseUs';
+import { BundleOffers } from '@/components/home/BundleOffers';
 import { CollectionsShowcase } from '@/components/home/CollectionsShowcase';
-import { PackagesTeaser } from '@/components/home/PackagesTeaser';
-import { ReviewsSection } from '@/components/home/ReviewsSection';
-import { FaqPreview } from '@/components/home/FaqPreview';
 import { ContactCta } from '@/components/home/ContactCta';
+import { FaqPreview } from '@/components/home/FaqPreview';
+import { Hero } from '@/components/home/Hero';
+import { ProductShowcase } from '@/components/home/ProductShowcase';
+import { ReviewsSection } from '@/components/home/ReviewsSection';
+import { TrustBar } from '@/components/home/TrustBar';
+import { WhyChooseUs } from '@/components/home/WhyChooseUs';
 import { WebSiteJsonLd } from '@/components/seo/JsonLd';
-import { getBestSellers, getFeatured, getNewArrivals } from '@/lib/products';
+import { getBestSellers, getNewArrivals } from '@/lib/products';
 
 export default function HomePage() {
-  const bestSellers = getBestSellers();
-  const newArrivals = getNewArrivals();
-  const featured = getFeatured();
+  const bestSellers = getBestSellers(8);
+  const newArrivals = getNewArrivals(8);
 
   return (
     <>
       <WebSiteJsonLd />
+      {/* 1. Hero Editorial Banner */}
       <Hero />
+
+      {/* 2. Trust Bar */}
       <TrustBar />
 
-      <ProductShowcase
-        eyebrow="Most loved"
-        title="Best Sellers"
-        description="The fragrances our customers reach for again and again."
-        products={bestSellers}
-        viewAllHref="/collections/best-sellers"
-      />
+      {/* 3. Most Wanted / Best Sellers */}
+      <div id='most-wanted'>
+        <ProductShowcase
+          eyebrow='MOST LOVED'
+          title='Best Sellers'
+          description='The fragrances our customers reach for again and again.'
+          products={bestSellers}
+          viewAllHref='/collections/most-wanted'
+          desktopCount={8}
+          mobileCount={8}
+        />
+      </div>
 
-      <BrandStory />
+      {/* 4. New Arrivals */}
+      <div id='new-arrivals'>
+        <ProductShowcase
+          eyebrow='NEWEST RELEASE'
+          title='New Arrivals'
+          description='Discover our latest handcrafted attar creations.'
+          products={newArrivals}
+          viewAllHref='/collections/new-arrivals'
+          desktopCount={8}
+          mobileCount={8}
+        />
+      </div>
 
-      <ProductShowcase
-        eyebrow="Just in"
-        title="New Arrivals"
-        description="The latest additions to the KAHF Treasure library."
-        products={newArrivals}
-        viewAllHref="/collections/new-arrivals"
-        surface
-      />
-
+      {/* 5. Explore Collections */}
       <CollectionsShowcase />
 
+      {/* 6. Bundle Offers */}
+      <BundleOffers />
+
+      {/* 7. Why Choose Kahf Treasure */}
       <WhyChooseUs />
 
-      {featured.length > 0 && (
-        <ProductShowcase
-          eyebrow="Editor's picks"
-          title="Featured Fragrances"
-          products={featured}
-          viewAllHref="/shop"
-          surface
-        />
-      )}
-
-      <PackagesTeaser />
+      {/* 8. Verified Customer Reviews */}
       <ReviewsSection />
+
+      {/* 9. Frequently Asked Questions */}
       <FaqPreview />
-      <ContactCta />
+
+      {/* 10. Personal Consultation & Contact CTA */}
+      <div id='contact'>
+        <ContactCta />
+      </div>
     </>
   );
 }

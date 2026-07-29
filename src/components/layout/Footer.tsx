@@ -1,3 +1,7 @@
+'use client';
+
+import * as React from 'react';
+
 import Link from 'next/link';
 import { Mail, Phone } from 'lucide-react';
 import { Container } from '@/components/ui/Container';
@@ -9,20 +13,38 @@ export function Footer() {
   const year = new Date().getFullYear();
 
   return (
-    <footer className="border-t border-line bg-surface" role="contentinfo">
-      <Container className="py-16 lg:py-20">
-        <div className="grid gap-12 lg:grid-cols-[1.4fr_1fr_1fr_1fr]">
+    <footer
+      role="contentinfo"
+      style={{
+        background: 'var(--color-surface)',
+        borderTop: '1px solid var(--color-border)',
+      }}
+    >
+      <Container className="py-16 lg:py-24">
+        <div className="grid gap-10 sm:gap-12 lg:grid-cols-[1.5fr_1fr_1fr_1fr]">
           {/* Brand + newsletter */}
-          <div className="max-w-sm">
+          <div className="max-w-xs">
             <Link href="/" aria-label={`${site.name} — home`}>
-              <span className="font-display text-2xl tracking-[0.15em] text-ink">
-                KAHF <span className="text-[var(--color-gold-deep)]">TREASURE</span>
+              <span
+                className="font-display text-2xl tracking-[0.18em]"
+                style={{ color: 'var(--color-text-primary)' }}
+              >
+                KAHF{' '}
+                <span style={{ color: 'var(--color-accent)' }}>TREASURE</span>
               </span>
             </Link>
-            <p className="mt-4 text-sm leading-relaxed text-muted">{site.tagline}. {site.description}</p>
+            <p
+              className="mt-4 text-sm leading-[1.8]"
+              style={{ color: 'var(--color-muted)' }}
+            >
+              {site.tagline}. {site.description}
+            </p>
 
-            <div className="mt-6">
-              <p className="mb-3 text-xs font-medium uppercase tracking-[0.16em] text-muted">
+            <div className="mt-7">
+              <p
+                className="mb-3 text-[0.65rem] font-medium uppercase tracking-[0.2em]"
+                style={{ color: 'var(--color-muted)' }}
+              >
                 Join our list
               </p>
               <NewsletterForm />
@@ -30,36 +52,74 @@ export function Footer() {
           </div>
 
           {/* Link columns */}
-          <FooterColumn title="Shop" links={footerNav.shop} />
-          <FooterColumn title="Company" links={footerNav.company} />
-          <FooterColumn title="Policies" links={footerNav.policies} />
+          <div className="grid grid-cols-2 sm:grid-cols-3 gap-8 lg:contents">
+            <FooterColumn title="Shop"     links={footerNav.shop}     />
+            <FooterColumn title="Company"  links={footerNav.company}  />
+            <FooterColumn title="Policies" links={footerNav.policies} />
+          </div>
         </div>
 
-        <div className="mt-14 flex flex-col gap-6 border-t border-line pt-8 sm:flex-row sm:items-center sm:justify-between">
-          {/* Contact + social */}
-          <div className="flex flex-wrap items-center gap-x-6 gap-y-3 text-sm text-muted">
-            <a href={telLink} className="inline-flex items-center gap-2 transition-colors hover:text-ink">
-              <Phone size={15} /> {contact.phoneDisplay}
+        {/* Bottom row */}
+        <div
+          className="mt-16 flex flex-col gap-6 pt-8 sm:flex-row sm:items-center sm:justify-between"
+          style={{ borderTop: '1px solid var(--color-border)' }}
+        >
+          {/* Contact */}
+          <div
+            className="flex flex-wrap items-center gap-x-6 gap-y-3 text-sm"
+            style={{ color: 'var(--color-muted)' }}
+          >
+            <a
+              href={telLink}
+              className="inline-flex items-center gap-2 transition-colors"
+              style={{ color: 'inherit' }}
+              onMouseEnter={(e) =>
+                ((e.currentTarget as HTMLAnchorElement).style.color =
+                  'var(--color-text-primary)')
+              }
+              onMouseLeave={(e) =>
+                ((e.currentTarget as HTMLAnchorElement).style.color =
+                  'var(--color-muted)')
+              }
+            >
+              <Phone size={14} /> {contact.phoneDisplay}
             </a>
-            <a href={mailLink} className="inline-flex items-center gap-2 transition-colors hover:text-ink">
-              <Mail size={15} /> {contact.email}
+            <a
+              href={mailLink}
+              className="inline-flex items-center gap-2 transition-colors"
+              style={{ color: 'inherit' }}
+              onMouseEnter={(e) =>
+                ((e.currentTarget as HTMLAnchorElement).style.color =
+                  'var(--color-text-primary)')
+              }
+              onMouseLeave={(e) =>
+                ((e.currentTarget as HTMLAnchorElement).style.color =
+                  'var(--color-muted)')
+              }
+            >
+              <Mail size={14} /> {contact.email}
             </a>
           </div>
 
+          {/* Social icons */}
           <div className="flex items-center gap-3">
             <SocialLink href={waLink} label="WhatsApp">
-              <WhatsAppIcon size={18} />
+              <WhatsAppIcon size={17} />
             </SocialLink>
             <SocialLink href={contact.facebook} label="Facebook">
-              <FacebookIcon size={18} />
+              <FacebookIcon size={17} />
             </SocialLink>
             <SocialLink href={mailLink} label="Email" external={false}>
-              <Mail size={18} />
+              <Mail size={17} />
             </SocialLink>
           </div>
         </div>
 
-        <div className="mt-8 flex flex-col gap-1 text-xs text-muted sm:flex-row sm:items-center sm:justify-between">
+        {/* Legal */}
+        <div
+          className="mt-8 flex flex-col gap-1 text-xs sm:flex-row sm:items-center sm:justify-between"
+          style={{ color: 'var(--color-muted)' }}
+        >
           <p>© {year} {site.name}. All rights reserved.</p>
           <p>Premium alcohol-free attar · Handcrafted in Bangladesh</p>
         </div>
@@ -77,11 +137,28 @@ function FooterColumn({
 }) {
   return (
     <div>
-      <h2 className="mb-4 text-xs font-medium uppercase tracking-[0.16em] text-ink">{title}</h2>
-      <ul className="flex flex-col gap-2.5">
+      <h2
+        className="mb-5 text-[0.65rem] font-semibold uppercase tracking-[0.22em]"
+        style={{ color: 'var(--color-text-primary)' }}
+      >
+        {title}
+      </h2>
+      <ul className="flex flex-col gap-3">
         {links.map((link) => (
           <li key={link.href}>
-            <Link href={link.href} className="text-sm text-muted transition-colors hover:text-ink">
+            <Link
+              href={link.href}
+              className="text-sm transition-colors"
+              style={{ color: 'var(--color-muted)' }}
+              onMouseEnter={(e) =>
+                ((e.currentTarget as HTMLAnchorElement).style.color =
+                  'var(--color-text-primary)')
+              }
+              onMouseLeave={(e) =>
+                ((e.currentTarget as HTMLAnchorElement).style.color =
+                  'var(--color-muted)')
+              }
+            >
               {link.label}
             </Link>
           </li>
@@ -107,7 +184,21 @@ function SocialLink({
     <a
       href={href}
       aria-label={label}
-      className="flex h-10 w-10 items-center justify-center rounded-full border border-line text-ink-soft transition-colors hover:border-ink hover:bg-ink hover:text-white"
+      className="flex h-10 w-10 items-center justify-center rounded-full transition-all duration-200"
+      style={{
+        border: '1px solid var(--color-border)',
+        color: 'var(--color-muted)',
+      }}
+      onMouseEnter={(e) => {
+        const el = e.currentTarget as HTMLAnchorElement;
+        el.style.borderColor = 'var(--color-accent)';
+        el.style.color = 'var(--color-accent)';
+      }}
+      onMouseLeave={(e) => {
+        const el = e.currentTarget as HTMLAnchorElement;
+        el.style.borderColor = 'var(--color-border)';
+        el.style.color = 'var(--color-muted)';
+      }}
       {...extra}
     >
       {children}

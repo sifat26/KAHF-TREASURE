@@ -5,20 +5,27 @@ import type { ProductStatus } from '@/data/products';
 
 /**
  * Badge — subtle, elegant labels (BRAND_GUIDELINES.md » Badge Style).
- * Kept understated: thin borders, muted fills, uppercase micro-type.
+ * Dark luxury edition: thin borders, warm fills, uppercase micro-type.
  */
 const badge = cva(
   'inline-flex items-center gap-1 rounded-full font-medium uppercase tracking-[0.12em] leading-none',
   {
     variants: {
       variant: {
-        gold: 'bg-[var(--color-gold-soft)]/60 text-[var(--color-gold-deep)] border border-[var(--color-gold)]/30',
-        ink: 'bg-ink text-white',
-        neutral: 'bg-surface text-muted border border-line',
-        outline: 'bg-transparent text-ink-soft border border-line',
-        success: 'bg-[var(--color-success)]/10 text-[var(--color-success)] border border-[var(--color-success)]/25',
-        warning: 'bg-[var(--color-warning)]/10 text-[#8a5a00] border border-[var(--color-warning)]/30',
-        muted: 'bg-surface text-muted',
+        gold:
+          'bg-[rgba(200,169,106,0.12)] text-[var(--color-accent)] border border-[rgba(200,169,106,0.3)]',
+        ink:
+          'bg-[var(--color-text-primary)] text-[var(--color-background)]',
+        neutral:
+          'bg-[var(--color-card)] text-[var(--color-muted)] border border-[var(--color-border)]',
+        outline:
+          'bg-transparent text-[var(--color-text-secondary)] border border-[var(--color-border)]',
+        success:
+          'bg-[rgba(34,197,94,0.12)] text-[var(--color-success)] border border-[rgba(34,197,94,0.25)]',
+        warning:
+          'bg-[rgba(245,158,11,0.12)] text-[#d4920a] border border-[rgba(245,158,11,0.25)]',
+        muted:
+          'bg-[var(--color-card)] text-[var(--color-muted)]',
       },
       size: {
         sm: 'text-[0.6rem] px-2 py-1',

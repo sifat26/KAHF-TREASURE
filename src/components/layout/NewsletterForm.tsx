@@ -8,10 +8,8 @@ import { cn } from '@/lib/utils';
 /**
  * Newsletter signup.
  *
- * NOTE: No mailing-list backend is defined in the source docs (Newsletter is a
- * future marketing feature — BUSINESS_REQUIREMENTS.md). This validates input
- * and confirms locally. Wire `onValid` to a real provider (e.g. Mailchimp /
- * a route handler) when the business supplies one.
+ * NOTE: No mailing-list backend is defined in the source docs. This validates
+ * input and confirms locally. Wire `onValid` to a real provider when ready.
  */
 export function NewsletterForm({ className }: { className?: string }) {
   const [done, setDone] = React.useState(false);
@@ -23,8 +21,11 @@ export function NewsletterForm({ className }: { className?: string }) {
 
   if (done) {
     return (
-      <p className={cn('flex items-center gap-2 text-sm text-[var(--color-success)]', className)}>
-        <Check size={16} /> Thank you — we’ll be in touch.
+      <p
+        className={cn('flex items-center gap-2 text-sm', className)}
+        style={{ color: 'var(--color-success)' }}
+      >
+        <Check size={16} /> Thank you — we&apos;ll be in touch.
       </p>
     );
   }
@@ -35,12 +36,21 @@ export function NewsletterForm({ className }: { className?: string }) {
       className={cn('flex flex-col gap-2', className)}
       noValidate
     >
-      <div className="flex overflow-hidden rounded-[var(--radius-input)] border border-line bg-canvas focus-within:border-ink">
+      <div
+        className="flex overflow-hidden rounded-[var(--radius-input)] transition-colors focus-within:border-[var(--color-accent)]"
+        style={{
+          border: '1px solid var(--color-border)',
+          background: 'var(--color-card)',
+        }}
+      >
         <input
           type="email"
           placeholder="Your email address"
           aria-label="Email address"
-          className="h-11 w-full bg-transparent px-4 text-sm text-ink-soft outline-none placeholder:text-muted/70"
+          className="h-11 w-full bg-transparent px-4 text-sm outline-none"
+          style={{
+            color: 'var(--color-text-primary)',
+          }}
           {...register('email', {
             required: 'Email is required',
             pattern: { value: /^[^\s@]+@[^\s@]+\.[^\s@]+$/, message: 'Enter a valid email' },
@@ -48,14 +58,30 @@ export function NewsletterForm({ className }: { className?: string }) {
         />
         <button
           type="submit"
-          className="flex h-11 w-12 shrink-0 items-center justify-center bg-ink text-white transition-colors hover:bg-[var(--color-gold-deep)]"
+          className="flex h-11 w-12 shrink-0 items-center justify-center transition-colors"
+          style={{
+            background: 'var(--color-accent)',
+            color: 'var(--color-background)',
+          }}
+          onMouseEnter={(e) => {
+            (e.currentTarget as HTMLButtonElement).style.background =
+              'var(--color-accent-hover)';
+          }}
+          onMouseLeave={(e) => {
+            (e.currentTarget as HTMLButtonElement).style.background =
+              'var(--color-accent)';
+          }}
           aria-label="Subscribe"
         >
           <ArrowRight size={18} />
         </button>
       </div>
       {errors.email && (
-        <span className="text-xs text-[var(--color-error)]" role="alert">
+        <span
+          className="text-xs"
+          style={{ color: 'var(--color-error)' }}
+          role="alert"
+        >
           {errors.email.message}
         </span>
       )}

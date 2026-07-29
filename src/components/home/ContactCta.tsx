@@ -6,29 +6,63 @@ import { contact, mailLink, waLink } from '@/data/site';
 import { WhatsAppIcon, FacebookIcon } from '@/components/icons/SocialIcons';
 import { Mail } from 'lucide-react';
 
-/** Final conversion band — every homepage should end with a clear CTA. */
+/**
+ * ContactCta — final conversion section.
+ * Minimal, editorial. Centered layout with 3 clean contact actions.
+ */
 export function ContactCta() {
   return (
-    <Section className="bg-canvas">
+    <Section style={{ background: 'var(--color-surface)' }}>
       <Container size="narrow">
         <Reveal className="text-center">
-          <span className="eyebrow mb-4 block">Here to help</span>
-          <h2 className="font-display text-3xl text-ink sm:text-4xl">
+          <span className="eyebrow mb-5 block">Here to help</span>
+          <h2
+            className="font-display text-4xl font-semibold leading-tight sm:text-5xl"
+            style={{ color: 'var(--color-text-primary)' }}
+          >
             Not sure which fragrance is right for you?
           </h2>
-          <p className="mx-auto mt-4 max-w-lg text-muted">
-            Tell us what you love and the occasion — our team will recommend the perfect scent and
-            help you place your order.
+
+          <div
+            className="mx-auto my-8 h-px w-12"
+            style={{ background: 'var(--color-accent)', opacity: 0.4 }}
+            aria-hidden="true"
+          />
+
+          <p
+            className="mx-auto max-w-lg text-lg leading-[1.8]"
+            style={{ color: 'var(--color-text-secondary)' }}
+          >
+            Tell us what you love and the occasion — our team will recommend the perfect
+            scent and help you place your order.
           </p>
-          <div className="mt-8 flex flex-wrap justify-center gap-3">
-            <ButtonLink href={waLink} external variant="primary" size="lg">
+
+          <div className="mt-10 flex flex-wrap justify-center gap-3">
+            <ButtonLink
+              href={waLink}
+              external
+              variant="gold"
+              size="lg"
+              className="rounded-[14px] font-semibold"
+            >
               <WhatsAppIcon size={18} /> Chat on WhatsApp
             </ButtonLink>
-            <ButtonLink href={contact.facebook} external variant="secondary" size="lg">
+            <ButtonLink
+              href={contact.facebook}
+              external
+              variant="outline"
+              size="lg"
+              className="rounded-[14px] border-[var(--color-border)] text-[var(--color-text-secondary)] hover:border-[var(--color-accent)] hover:text-[var(--color-text-primary)]"
+            >
               <FacebookIcon size={18} /> Facebook
             </ButtonLink>
-            <ButtonLink href={mailLink} variant="secondary" size="lg">
-              <Mail size={18} /> Email
+            <ButtonLink
+              href={mailLink}
+              variant="outline"
+              size="lg"
+              className="rounded-[14px] border-[var(--color-border)] text-[var(--color-text-secondary)] hover:border-[var(--color-accent)] hover:text-[var(--color-text-primary)]"
+            >
+              <Mail size={18} /> Email Us
             </ButtonLink>
           </div>
         </Reveal>

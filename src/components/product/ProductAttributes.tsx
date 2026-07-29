@@ -1,5 +1,5 @@
 import type { Product } from '@/data/products';
-import { Droplets, Wind, Sun, CalendarClock, User } from 'lucide-react';
+import { CalendarClock, Droplets, Sun, User, Wind } from 'lucide-react';
 
 /**
  * Fragrance profile — notes pyramid + attribute grid.
@@ -26,41 +26,45 @@ export function ProductAttributes({ product }: { product: Product }) {
   ].filter((a) => a.value);
 
   return (
-    <div className="flex flex-col gap-10">
+    <div className='flex flex-col gap-10'>
       {/* Notes */}
       {hasNotes ? (
         <div>
-          <h2 className="font-display text-2xl text-ink">Fragrance Notes</h2>
-          <span className="gold-rule my-4 block w-12" aria-hidden="true" />
-          <dl className="grid gap-4 sm:grid-cols-3">
-            <NoteColumn title="Top" notes={product.topNotes} />
-            <NoteColumn title="Heart" notes={product.middleNotes} />
-            <NoteColumn title="Base" notes={product.baseNotes} />
+          <h2 className='font-display text-2xl text-ink'>Fragrance Notes</h2>
+          <span className='gold-rule my-4 block w-12' aria-hidden='true' />
+          <dl className='grid gap-4 sm:grid-cols-3'>
+            <NoteColumn title='Top' notes={product.topNotes} />
+            <NoteColumn title='Heart' notes={product.middleNotes} />
+            <NoteColumn title='Base' notes={product.baseNotes} />
           </dl>
         </div>
       ) : (
-        <p className="rounded-[var(--radius-card)] border border-dashed border-line bg-surface p-5 text-sm text-muted">
-          Detailed fragrance notes for this scent are being added. Message us on WhatsApp for a full
-          description and recommendations.
+        <p
+          className='border border-dashed border-line bg-surface p-5 text-sm text-muted'
+          style={{ borderRadius: 'var(--radius-card)' }}
+        >
+          Detailed fragrance notes for this scent are being added. Message us on WhatsApp for a full description and
+          recommendations.
         </p>
       )}
 
       {/* Attributes */}
       {attributes.length > 0 && (
         <div>
-          <h2 className="font-display text-2xl text-ink">Details</h2>
-          <span className="gold-rule my-4 block w-12" aria-hidden="true" />
-          <dl className="grid grid-cols-2 gap-4 sm:grid-cols-3">
+          <h2 className='font-display text-2xl text-ink'>Details</h2>
+          <span className='gold-rule my-4 block w-12' aria-hidden='true' />
+          <dl className='grid grid-cols-2 gap-4 sm:grid-cols-3'>
             {attributes.map((attr) => (
               <div
                 key={attr.label}
-                className="rounded-[var(--radius-card)] border border-line bg-canvas p-4"
+                className='border border-line bg-surface/80 p-4'
+                style={{ borderRadius: 'var(--radius-card)', boxShadow: 'var(--shadow-card)' }}
               >
-                <dt className="flex items-center gap-2 text-xs uppercase tracking-[0.12em] text-muted">
-                  <span className="text-[var(--color-gold-deep)]">{attr.icon}</span>
+                <dt className='flex items-center gap-2 text-xs uppercase tracking-[0.12em] text-muted'>
+                  <span style={{ color: 'var(--color-gold-deep)' }}>{attr.icon}</span>
                   {attr.label}
                 </dt>
-                <dd className="mt-1.5 font-medium text-ink">{attr.value}</dd>
+                <dd className='mt-1.5 font-medium text-ink'>{attr.value}</dd>
               </div>
             ))}
           </dl>
@@ -72,10 +76,15 @@ export function ProductAttributes({ product }: { product: Product }) {
 
 function NoteColumn({ title, notes }: { title: string; notes?: string[] }) {
   return (
-    <div className="rounded-[var(--radius-card)] border border-line bg-canvas p-5 text-center">
-      <dt className="text-xs uppercase tracking-[0.16em] text-[var(--color-gold-deep)]">{title}</dt>
-      <dd className="mt-2 text-sm text-ink-soft">
-        {notes && notes.length > 0 ? notes.join(' · ') : <span className="text-muted">—</span>}
+    <div
+      className='border border-line bg-surface/80 p-5 text-center'
+      style={{ borderRadius: 'var(--radius-card)', boxShadow: 'var(--shadow-card)' }}
+    >
+      <dt className='text-xs uppercase tracking-[0.16em]' style={{ color: 'var(--color-gold-deep)' }}>
+        {title}
+      </dt>
+      <dd className='mt-2 text-sm text-ink-soft'>
+        {notes && notes.length > 0 ? notes.join(' · ') : <span className='text-muted'>—</span>}
       </dd>
     </div>
   );

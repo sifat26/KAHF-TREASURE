@@ -1,11 +1,12 @@
+import { BreadcrumbJsonLd } from '@/components/seo/JsonLd';
+import { ShopClient } from '@/components/shop/ShopClient';
+import { Breadcrumbs } from '@/components/ui/Breadcrumbs';
+import { Container } from '@/components/ui/Container';
+import { SectionHeader } from '@/components/ui/Section';
+import type { CategorySlug } from '@/data/products';
+import { getAllProducts, priceCeiling, usedFamilies } from '@/lib/products';
 import type { Metadata } from 'next';
 import { Suspense } from 'react';
-import { Container } from '@/components/ui/Container';
-import { Breadcrumbs } from '@/components/ui/Breadcrumbs';
-import { ShopClient } from '@/components/shop/ShopClient';
-import { BreadcrumbJsonLd } from '@/components/seo/JsonLd';
-import { getAllProducts, priceCeiling, usedFamilies } from '@/lib/products';
-import type { CategorySlug } from '@/data/products';
 
 export const metadata: Metadata = {
   title: 'Shop All Fragrances',
@@ -14,44 +15,37 @@ export const metadata: Metadata = {
   alternates: { canonical: '/shop' },
 };
 
-const VALID_CATEGORIES: CategorySlug[] = ['most-wanted', 'new-arrivals', 'oud', 'floral', 'fruit'];
+const VALID_CATEGORIES: CategorySlug[] = ['most-wanted', 'new-arrivals', 'oud', 'floral', 'fruit', 'unique'];
 
-export default async function ShopPage({
-  searchParams,
-}: {
-  searchParams: Promise<{ q?: string; category?: string }>;
-}) {
+export default async function ShopPage({ searchParams }: { searchParams: Promise<{ q?: string; category?: string }> }) {
   const { q, category } = await searchParams;
-  const initialCategory = VALID_CATEGORIES.includes(category as CategorySlug)
-    ? (category as CategorySlug)
-    : undefined;
+  const initialCategory = VALID_CATEGORIES.includes(category as CategorySlug) ? (category as CategorySlug) : undefined;
 
   return (
-    <>
+    <div className='min-h-screen bg-[radial-gradient(circle_at_top,rgba(200,169,106,0.06),transparent_22%),linear-gradient(180deg,var(--color-background)_0%,#11110f_100%)] pt-24 pb-16 text-white'>
       <BreadcrumbJsonLd
         items={[
           { name: 'Home', url: '/' },
           { name: 'Shop', url: '/shop' },
         ]}
       />
-      <Container className="py-10 lg:py-14">
+      <Container className='py-6 lg:py-10'>
         <Breadcrumbs
           items={[
             { name: 'Home', href: '/' },
             { name: 'Shop', href: '/shop' },
           ]}
-          className="mb-6"
+          className='mb-6 text-xs text-[var(--color-text-secondary)]'
         />
-        <header className="mb-10 max-w-2xl">
-          <span className="eyebrow mb-3 block">The Collection</span>
-          <h1 className="font-display text-4xl text-ink sm:text-5xl">All Fragrances</h1>
-          <p className="mt-4 text-muted">
-            Explore our complete library of premium alcohol-free attar. Use the filters to find your
-            signature scent.
-          </p>
-        </header>
+        <SectionHeader
+          eyebrow='THE FULL COLLECTION'
+          title='All Fragrances'
+          description='Explore our complete library of premium alcohol-free attars. Use the interactive filters to uncover your signature scent.'
+          align='left'
+          className='mb-10 max-w-3xl border-b border-line pb-8'
+        />
 
-        <Suspense fallback={<div className="py-24 text-center text-muted">Loading fragrances…</div>}>
+        <Suspense fallback={<div className='py-24 text-center text-[#c8a96a]'>Loading fragrances…</div>}>
           <ShopClient
             allProducts={getAllProducts()}
             families={usedFamilies()}
@@ -61,6 +55,6 @@ export default async function ShopPage({
           />
         </Suspense>
       </Container>
-    </>
+    </div>
   );
 }
