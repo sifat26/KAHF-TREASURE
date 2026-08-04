@@ -126,7 +126,7 @@ export function ProductCard({ product, className }: { product: Product; classNam
               type='button'
               onClick={() => addItem(product, size)}
               aria-label={`Add ${product.name} to enquiry bag`}
-              className='relative z-10 inline-flex shrink-0 items-center justify-center gap-1 whitespace-nowrap rounded-full bg-[var(--color-gold)] px-2.5 py-1.5 sm:px-3.5 sm:py-2 text-[0.58rem] sm:text-[0.68rem] font-bold uppercase tracking-wider text-[var(--color-background)] shadow-md shadow-[rgba(200,169,106,0.2)] transition-all hover:scale-105 active:scale-95'
+              className='relative z-10 inline-flex shrink-0 items-center justify-center gap-1 whitespace-nowrap rounded-full bg-[var(--color-gold)] px-2.5 py-1.5 sm:px-3.5 sm:py-2 text-[0.58rem] sm:text-[0.68rem] font-bold uppercase tracking-wider text-[var(--color-background)] shadow-md shadow-[var(--color-border)] transition-all hover:scale-105 active:scale-95'
             >
               <Plus size={12} className='shrink-0 sm:w-[13px] sm:h-[13px]' />
               <span>ADD TO BAG</span>

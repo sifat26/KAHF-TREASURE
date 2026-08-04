@@ -22,7 +22,7 @@ export default async function ShopPage({ searchParams }: { searchParams: Promise
   const initialCategory = VALID_CATEGORIES.includes(category as CategorySlug) ? (category as CategorySlug) : undefined;
 
   return (
-    <div className='min-h-screen bg-[radial-gradient(circle_at_top,rgba(200,169,106,0.06),transparent_22%),linear-gradient(180deg,var(--color-background)_0%,#11110f_100%)] pt-24 pb-16 text-white'>
+    <div className='min-h-screen bg-[radial-gradient(circle_at_top,var(--color-accent-tint),transparent_22%),linear-gradient(180deg,var(--color-background)_0%,var(--color-surface)_100%)] pt-24 pb-16 text-[var(--color-text-primary)]'>
       <BreadcrumbJsonLd
         items={[
           { name: 'Home', url: '/' },
@@ -45,7 +45,7 @@ export default async function ShopPage({ searchParams }: { searchParams: Promise
           className='mb-10 max-w-3xl border-b border-line pb-8'
         />
 
-        <Suspense fallback={<div className='py-24 text-center text-[#c8a96a]'>Loading fragrances…</div>}>
+        <Suspense fallback={<div className='py-24 text-center text-[var(--color-accent)]'>Loading fragrances…</div>}>
           <ShopClient
             allProducts={getAllProducts()}
             families={usedFamilies()}

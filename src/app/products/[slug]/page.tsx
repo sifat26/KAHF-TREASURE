@@ -77,7 +77,7 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
       <ProductJsonLd product={product} />
       <BreadcrumbJsonLd items={crumbs.map((c) => ({ name: c.name, url: c.href }))} />
 
-      <div className='bg-[radial-gradient(circle_at_top,rgba(200,169,106,0.08),transparent_24%),linear-gradient(180deg,var(--color-background)_0%,#10100e_100%)]'>
+      <div className='bg-[radial-gradient(circle_at_top,var(--color-accent-tint),transparent_24%),linear-gradient(180deg,var(--color-background)_0%,var(--color-surface)_100%)]'>
         <Container className='py-8 lg:py-12'>
           <Breadcrumbs items={crumbs} className='mb-8' />
 

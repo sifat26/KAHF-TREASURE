@@ -81,7 +81,7 @@ export function ProductPurchase({ product }: { product: Product }) {
                 className={cn(
                   'relative flex flex-col items-center border px-4 py-2.5 pr-8 text-left transition-all duration-300',
                   size === s
-                    ? 'border-line text-ink shadow-[0_0_0_1px_rgba(200,169,106,0.12)]'
+                    ? 'border-line text-ink shadow-[0_0_0_1px_var(--color-accent-tint)]'
                     : 'border-line bg-transparent text-ink-soft',
                 )}
                 style={{

@@ -1,79 +1,72 @@
 @import 'tailwindcss';
 
 /*
-  KAHF Treasure — Design System v2.0
+  KAHF Treasure — Design System v3.0
   Source of truth: docs/BRAND_GUIDELINES.md
-  Dark luxury aesthetic: near-black surfaces, warm text, soft gold accent, generous whitespace.
+  Warm luxury aesthetic in two themes: a near-black "dark" mode and a warm
+  ivory "light" mode, both carrying the same gold accent identity.
 
   TOKEN ARCHITECTURE
   ─────────────────────────────────────────────────────────────────────────────
-  Layer 1 — Primitive values        Raw hex / rgba values, never used directly
-  Layer 2 — Semantic tokens         Role-named: --color-background, --color-text-primary …
-  Layer 3 — Legacy aliases          Old names (ink, canvas, line …) mapped to semantic
-                                    tokens so existing component classes continue to work
-                                    without edits.
+  Layer 1 — Theme values (--t-*)   Raw per-theme hex/rgba. Defined ONCE per
+                                   theme in the :root / [data-theme] blocks
+                                   below. Never referenced by components.
+  Layer 2 — Semantic tokens        Role-named (--color-background, --color-accent
+                                   …). Declared in @theme as indirections onto
+                                   Layer 1, so a single data-theme swap on <html>
+                                   re-points every one of them at once.
+  Layer 3 — Legacy aliases         Old names (ink, canvas, line, gold …) mapped
+                                   onto semantic tokens so existing component
+                                   classes keep working without edits.
   ─────────────────────────────────────────────────────────────────────────────
+  ADDING A COLOR: add a --t-* pair to BOTH theme blocks, then expose it as a
+  semantic token in @theme. Never put a raw hex in a component.
 */
 
 @theme {
   /* ═══════════════════════════════════════════════════════
-     LAYER 1 — PRIMITIVE PALETTE  (BRAND_GUIDELINES.md)
-     Never reference these in components; use semantic tokens.
-     ═══════════════════════════════════════════════════════ */
-
-  /* Backgrounds */
-  --primitive-bg-base:        #0F0F0D;
-  --primitive-bg-surface:     #1B1A17;
-  --primitive-bg-surface-2:   #222118;
-  --primitive-bg-card:        #1C1B18;
-
-  /* Text */
-  --primitive-text-primary:   #F6F3EC;
-  --primitive-text-secondary: #B8B1A5;
-  --primitive-text-muted:     #8D8578;
-
-  /* Gold */
-  --primitive-gold:           #C8A96A;
-  --primitive-gold-hover:     #B89245;
-  --primitive-gold-tint:      rgba(200, 169, 106, 0.10);
-
-  /* Border */
-  --primitive-border:         rgba(200, 169, 106, 0.18);
-
-  /* Status */
-  --primitive-success:        #22c55e;
-  --primitive-warning:        #f59e0b;
-  --primitive-error:          #ef4444;
-
-
-  /* ═══════════════════════════════════════════════════════
      LAYER 2 — SEMANTIC TOKENS
-     These are the canonical names. Use these in new code.
+     Each is an indirection onto a --t-* value that is
+     redefined per theme. These are the canonical names.
      ═══════════════════════════════════════════════════════ */
 
   /* — Layout surfaces — */
-  --color-background:   #0F0F0D;          /* Page background */
-  --color-surface:      #1B1A17;          /* Raised surface (nav, footer, sheet) */
-  --color-surface-2:    #222118;          /* Deeper raised surface (alt sections) */
-  --color-card:         #1C1B18;          /* Product / content cards */
+  --color-background:      var(--t-background);       /* Page background */
+  --color-background-deep: var(--t-background-deep);  /* Nav / recessed chrome */
+  --color-surface:         var(--t-surface);          /* Raised surface (footer, sheet) */
+  --color-surface-2:       var(--t-surface-2);        /* Deeper raised surface (alt sections) */
+  --color-card:            var(--t-card);             /* Product / content cards */
 
   /* — Text — */
-  --color-text-primary:   #F6F3EC;        /* Body copy, headings */
-  --color-text-secondary: #B8B1A5;        /* Supporting copy, labels */
-  --color-muted:          #8D8578;        /* Placeholders, meta, captions */
+  --color-text-primary:   var(--t-text-primary);   /* Body copy, headings */
+  --color-text-secondary: var(--t-text-secondary); /* Supporting copy, labels */
+  --color-text-tertiary:  var(--t-text-tertiary);  /* Menu items, low-emphasis UI */
+  --color-muted:          var(--t-muted);          /* Placeholders, meta, captions */
+  /* Text that sits ON a gold fill (buttons, badges). */
+  --color-on-accent:      var(--t-on-accent);
 
   /* — Accent (gold) — */
-  --color-accent:         #C8A96A;        /* Primary gold accent */
-  --color-accent-hover:   #B89245;        /* Gold on hover / pressed */
-  --color-accent-tint:    rgba(200, 169, 106, 0.10); /* Subtle gold bg fill */
+  --color-accent:         var(--t-accent);         /* Primary gold accent */
+  --color-accent-hover:   var(--t-accent-hover);   /* Gold on hover / pressed */
+  --color-accent-strong:  var(--t-accent-strong);  /* Higher-emphasis gold (logo, active nav) */
+  --color-accent-tint:    var(--t-accent-tint);    /* Subtle gold bg fill */
 
   /* — Border — */
-  --color-border:         rgba(200, 169, 106, 0.18); /* Thin gold-tinted border */
+  --color-border:        var(--t-border);        /* Thin gold-tinted border */
+  --color-border-strong: var(--t-border-strong); /* Emphasised / focused border */
 
   /* — Status — */
-  --color-success:  #22c55e;
-  --color-warning:  #f59e0b;
-  --color-error:    #ef4444;
+  --color-success:  var(--t-success);
+  --color-warning:  var(--t-warning);
+  --color-error:    var(--t-error);
+
+  /* — Brand fixed (identical in both themes) — */
+  --color-whatsapp: #25D366;
+
+  /* — Collection seal edge colours (decorative, per fragrance family) — */
+  --color-seal-floral-edge: var(--t-seal-floral-edge);
+  --color-seal-fruity-edge: var(--t-seal-fruity-edge);
+  --color-seal-fresh-edge:  var(--t-seal-fresh-edge);
 
 
   /* ═══════════════════════════════════════════════════════
@@ -112,10 +105,10 @@
   --radius-card:  16px;
   --radius-image: 18px;
 
-  /* ── Soft shadows (warm-dark: no white bloom) ── */
-  --shadow-card:       0 1px 3px rgba(0, 0, 0, 0.30), 0 6px 20px rgba(0, 0, 0, 0.25);
-  --shadow-card-hover: 0 2px 8px rgba(0, 0, 0, 0.40), 0 16px 40px rgba(0, 0, 0, 0.35);
-  --shadow-soft:       0 10px 40px rgba(0, 0, 0, 0.35);
+  /* ── Shadows (per-theme: black in dark, warm brown in light) ── */
+  --shadow-card:       var(--t-shadow-card);
+  --shadow-card-hover: var(--t-shadow-card-hover);
+  --shadow-soft:       var(--t-shadow-soft);
 
   /* ── Motion (150–300 ms per BRAND_GUIDELINES.md) ── */
   --ease-lux: cubic-bezier(0.22, 1, 0.36, 1);
@@ -126,10 +119,164 @@
 
 
 /* ═══════════════════════════════════════════════════════════════
-   BASE
+   LAYER 1 — THEME VALUES
+
+   DARK is the default and also the explicit [data-theme='dark'].
+   The LIGHT block must stay AFTER the dark one: `:root` and
+   `[data-theme]` have equal specificity, so source order decides.
+
+   These blocks are deliberately unlayered. @theme compiles its
+   `--color-*: var(--t-*)` indirections into `@layer theme` at
+   `:root, :host`; unlayered declarations outrank any layer, so the
+   --t-* values below win and the whole semantic layer re-resolves
+   on <html> the moment data-theme flips.
    ═══════════════════════════════════════════════════════════════ */
-:root {
+:root,
+[data-theme='dark'] {
   color-scheme: dark;
+
+  /* Surfaces */
+  --t-background:      #0F0F0D;
+  --t-background-deep: #090807;
+  --t-surface:         #1B1A17;
+  --t-surface-2:       #222118;
+  --t-card:            #1C1B18;
+
+  /* Text */
+  --t-text-primary:   #F6F3EC;
+  --t-text-secondary: #B8B1A5;
+  --t-text-tertiary:  #D6CDBE;
+  --t-muted:          #8D8578;
+  --t-on-accent:      #0F0F0D;
+
+  /* Gold — on dark, "strong" reads brighter than the base accent */
+  --t-accent:        #C8A96A;
+  --t-accent-hover:  #D4B574;
+  --t-accent-strong: #F5DD9E;
+  --t-accent-tint:   rgba(200, 169, 106, 0.10);
+
+  /* Border */
+  --t-border:        rgba(200, 169, 106, 0.18);
+  --t-border-strong: rgba(200, 169, 106, 0.45);
+
+  /* Status */
+  --t-success: #22c55e;
+  --t-warning: #f59e0b;
+  --t-error:   #ef4444;
+
+  /* Shadows — pure black, no white bloom on dark surfaces */
+  --t-shadow-card:       0 1px 3px rgba(0, 0, 0, 0.30), 0 6px 20px rgba(0, 0, 0, 0.25);
+  --t-shadow-card-hover: 0 2px 8px rgba(0, 0, 0, 0.40), 0 16px 40px rgba(0, 0, 0, 0.35);
+  --t-shadow-soft:       0 10px 40px rgba(0, 0, 0, 0.35);
+
+  /* Scrim over photography — dark theme blends into the page */
+  --t-scrim:        rgba(15, 15, 13, 0.92);
+  --t-scrim-soft:   rgba(15, 15, 13, 0.45);
+  --t-scrim-strong: rgba(9, 8, 7, 0.98);
+  /* Halo behind text laid over photography */
+  --t-text-halo:    rgba(0, 0, 0, 0.85);
+
+  /* Product-bottle plinth: the bottle render is a dark studio shot, so it
+     keeps a dark bed in both themes; light mode just lifts it slightly. */
+  --t-bottle-glow:   rgba(35, 28, 18, 0.95);
+  --t-bottle-bed:    rgba(10, 9, 8, 0.98);
+  --t-bottle-shadow: rgba(0, 0, 0, 0.90);
+
+  /* Hero band. The banner art is a dark studio shot, so the hero keeps a dark
+     bed in BOTH themes — otherwise the scrim fades into ivory and leaves a hard
+     seam at the image edge. In light mode this reads as an editorial dark band. */
+  --t-hero-bed: #0F0F0D;
+
+  /* Floating-button shadow + card sheen (top highlight / bottom shading) */
+  --t-shadow-fab:   rgba(0, 0, 0, 0.35);
+  --t-sheen-top:    rgba(255, 255, 255, 0.04);
+  --t-sheen-bottom: rgba(0, 0, 0, 0.12);
+
+  /* Collection seal gradients (decorative, per fragrance family) */
+  --t-seal-oud:     rgba(200, 169, 106, 0.40), rgba(89, 68, 26, 0.60), rgba(30, 22, 7, 0.90);
+  --t-seal-floral:  rgba(184, 46, 70, 0.60), rgba(102, 18, 32, 0.70), rgba(36, 4, 9, 0.90);
+  --t-seal-fruity:  rgba(200, 90, 32, 0.60), rgba(102, 40, 11, 0.70), rgba(36, 12, 3, 0.90);
+  --t-seal-fresh:   rgba(28, 120, 68, 0.60), rgba(13, 59, 32, 0.70), rgba(3, 20, 10, 0.90);
+  --t-seal-woody:   rgba(154, 110, 66, 0.50), rgba(74, 52, 30, 0.70), rgba(26, 17, 9, 0.90);
+  --t-seal-floral-edge: #e26b80;
+  --t-seal-fruity-edge: #e28850;
+  --t-seal-fresh-edge:  #4ec480;
+
+}
+
+[data-theme='light'] {
+  color-scheme: light;
+
+  /* Surfaces — warm ivory / cream, never pure white */
+  --t-background:      #FBF7EF;
+  --t-background-deep: #FFFDF8;
+  --t-surface:         #F4EEE1;
+  --t-surface-2:       #EDE5D5;
+  --t-card:            #FFFDF8;
+
+  /* Text — warm deep charcoal, never pure black */
+  --t-text-primary:   #1A1611;
+  --t-text-secondary: #554D41;
+  --t-text-tertiary:  #443D33;
+  --t-muted:          #7A7062;
+  --t-on-accent:      #FFFDF8;
+
+  /* Gold — darkened for AA contrast on ivory. "strong" reads DEEPER
+     here, the inverse of dark mode, because emphasis means more
+     contrast against the page in both directions.
+     #8A6A1F on #FBF7EF ≈ 4.9:1 (AA normal text). */
+  --t-accent:        #8A6A1F;
+  --t-accent-hover:  #6E5416;
+  --t-accent-strong: #5C4512;
+  --t-accent-tint:   rgba(138, 106, 31, 0.10);
+
+  /* Border — alpha raised, a 0.18 gold is invisible on ivory */
+  --t-border:        rgba(138, 106, 31, 0.28);
+  --t-border-strong: rgba(138, 106, 31, 0.55);
+
+  /* Status — darkened so they stay legible on a light page */
+  --t-success: #15803d;
+  --t-warning: #b45309;
+  --t-error:   #b91c1c;
+
+  /* Shadows — warm brown at low alpha; black looks like soot on cream */
+  --t-shadow-card:       0 1px 3px rgba(60, 46, 20, 0.08), 0 6px 20px rgba(60, 46, 20, 0.06);
+  --t-shadow-card-hover: 0 2px 8px rgba(60, 46, 20, 0.12), 0 16px 40px rgba(60, 46, 20, 0.10);
+  --t-shadow-soft:       0 10px 40px rgba(60, 46, 20, 0.10);
+
+  /* Scrim over photography. The product/collection imagery is shot on a
+     dark studio background, so it stays a dark "media" surface in light
+     mode too — an intentional editorial contrast, not an oversight.
+     Text over these images therefore stays light in BOTH themes. */
+  --t-scrim:        rgba(23, 19, 13, 0.92);
+  --t-scrim-soft:   rgba(23, 19, 13, 0.45);
+  --t-scrim-strong: rgba(23, 19, 13, 0.98);
+  --t-text-halo:    rgba(20, 16, 12, 0.55);
+
+  /* Bottle plinth. Like the hero, the bottle render is a dark studio shot with
+     no alpha, so the plinth stays dark in light mode too — a taupe bed would
+     leave a visible rectangle around the product. Lifted slightly vs. dark. */
+  --t-bottle-glow:   rgba(48, 40, 27, 0.95);
+  --t-bottle-bed:    rgba(23, 19, 13, 0.98);
+  --t-bottle-shadow: rgba(60, 46, 20, 0.35);
+
+  /* Warm brown rather than black, so floats and sheens don't look sooty. */
+  --t-hero-bed: #17130D;
+  --t-shadow-fab:   rgba(60, 46, 20, 0.22);
+  --t-sheen-top:    rgba(255, 255, 255, 0.55);
+  --t-sheen-bottom: rgba(60, 46, 20, 0.07);
+
+  /* Seal gradients — same hues, lifted so they read on a light card */
+  --t-seal-oud:     rgba(200, 169, 106, 0.55), rgba(138, 106, 31, 0.70), rgba(89, 68, 26, 0.92);
+  --t-seal-floral:  rgba(214, 76, 100, 0.65), rgba(150, 30, 50, 0.78), rgba(102, 18, 32, 0.92);
+  --t-seal-fruity:  rgba(230, 120, 55, 0.65), rgba(160, 62, 20, 0.78), rgba(102, 40, 11, 0.92);
+  --t-seal-fresh:   rgba(46, 150, 90, 0.65), rgba(22, 96, 52, 0.78), rgba(13, 59, 32, 0.92);
+  --t-seal-woody:   rgba(178, 132, 84, 0.60), rgba(120, 86, 50, 0.78), rgba(74, 52, 30, 0.92);
+  /* Edges darkened so the emblem outline still reads on an ivory card. */
+  --t-seal-floral-edge: #b02a44;
+  --t-seal-fruity-edge: #b04e18;
+  --t-seal-fresh-edge:  #1d8a52;
+
 }
 
 * {
@@ -154,11 +301,12 @@ body {
   text-rendering: optimizeLegibility;
   overflow-x: hidden;
   max-width: 100vw;
+  transition: background-color 200ms var(--ease-lux), color 200ms var(--ease-lux);
 }
 
 ::selection {
   background: var(--color-accent);
-  color: var(--color-background);
+  color: var(--color-on-accent);
 }
 
 /* Accessible, on-brand focus ring for keyboard users */
@@ -218,7 +366,7 @@ body {
   background: var(--color-surface);
 }
 ::-webkit-scrollbar-thumb {
-  background: rgba(200, 169, 106, 0.25);
+  background: var(--color-border-strong);
   border: 2px solid var(--color-surface);
   border-radius: 9999px;
 }
@@ -253,8 +401,65 @@ body {
 /* Warm radial glow for hero / featured areas — no heavy gradient */
 .lux-vignette {
   background:
-    radial-gradient(ellipse 80% 60% at 50% 0%, rgba(200, 169, 106, 0.07), transparent 70%),
+    radial-gradient(ellipse 80% 60% at 50% 0%, var(--color-accent-tint), transparent 70%),
     var(--color-background);
+}
+
+/* ── Media surfaces ──────────────────────────────────────────────
+   The product & collection photography is shot on a dark studio
+   background. Those images stay dark in BOTH themes (an editorial
+   choice), so anything layered over them keeps light-on-dark
+   treatment regardless of the active theme. Use these helpers
+   instead of hardcoding rgba scrims in components.
+   ──────────────────────────────────────────────────────────────── */
+
+/* Text placed on top of photography. */
+.on-media {
+  color: #F6F3EC;
+}
+.on-media-soft {
+  color: #D6CDBE;
+}
+/* Hover brightening for text over photography. A plain class rather than a
+   Tailwind `hover:` variant, which cannot be generated for custom utilities. */
+.on-media-hover:hover {
+  color: #F6F3EC;
+}
+
+/* Legibility halo for text over photography — replaces the
+   hand-rolled drop-shadow-[0_2px_12px_rgba(0,0,0,0.9)] pattern. */
+.media-halo {
+  text-shadow: 0 2px 12px var(--t-text-halo);
+}
+.media-halo-sm {
+  text-shadow: 0 1px 6px var(--t-text-halo);
+}
+
+/* Bottom-up scrim so titles stay readable over an image. */
+.media-scrim {
+  background: linear-gradient(
+    to top,
+    var(--color-background) 0%,
+    var(--t-scrim-soft) 55%,
+    var(--t-scrim-soft) 100%
+  );
+}
+
+/* Collection seal emblem gradients (decorative, per fragrance family). */
+.seal-oud {
+  background-image: linear-gradient(to bottom right, var(--t-seal-oud));
+}
+.seal-floral {
+  background-image: linear-gradient(to bottom right, var(--t-seal-floral));
+}
+.seal-fruity {
+  background-image: linear-gradient(to bottom right, var(--t-seal-fruity));
+}
+.seal-fresh {
+  background-image: linear-gradient(to bottom right, var(--t-seal-fresh));
+}
+.seal-woody {
+  background-image: linear-gradient(to bottom right, var(--t-seal-woody));
 }
 
 /* Hide scrollbar for horizontal rails while keeping scroll */

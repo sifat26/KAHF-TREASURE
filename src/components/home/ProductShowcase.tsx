@@ -58,7 +58,7 @@ export function ProductShowcase({
   if (!products.length) return null;
 
   return (
-    <section className='bg-[var(--color-background)] py-16 text-white sm:py-24'>
+    <section className='bg-[var(--color-background)] py-16 text-[var(--color-text-primary)] sm:py-24'>
       <Container>
         <Reveal>
           <div className='mb-10 flex flex-wrap items-end justify-between gap-4 border-b border-[var(--color-border)] pb-6'>
@@ -68,7 +68,7 @@ export function ProductShowcase({
                   {eyebrow}
                 </span>
               )}
-              <h2 className='font-serif text-3xl sm:text-4xl md:text-5xl font-bold tracking-tight text-white'>
+              <h2 className='font-serif text-3xl sm:text-4xl md:text-5xl font-bold tracking-tight text-[var(--color-text-primary)]'>
                 {title}
               </h2>
               {description && (
@@ -119,7 +119,7 @@ export function ProductShowcase({
               type='button'
               onClick={() => scroll('left')}
               disabled={!canLeft}
-              className='flex h-9 w-9 items-center justify-center rounded-full border border-[#c8a96a]/30 text-[#c8a96a] disabled:opacity-30 disabled:pointer-events-none hover:bg-[#c8a96a]/15 transition-all'
+              className='flex h-9 w-9 items-center justify-center rounded-full border border-[var(--color-accent)]/30 text-[var(--color-accent)] disabled:opacity-30 disabled:pointer-events-none hover:bg-[var(--color-accent)]/15 transition-all'
               aria-label='Scroll left'
             >
               <ChevronLeft size={18} />
@@ -128,7 +128,7 @@ export function ProductShowcase({
               type='button'
               onClick={() => scroll('right')}
               disabled={!canRight}
-              className='flex h-9 w-9 items-center justify-center rounded-full border border-[#c8a96a]/30 text-[#c8a96a] disabled:opacity-30 disabled:pointer-events-none hover:bg-[#c8a96a]/15 transition-all'
+              className='flex h-9 w-9 items-center justify-center rounded-full border border-[var(--color-accent)]/30 text-[var(--color-accent)] disabled:opacity-30 disabled:pointer-events-none hover:bg-[var(--color-accent)]/15 transition-all'
               aria-label='Scroll right'
             >
               <ChevronRight size={18} />

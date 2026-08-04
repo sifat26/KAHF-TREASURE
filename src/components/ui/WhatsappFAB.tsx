@@ -11,8 +11,8 @@ export function WhatsappFAB() {
       aria-label="Chat with us on WhatsApp"
       className="fixed bottom-6 right-6 z-40 flex h-14 w-14 items-center justify-center rounded-full text-white transition-transform duration-300 ease-[var(--ease-lux)] hover:scale-105"
       style={{
-        background: '#25D366',
-        boxShadow: '0 4px 20px rgba(0,0,0,0.35)',
+        background: 'var(--color-whatsapp)',
+        boxShadow: '0 4px 20px var(--t-shadow-fab)',
       }}
     >
       <WhatsAppIcon size={28} />

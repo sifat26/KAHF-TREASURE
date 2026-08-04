@@ -6,6 +6,7 @@ import { EnquiryBagProvider } from '@/components/bag/EnquiryBagProvider';
 import { EnquiryDrawer } from '@/components/bag/EnquiryDrawer';
 import { Navbar } from '@/components/layout/Navbar';
 import { Footer } from '@/components/layout/Footer';
+import { ThemeProvider, themeInitScript } from '@/components/theme/ThemeProvider';
 import { WhatsappFAB } from '@/components/ui/WhatsappFAB';
 import { OrganizationJsonLd } from '@/components/seo/JsonLd';
 import './globals.css';
@@ -81,34 +82,43 @@ export const metadata: Metadata = {
 };
 
 export const viewport: Viewport = {
-  themeColor: '#0F0F0D',
-  colorScheme: 'dark',
+  // Literal colours: the meta tag cannot resolve CSS variables. ThemeProvider
+  // rewrites this at runtime when the visitor toggles the theme.
+  themeColor: [
+    { media: '(prefers-color-scheme: dark)', color: '#0F0F0D' },
+    { media: '(prefers-color-scheme: light)', color: '#FBF7EF' },
+  ],
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html
-      lang="en"
+      lang="bn"
       suppressHydrationWarning
       className={cn(inter.variable, playfair.variable, cormorant.variable, notoBengali.variable)}
     >
+      <head>
+        <script dangerouslySetInnerHTML={{ __html: themeInitScript }} />
+      </head>
       <body className="min-h-dvh bg-canvas antialiased">
         <OrganizationJsonLd />
         <a
           href="#main"
-          className="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-[100] focus:rounded-lg focus:bg-ink focus:px-4 focus:py-2 focus:text-sm focus:text-white"
+          className="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-[100] focus:rounded-lg focus:bg-[var(--color-accent)] focus:px-4 focus:py-2 focus:text-sm focus:text-[var(--color-on-accent)]"
         >
-          Skip to content
+          মূল অংশে যান
         </a>
-        <EnquiryBagProvider>
-          <Navbar />
-          <main id="main" className="pt-[76px]">
-            {children}
-          </main>
-          <Footer />
-          <EnquiryDrawer />
-          <WhatsappFAB />
-        </EnquiryBagProvider>
+        <ThemeProvider>
+          <EnquiryBagProvider>
+            <Navbar />
+            <main id="main" className="pt-[76px]">
+              {children}
+            </main>
+            <Footer />
+            <EnquiryDrawer />
+            <WhatsappFAB />
+          </EnquiryBagProvider>
+        </ThemeProvider>
       </body>
     </html>
   );

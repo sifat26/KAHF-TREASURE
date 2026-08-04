@@ -21,11 +21,11 @@ export function ProductGallery({ name, family }: { name: string; family?: Fragra
     <div className='flex flex-col gap-4'>
       {/* Main view */}
       <div
-        className='relative overflow-hidden rounded-[var(--radius-image)] border border-line bg-[radial-gradient(circle_at_top,rgba(200,169,106,0.08),transparent_24%),var(--color-canvas)] shadow-[var(--shadow-card)]'
+        className='relative overflow-hidden rounded-[var(--radius-image)] border border-line bg-[radial-gradient(circle_at_top,var(--color-accent-tint),transparent_24%),var(--color-canvas)] shadow-[var(--shadow-card)]'
         onMouseEnter={() => setZoom(true)}
         onMouseLeave={() => setZoom(false)}
       >
-        <div className='absolute inset-0 bg-[linear-gradient(180deg,rgba(255,255,255,0.04),transparent_20%,transparent_80%,rgba(0,0,0,0.12))]' />
+        <div className='absolute inset-0 bg-[linear-gradient(180deg,var(--t-sheen-top),transparent_20%,transparent_80%,var(--t-sheen-bottom))]' />
         <ProductBottle
           name={name}
           family={family}
@@ -47,7 +47,7 @@ export function ProductGallery({ name, family }: { name: string; family?: Fragra
             className={cn(
               'relative h-20 w-20 overflow-hidden rounded-[var(--radius-image)] border bg-canvas transition-all duration-300',
               active === i
-                ? 'border-[var(--color-gold)] shadow-[0_8px_24px_rgba(0,0,0,0.25)]'
+                ? 'border-[var(--color-gold)] shadow-[0_8px_24px_var(--t-shadow-fab)]'
                 : 'border-line hover:border-[var(--color-gold)]/50',
             )}
           >

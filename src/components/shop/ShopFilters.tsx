@@ -48,7 +48,7 @@ export function ShopFilters({
     list.includes(value) ? list.filter((v) => v !== value) : [...list, value];
 
   return (
-    <div className={cn('flex flex-col gap-7 p-5 rounded-2xl bg-[#0f0d0b] border border-[#c8a96a]/20 shadow-xl text-white', className)}>
+    <div className={cn('flex flex-col gap-7 p-5 rounded-2xl bg-[var(--color-background)] border border-[var(--color-accent)]/20 shadow-xl text-[var(--color-text-primary)]', className)}>
       <FilterGroup title="Category">
         <div className="flex flex-col gap-2.5">
           {CATEGORY_OPTIONS.map((opt) => (
@@ -87,8 +87,8 @@ export function ShopFilters({
                 className={cn(
                   'rounded-full border px-3 py-1 text-xs capitalize transition-all duration-200',
                   active
-                    ? 'border-[#c8a96a] bg-[#c8a96a] text-[#090807] font-bold shadow-md'
-                    : 'border-[#c8a96a]/30 text-[#b8b0a2] hover:border-[#c8a96a] hover:text-white bg-[#090807]',
+                    ? 'border-[var(--color-accent)] bg-[var(--color-accent)] text-[var(--color-background-deep)] font-bold shadow-md'
+                    : 'border-[var(--color-accent)]/30 text-[var(--color-text-secondary)] hover:border-[var(--color-accent)] hover:text-[var(--color-text-primary)] bg-[var(--color-background-deep)]',
                 )}
               >
                 {fam}
@@ -106,10 +106,10 @@ export function ShopFilters({
           step={50}
           value={state.maxPrice}
           onChange={(e) => onChange({ ...state, maxPrice: Number(e.target.value) })}
-          className="w-full accent-[#c8a96a] cursor-pointer"
+          className="w-full accent-[var(--color-accent)] cursor-pointer"
           aria-label="Maximum starting price"
         />
-        <div className="mt-1 flex justify-between text-xs text-[#b8b0a2]">
+        <div className="mt-1 flex justify-between text-xs text-[var(--color-text-secondary)]">
           <span>{formatPrice(100)}</span>
           <span>{formatPrice(priceCeiling)}</span>
         </div>
@@ -126,7 +126,7 @@ export function ShopFilters({
       <button
         type="button"
         onClick={onReset}
-        className="inline-flex items-center gap-2 text-xs font-semibold text-[#c8a96a] hover:text-[#f5dd9e] transition-colors pt-2 border-t border-[#c8a96a]/15 w-full"
+        className="inline-flex items-center gap-2 text-xs font-semibold text-[var(--color-accent)] hover:text-[var(--color-accent-strong)] transition-colors pt-2 border-t border-[var(--color-accent)]/15 w-full"
       >
         <RotateCcw size={13} /> Reset All Filters
       </button>
@@ -137,7 +137,7 @@ export function ShopFilters({
 function FilterGroup({ title, children }: { title: string; children: React.ReactNode }) {
   return (
     <div>
-      <h3 className="mb-3 text-[0.7rem] font-bold uppercase tracking-[0.2em] text-[#c8a96a]">{title}</h3>
+      <h3 className="mb-3 text-[0.7rem] font-bold uppercase tracking-[0.2em] text-[var(--color-accent)]">{title}</h3>
       {children}
     </div>
   );
@@ -153,16 +153,16 @@ function CheckRow({
   onChange: () => void;
 }) {
   return (
-    <label className="flex cursor-pointer items-center gap-3 text-xs sm:text-sm text-[#b8b0a2] hover:text-white transition-colors">
+    <label className="flex cursor-pointer items-center gap-3 text-xs sm:text-sm text-[var(--color-text-secondary)] hover:text-[var(--color-text-primary)] transition-colors">
       <span
         className={cn(
           'flex h-4 w-4 items-center justify-center rounded border transition-all duration-200',
-          checked ? 'border-[#c8a96a] bg-[#c8a96a] text-[#090807]' : 'border-[#c8a96a]/40 bg-[#090807]',
+          checked ? 'border-[var(--color-accent)] bg-[var(--color-accent)] text-[var(--color-background-deep)]' : 'border-[var(--color-accent)]/40 bg-[var(--color-background-deep)]',
         )}
       >
         {checked && (
           <svg width="10" height="10" viewBox="0 0 12 12" fill="none" aria-hidden="true">
-            <path d="M2 6l3 3 5-6" stroke="#090807" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" />
+            <path d="M2 6l3 3 5-6" stroke="var(--color-background-deep)" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" />
           </svg>
         )}
       </span>

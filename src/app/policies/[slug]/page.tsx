@@ -68,7 +68,7 @@ export default async function PolicyPage({
                   isPlaceholder(para) ? (
                     <p
                       key={i}
-                      className="rounded-[var(--radius-input)] border border-dashed border-[var(--color-warning)]/40 bg-[var(--color-warning)]/5 px-4 py-3 text-sm text-[#8a5a00]"
+                      className="rounded-[var(--radius-input)] border border-dashed border-[var(--color-warning)]/40 bg-[var(--color-warning)]/5 px-4 py-3 text-sm text-[var(--color-accent-hover)]"
                     >
                       {para}
                     </p>

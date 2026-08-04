@@ -64,7 +64,7 @@ export function SearchOverlay({ open, onClose }: { open: boolean; onClose: () =>
           {/* Backdrop */}
           <div
             className="absolute inset-0"
-            style={{ background: 'rgba(0,0,0,0.7)', backdropFilter: 'blur(4px)' }}
+            style={{ background: 'var(--t-scrim)', backdropFilter: 'blur(4px)' }}
             onClick={onClose}
           />
 

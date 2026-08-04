@@ -13,7 +13,7 @@ export const metadata: Metadata = {
 
 export default function FavoritesPage() {
   return (
-    <div className='min-h-screen bg-[radial-gradient(circle_at_top,rgba(200,169,106,0.06),transparent_22%),linear-gradient(180deg,var(--color-background)_0%,#11110f_100%)] pt-24 pb-16 text-white'>
+    <div className='min-h-screen bg-[radial-gradient(circle_at_top,var(--color-accent-tint),transparent_22%),linear-gradient(180deg,var(--color-background)_0%,var(--color-surface)_100%)] pt-24 pb-16 text-[var(--color-text-primary)]'>
       <BreadcrumbJsonLd
         items={[
           { name: 'Home', url: '/' },

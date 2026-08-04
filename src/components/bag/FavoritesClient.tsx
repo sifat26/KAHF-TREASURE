@@ -9,13 +9,20 @@ import { cn } from '@/lib/utils';
 import Link from 'next/link';
 import * as React from 'react';
 
+/**
+ * "Have we hydrated yet?" as an external store. The wishlist lives in
+ * localStorage, so the server render cannot know it; gating on this keeps the
+ * first client render identical to the server's without a setState-in-effect.
+ */
+const neverChanges = () => () => {};
+
 export function FavoritesClient({ allProducts }: { allProducts: Product[] }) {
   const { wishlist } = useEnquiryBag();
-  const [mounted, setMounted] = React.useState(false);
-
-  React.useEffect(() => {
-    setMounted(true);
-  }, []);
+  const mounted = React.useSyncExternalStore(
+    neverChanges,
+    () => true,
+    () => false,
+  );
 
   const favorites = mounted ? allProducts.filter((product) => wishlist.includes(product.slug)) : [];
 

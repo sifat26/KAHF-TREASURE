@@ -1,48 +1,16 @@
 import { Container } from '@/components/ui/Container';
+import { getCollectionMedia } from '@/lib/collectionMedia';
 import { Reveal, RevealGroup, RevealItem } from '@/components/ui/Reveal';
 import { Section } from '@/components/ui/Section';
 import { collections } from '@/data/collections';
 import Image from 'next/image';
 import Link from 'next/link';
 
-/** Mapping of real photorealistic background images & seal badge colors */
-const collectionMedia: Record<string, { bgImage: string; sealBg: string; sealBorder: string }> = {
-  oud: {
-    bgImage: '/images/collection-oud.png',
-    sealBg: 'from-[#c8a96a]/40 via-[#59441a]/60 to-[#1e1607]/90',
-    sealBorder: 'border-[#c8a96a]/70',
-  },
-  floral: {
-    bgImage: '/images/collection-floral.png',
-    sealBg: 'from-[#b82e46]/60 via-[#661220]/70 to-[#240409]/90',
-    sealBorder: 'border-[#e26b80]/70',
-  },
-  fruity: {
-    bgImage: '/images/collection-fruity.png',
-    sealBg: 'from-[#c85a20]/60 via-[#66280b]/70 to-[#240c03]/90',
-    sealBorder: 'border-[#e28850]/70',
-  },
-  fresh: {
-    bgImage: '/images/collection-fresh.png',
-    sealBg: 'from-[#1c7844]/60 via-[#0d3b20]/70 to-[#03140a]/90',
-    sealBorder: 'border-[#4ec480]/70',
-  },
-  arabian: {
-    bgImage: '/images/collection-arabian.png',
-    sealBg: 'from-[#c8a96a]/50 via-[#59441a]/60 to-[#1e1607]/90',
-    sealBorder: 'border-[#c8a96a]/80',
-  },
-  woody: {
-    bgImage: '/images/collection-woody.png',
-    sealBg: 'from-[#9a6e42]/50 via-[#4a341e]/70 to-[#1a1109]/90',
-    sealBorder: 'border-[#c8a96a]/60',
-  },
-};
 
 /** Featured 6 signature collections grid matching reference image layout. */
 export function CollectionsShowcase() {
   return (
-    <Section className='select-none bg-[var(--color-background)] py-16 text-white sm:py-24'>
+    <Section className='select-none bg-[var(--color-background)] py-16 text-[var(--color-text-primary)] sm:py-24'>
       <Container>
         {/* Section Header matching other homepage sections */}
         <Reveal>
@@ -51,7 +19,7 @@ export function CollectionsShowcase() {
               <span className='mb-2 block text-[0.7rem] font-bold uppercase tracking-[0.24em] text-[var(--color-gold)]'>
                 EXPLORE OUR COLLECTIONS
               </span>
-              <h2 className='font-serif text-3xl sm:text-4xl md:text-5xl font-bold tracking-tight text-white'>
+              <h2 className='font-serif text-3xl sm:text-4xl md:text-5xl font-bold tracking-tight text-[var(--color-text-primary)]'>
                 Curated Fragrance Libraries
               </h2>
               <p className='mt-2 max-w-xl text-sm text-[var(--color-text-secondary)] sm:text-base'>
@@ -70,7 +38,7 @@ export function CollectionsShowcase() {
         {/* 6 Realistic Collection Cards */}
         <RevealGroup className='grid gap-3 sm:gap-4 grid-cols-2 sm:grid-cols-3 lg:grid-cols-6'>
           {collections.map((collection) => {
-            const media = collectionMedia[collection.slug] ?? collectionMedia.oud;
+            const media = getCollectionMedia(collection.slug);
 
             return (
               <RevealItem key={collection.slug}>
@@ -89,8 +57,11 @@ export function CollectionsShowcase() {
                     className='object-cover transition-transform duration-700 ease-out group-hover:scale-110 filter brightness-[0.70] group-hover:brightness-[0.85]'
                   />
 
-                  {/* Dark Vignette Overlay for Crisp Contrast */}
-                  <div className='pointer-events-none absolute inset-0 bg-linear-to-t from-[var(--color-background)] via-black/40 to-black/25' />
+                  {/* Dark vignette. Anchored to --t-scrim-*, which stays dark in
+                      both themes: the artwork is a dark photo and the label sits
+                      on it in white, so fading into an ivory page background
+                      would strand the text on a near-white card foot. */}
+                  <div className='pointer-events-none absolute inset-0 bg-linear-to-t from-[var(--t-scrim-strong)] via-[var(--t-scrim-soft)] to-[var(--t-scrim-soft)]' />
 
                   {/* Middle Wax Seal Emblem Stamp */}
                   <div
@@ -173,7 +144,7 @@ export function CollectionsShowcase() {
 
                   {/* Bottom Title & Subtitle */}
                   <div className='relative z-10 mt-auto'>
-                    <h3 className='font-sans text-base font-extrabold uppercase tracking-[0.14em] text-white transition-colors leading-none drop-shadow-md group-hover:text-[var(--color-gold)] sm:text-lg'>
+                    <h3 className='font-sans text-base font-extrabold uppercase tracking-[0.14em] on-media transition-colors leading-none drop-shadow-md group-hover:text-[var(--color-gold)] sm:text-lg'>
                       {collection.title}
                     </h3>
                     <p className='mt-1.5 text-[0.62rem] font-medium tracking-[0.18em] text-[var(--color-text-secondary)] transition-colors leading-none drop-shadow group-hover:text-[var(--color-text-primary)] sm:text-[0.68rem]'>

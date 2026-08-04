@@ -9,6 +9,7 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import * as React from 'react';
 import { SearchOverlay } from './SearchOverlay';
+import { ThemeToggle } from '@/components/theme/ThemeToggle';
 
 export function Navbar() {
   const pathname = usePathname();
@@ -50,25 +51,25 @@ export function Navbar() {
     <>
       <header className='fixed inset-x-0 top-0 z-50 transition-all duration-300'>
         {/* ── Top Announcement Bar (matching reference image top bar) ── */}
-        <div className='bg-[#0b0907] border-b border-[#c8a96a]/20 text-[#c8a96a] py-1.5 px-3 text-[0.62rem] sm:text-[0.68rem] font-semibold tracking-[0.14em] sm:tracking-[0.16em] uppercase select-none'>
+        <div className='bg-[var(--color-background-deep)] border-b border-[var(--color-accent)]/20 text-[var(--color-accent)] py-1.5 px-3 text-[0.62rem] sm:text-[0.68rem] font-semibold tracking-[0.14em] sm:tracking-[0.16em] uppercase select-none'>
           <div className='mx-auto max-w-7xl flex items-center justify-center flex-wrap gap-x-3 sm:gap-x-6 gap-y-1 text-center'>
             <div className='flex items-center gap-1.5'>
-              <Award className='w-3.5 h-3.5 text-[#c8a96a] shrink-0' />
+              <Award className='w-3.5 h-3.5 text-[var(--color-accent)] shrink-0' />
               <span className='whitespace-nowrap'>PREMIUM ALCOHOL-FREE ATTAR</span>
             </div>
-            <span className='hidden sm:inline text-[#c8a96a]/40 font-light'>|</span>
+            <span className='hidden sm:inline text-[var(--color-accent)]/40 font-light'>|</span>
             <div className='hidden sm:flex items-center gap-1.5'>
-              <Flame className='w-3.5 h-3.5 text-[#c8a96a] shrink-0' />
+              <Flame className='w-3.5 h-3.5 text-[var(--color-accent)] shrink-0' />
               <span className='whitespace-nowrap'>IMPORTED PERFUME OILS</span>
             </div>
-            <span className='hidden md:inline text-[#c8a96a]/40 font-light'>|</span>
+            <span className='hidden md:inline text-[var(--color-accent)]/40 font-light'>|</span>
             <div className='hidden md:flex items-center gap-1.5'>
-              <Clock className='w-3.5 h-3.5 text-[#c8a96a] shrink-0' />
+              <Clock className='w-3.5 h-3.5 text-[var(--color-accent)] shrink-0' />
               <span className='whitespace-nowrap'>LONG LASTING FRAGRANCE</span>
             </div>
-            <span className='hidden lg:inline text-[#c8a96a]/40 font-light'>|</span>
+            <span className='hidden lg:inline text-[var(--color-accent)]/40 font-light'>|</span>
             <div className='hidden lg:flex items-center gap-1.5'>
-              <Truck className='w-3.5 h-3.5 text-[#c8a96a] shrink-0' />
+              <Truck className='w-3.5 h-3.5 text-[var(--color-accent)] shrink-0' />
               <span className='whitespace-nowrap'>FAST DELIVERY IN BD</span>
             </div>
           </div>
@@ -79,8 +80,8 @@ export function Navbar() {
           className={cn(
             'transition-colors duration-300',
             scrolled || menuOpen
-              ? 'bg-[#090807]/95 backdrop-blur-md border-b border-[#c8a96a]/20 shadow-xl'
-              : 'bg-[#090807]/90 backdrop-blur-sm border-b border-[#c8a96a]/15 shadow-md',
+              ? 'bg-[var(--color-background-deep)]/95 backdrop-blur-md border-b border-[var(--color-accent)]/20 shadow-xl'
+              : 'bg-[var(--color-background-deep)]/90 backdrop-blur-sm border-b border-[var(--color-accent)]/15 shadow-md',
           )}
           aria-label='Main'
         >
@@ -91,7 +92,7 @@ export function Navbar() {
             {/* Left: Mobile Menu Toggle */}
             <button
               type='button'
-              className='flex h-10 w-10 items-center justify-center rounded-full text-[#c8a96a] transition-colors lg:hidden shrink-0'
+              className='flex h-10 w-10 items-center justify-center rounded-full text-[var(--color-accent)] transition-colors lg:hidden shrink-0'
               onClick={() => setMenuOpen((o) => !o)}
               aria-label={menuOpen ? 'Close menu' : 'Open menu'}
             >
@@ -106,15 +107,15 @@ export function Navbar() {
                 width={48}
                 height={52}
                 priority
-                className='h-9 sm:h-12 w-auto object-contain filter drop-shadow-[0_2px_10px_rgba(200,169,106,0.45)] transform group-hover:scale-105 transition-transform'
+                className='h-9 sm:h-12 w-auto object-contain filter drop-shadow-[0_2px_10px_var(--color-border-strong)] transform group-hover:scale-105 transition-transform'
               />
 
               {/* Brand Text */}
               <div className='flex flex-col'>
-                <span className='font-serif text-base sm:text-[1.35rem] font-bold tracking-[0.14em] sm:tracking-[0.16em] text-[#f5dd9e] leading-tight group-hover:text-white transition-colors'>
+                <span className='font-serif text-base sm:text-[1.35rem] font-bold tracking-[0.14em] sm:tracking-[0.16em] text-[var(--color-accent-strong)] leading-tight group-hover:text-[var(--color-text-primary)] transition-colors'>
                   KAHF
                 </span>
-                <span className='font-serif text-[0.55rem] sm:text-[0.65rem] tracking-[0.28em] sm:tracking-[0.32em] text-[#c8a96a] font-medium leading-none'>
+                <span className='font-serif text-[0.55rem] sm:text-[0.65rem] tracking-[0.28em] sm:tracking-[0.32em] text-[var(--color-accent)] font-medium leading-none'>
                   TREASURE
                 </span>
               </div>
@@ -132,58 +133,58 @@ export function Navbar() {
                           href={item.href}
                           className={cn(
                             'relative flex items-center gap-1.5 text-xs xl:text-sm font-semibold tracking-widest uppercase transition-colors duration-200',
-                            isActive(item.href) ? 'text-[#f5dd9e]' : 'text-[#b8b0a2] group-hover/drop:text-[#f5dd9e]',
+                            isActive(item.href) ? 'text-[var(--color-accent-strong)]' : 'text-[var(--color-text-secondary)] group-hover/drop:text-[var(--color-accent-strong)]',
                           )}
                         >
                           <span>{item.label}</span>
                           <ChevronDown
                             size={14}
-                            className='text-[#c8a96a] opacity-80 group-hover/drop:rotate-180 transition-transform duration-200'
+                            className='text-[var(--color-accent)] opacity-80 group-hover/drop:rotate-180 transition-transform duration-200'
                           />
                         </Link>
 
                         {/* Luxury Hover Dropdown Panel */}
                         <div className='absolute left-1/2 -translate-x-1/2 top-full pt-3 opacity-0 translate-y-2 pointer-events-none group-hover/drop:opacity-100 group-hover/drop:translate-y-0 group-hover/drop:pointer-events-auto transition-all duration-200 z-50'>
-                          <div className='w-56 rounded-xl bg-[#0f0d0b]/98 border border-[#c8a96a]/25 shadow-2xl backdrop-blur-xl p-2 flex flex-col gap-0.5'>
+                          <div className='w-56 rounded-xl bg-[var(--color-background)]/98 border border-[var(--color-accent)]/25 shadow-2xl backdrop-blur-xl p-2 flex flex-col gap-0.5'>
                             <Link
                               href='/collections'
-                              className='px-3.5 py-2 text-xs font-semibold text-[#f5dd9e] rounded-lg hover:bg-[#c8a96a]/20 transition-colors border-b border-[#c8a96a]/15 mb-1'
+                              className='px-3.5 py-2 text-xs font-semibold text-[var(--color-accent-strong)] rounded-lg hover:bg-[var(--color-accent)]/20 transition-colors border-b border-[var(--color-accent)]/15 mb-1'
                             >
                               All Collections
                             </Link>
                             <Link
                               href='/collections/oud'
-                              className='px-3.5 py-1.5 text-xs font-medium text-[#d6cdbe] rounded-lg hover:bg-[#c8a96a]/15 hover:text-[#f5dd9e] transition-colors'
+                              className='px-3.5 py-1.5 text-xs font-medium text-[var(--color-text-tertiary)] rounded-lg hover:bg-[var(--color-accent)]/15 hover:text-[var(--color-accent-strong)] transition-colors'
                             >
                               OUD Collection
                             </Link>
                             <Link
                               href='/collections/floral'
-                              className='px-3.5 py-1.5 text-xs font-medium text-[#d6cdbe] rounded-lg hover:bg-[#c8a96a]/15 hover:text-[#f5dd9e] transition-colors'
+                              className='px-3.5 py-1.5 text-xs font-medium text-[var(--color-text-tertiary)] rounded-lg hover:bg-[var(--color-accent)]/15 hover:text-[var(--color-accent-strong)] transition-colors'
                             >
                               FLORAL Collection
                             </Link>
                             <Link
                               href='/collections/fruity'
-                              className='px-3.5 py-1.5 text-xs font-medium text-[#d6cdbe] rounded-lg hover:bg-[#c8a96a]/15 hover:text-[#f5dd9e] transition-colors'
+                              className='px-3.5 py-1.5 text-xs font-medium text-[var(--color-text-tertiary)] rounded-lg hover:bg-[var(--color-accent)]/15 hover:text-[var(--color-accent-strong)] transition-colors'
                             >
                               FRUITY Collection
                             </Link>
                             <Link
                               href='/collections/fresh'
-                              className='px-3.5 py-1.5 text-xs font-medium text-[#d6cdbe] rounded-lg hover:bg-[#c8a96a]/15 hover:text-[#f5dd9e] transition-colors'
+                              className='px-3.5 py-1.5 text-xs font-medium text-[var(--color-text-tertiary)] rounded-lg hover:bg-[var(--color-accent)]/15 hover:text-[var(--color-accent-strong)] transition-colors'
                             >
                               FRESH Collection
                             </Link>
                             <Link
                               href='/collections/arabian'
-                              className='px-3.5 py-1.5 text-xs font-medium text-[#d6cdbe] rounded-lg hover:bg-[#c8a96a]/15 hover:text-[#f5dd9e] transition-colors'
+                              className='px-3.5 py-1.5 text-xs font-medium text-[var(--color-text-tertiary)] rounded-lg hover:bg-[var(--color-accent)]/15 hover:text-[var(--color-accent-strong)] transition-colors'
                             >
                               ARABIAN Collection
                             </Link>
                             <Link
                               href='/collections/woody'
-                              className='px-3.5 py-1.5 text-xs font-medium text-[#d6cdbe] rounded-lg hover:bg-[#c8a96a]/15 hover:text-[#f5dd9e] transition-colors'
+                              className='px-3.5 py-1.5 text-xs font-medium text-[var(--color-text-tertiary)] rounded-lg hover:bg-[var(--color-accent)]/15 hover:text-[var(--color-accent-strong)] transition-colors'
                             >
                               WOODY Collection
                             </Link>
@@ -196,8 +197,8 @@ export function Navbar() {
                         className={cn(
                           'relative flex items-center gap-1 text-xs xl:text-sm font-semibold tracking-widest uppercase transition-colors duration-200 py-1.5 px-1',
                           isActive(item.href)
-                            ? 'text-[#f5dd9e] after:absolute after:bottom-0 after:left-0 after:w-full after:h-0.5 after:bg-[#c8a96a]'
-                            : 'text-[#b8b0a2] hover:text-[#f5dd9e] after:absolute after:bottom-0 after:left-0 after:w-0 hover:after:w-full after:h-0.5 after:bg-[#c8a96a] after:transition-all after:duration-300',
+                            ? 'text-[var(--color-accent-strong)] after:absolute after:bottom-0 after:left-0 after:w-full after:h-0.5 after:bg-[var(--color-accent)]'
+                            : 'text-[var(--color-text-secondary)] hover:text-[var(--color-accent-strong)] after:absolute after:bottom-0 after:left-0 after:w-0 hover:after:w-full after:h-0.5 after:bg-[var(--color-accent)] after:transition-all after:duration-300',
                         )}
                       >
                         <span>{item.label}</span>
@@ -210,16 +211,18 @@ export function Navbar() {
 
             {/* Right: Favorites, Search & Shopping Bag */}
             <div className='flex items-center gap-2 sm:gap-3 shrink-0'>
+              <ThemeToggle />
+
               <Link
                 href='/favorites'
-                className='relative flex h-10 w-10 items-center justify-center rounded-full text-[#c8a96a]/80 hover:text-[#c8a96a] hover:bg-[#c8a96a]/10 transition-colors'
+                className='relative flex h-10 w-10 items-center justify-center rounded-full text-[var(--color-accent)]/80 hover:text-[var(--color-accent)] hover:bg-[var(--color-accent)]/10 transition-colors'
                 aria-label={`Favorites${wishlist.length ? `, ${wishlist.length} saved` : ''}`}
               >
                 <Heart size={20} />
                 {wishlist.length > 0 && (
                   <span
                     className='absolute -right-1 -top-1 flex h-4 min-w-[18px] items-center justify-center rounded-full px-1 text-[0.62rem] font-bold shadow-sm'
-                    style={{ background: '#c8a96a', color: '#090807' }}
+                    style={{ background: 'var(--color-accent)', color: 'var(--color-on-accent)' }}
                   >
                     {wishlist.length}
                   </span>
@@ -230,7 +233,7 @@ export function Navbar() {
               <button
                 type='button'
                 onClick={() => setSearchOpen(true)}
-                className='flex h-10 w-10 items-center justify-center rounded-full text-[#c8a96a]/80 hover:text-[#c8a96a] hover:bg-[#c8a96a]/10 transition-colors'
+                className='flex h-10 w-10 items-center justify-center rounded-full text-[var(--color-accent)]/80 hover:text-[var(--color-accent)] hover:bg-[var(--color-accent)]/10 transition-colors'
                 aria-label='Search fragrances'
               >
                 <Search size={20} />
@@ -240,7 +243,7 @@ export function Navbar() {
               <button
                 type='button'
                 onClick={() => setBagOpen(true)}
-                className='relative flex h-10 w-10 items-center justify-center rounded-full text-[#c8a96a]/80 hover:text-[#c8a96a] hover:bg-[#c8a96a]/10 transition-colors'
+                className='relative flex h-10 w-10 items-center justify-center rounded-full text-[var(--color-accent)]/80 hover:text-[var(--color-accent)] hover:bg-[var(--color-accent)]/10 transition-colors'
                 aria-label={`Enquiry bag${count ? `, ${count} items` : ''}`}
               >
                 <ShoppingBag size={20} />
@@ -248,8 +251,8 @@ export function Navbar() {
                   <span
                     className='absolute -right-1 -top-1 flex h-4 items-center justify-center rounded-full px-1 text-[0.62rem] font-bold shadow-sm animate-in fade-in zoom-in'
                     style={{
-                      background: '#c8a96a',
-                      color: '#090807',
+                      background: 'var(--color-accent)',
+                      color: 'var(--color-on-accent)',
                       minWidth: '18px',
                     }}
                   >
@@ -269,30 +272,30 @@ export function Navbar() {
       >
         <div
           className={cn('absolute inset-0 transition-opacity duration-300', menuOpen ? 'opacity-100' : 'opacity-0')}
-          style={{ background: 'rgba(0,0,0,0.75)' }}
+          style={{ background: 'var(--t-scrim)' }}
           onClick={() => setMenuOpen(false)}
         />
         <div
           className={cn(
-            'absolute inset-x-0 top-[100px] origin-top transition-all duration-300 ease-out bg-[#0d0c0a] border-b border-[#c8a96a]/20 shadow-2xl max-h-[calc(100vh-100px)] overflow-y-auto',
+            'absolute inset-x-0 top-[100px] origin-top transition-all duration-300 ease-out bg-[var(--color-background-deep)] border-b border-[var(--color-accent)]/20 shadow-2xl max-h-[calc(100vh-100px)] overflow-y-auto',
             menuOpen ? 'translate-y-0 opacity-100' : '-translate-y-4 opacity-0',
           )}
         >
           <ul className='flex flex-col px-6 py-4'>
-            <li className='border-b border-[#c8a96a]/15'>
+            <li className='border-b border-[var(--color-accent)]/15'>
               <Link
                 href='/favorites'
-                className='flex items-center justify-between py-3.5 text-sm font-semibold tracking-wider text-[#d6cdbe] hover:text-[#f5dd9e]'
+                className='flex items-center justify-between py-3.5 text-sm font-semibold tracking-wider text-[var(--color-text-tertiary)] hover:text-[var(--color-accent-strong)]'
                 onClick={() => setMenuOpen(false)}
               >
                 <span>FAVORITES</span>
               </Link>
             </li>
             {mainNav.map((item) => (
-              <li key={item.href} className='border-b border-[#c8a96a]/15'>
+              <li key={item.href} className='border-b border-[var(--color-accent)]/15'>
                 <Link
                   href={item.href}
-                  className='flex items-center justify-between py-3.5 text-sm font-semibold tracking-wider text-[#d6cdbe] hover:text-[#f5dd9e]'
+                  className='flex items-center justify-between py-3.5 text-sm font-semibold tracking-wider text-[var(--color-text-tertiary)] hover:text-[var(--color-accent-strong)]'
                   onClick={() => setMenuOpen(false)}
                 >
                   <span>{item.label}</span>
@@ -302,42 +305,42 @@ export function Navbar() {
                   <div className='pl-4 pb-3 flex flex-col gap-2'>
                     <Link
                       href='/collections/oud'
-                      className='text-xs text-[#b8b0a2] hover:text-[#c8a96a] py-1'
+                      className='text-xs text-[var(--color-text-secondary)] hover:text-[var(--color-accent)] py-1'
                       onClick={() => setMenuOpen(false)}
                     >
                       • OUD Collection
                     </Link>
                     <Link
                       href='/collections/floral'
-                      className='text-xs text-[#b8b0a2] hover:text-[#c8a96a] py-1'
+                      className='text-xs text-[var(--color-text-secondary)] hover:text-[var(--color-accent)] py-1'
                       onClick={() => setMenuOpen(false)}
                     >
                       • FLORAL Collection
                     </Link>
                     <Link
                       href='/collections/fruity'
-                      className='text-xs text-[#b8b0a2] hover:text-[#c8a96a] py-1'
+                      className='text-xs text-[var(--color-text-secondary)] hover:text-[var(--color-accent)] py-1'
                       onClick={() => setMenuOpen(false)}
                     >
                       • FRUITY Collection
                     </Link>
                     <Link
                       href='/collections/fresh'
-                      className='text-xs text-[#b8b0a2] hover:text-[#c8a96a] py-1'
+                      className='text-xs text-[var(--color-text-secondary)] hover:text-[var(--color-accent)] py-1'
                       onClick={() => setMenuOpen(false)}
                     >
                       • FRESH Collection
                     </Link>
                     <Link
                       href='/collections/arabian'
-                      className='text-xs text-[#b8b0a2] hover:text-[#c8a96a] py-1'
+                      className='text-xs text-[var(--color-text-secondary)] hover:text-[var(--color-accent)] py-1'
                       onClick={() => setMenuOpen(false)}
                     >
                       • ARABIAN Collection
                     </Link>
                     <Link
                       href='/collections/woody'
-                      className='text-xs text-[#b8b0a2] hover:text-[#c8a96a] py-1'
+                      className='text-xs text-[var(--color-text-secondary)] hover:text-[var(--color-accent)] py-1'
                       onClick={() => setMenuOpen(false)}
                     >
                       • WOODY Collection

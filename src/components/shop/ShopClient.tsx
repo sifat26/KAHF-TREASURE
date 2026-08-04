@@ -77,7 +77,7 @@ export function ShopClient({
   }
 
   return (
-    <div className="grid gap-8 lg:grid-cols-[270px_1fr] text-white">
+    <div className="grid gap-8 lg:grid-cols-[270px_1fr] text-[var(--color-text-primary)]">
       {/* Desktop sidebar */}
       <aside className="hidden lg:block">
         <div className="sticky top-[100px]">
@@ -93,38 +93,38 @@ export function ShopClient({
 
       <div>
         {/* Toolbar */}
-        <div className="mb-6 flex items-center justify-between gap-4 border-b border-[#c8a96a]/20 pb-4">
-          <p className="text-sm text-[#b8b0a2]">
-            <span className="font-semibold text-white">{results.length}</span>{' '}
+        <div className="mb-6 flex items-center justify-between gap-4 border-b border-[var(--color-accent)]/20 pb-4">
+          <p className="text-sm text-[var(--color-text-secondary)]">
+            <span className="font-semibold text-[var(--color-text-primary)]">{results.length}</span>{' '}
             {results.length === 1 ? 'fragrance' : 'fragrances'}
-            {query && <span className="text-[#c8a96a]"> for “{query}”</span>}
+            {query && <span className="text-[var(--color-accent)]"> for “{query}”</span>}
           </p>
 
           <div className="flex items-center gap-3">
             <button
               type="button"
-              className="lg:hidden inline-flex items-center gap-2 rounded-xl border border-[#c8a96a]/40 bg-[#0f0d0b] px-3.5 py-2 text-xs font-semibold uppercase tracking-wider text-[#c8a96a] hover:bg-[#c8a96a]/15 transition-all"
+              className="lg:hidden inline-flex items-center gap-2 rounded-xl border border-[var(--color-accent)]/40 bg-[var(--color-background)] px-3.5 py-2 text-xs font-semibold uppercase tracking-wider text-[var(--color-accent)] hover:bg-[var(--color-accent)]/15 transition-all"
               onClick={() => setMobileOpen(true)}
             >
               <SlidersHorizontal size={15} />
               Filters
               {activeCount > 0 && (
-                <span className="ml-1 rounded-full bg-[#c8a96a] px-1.5 py-0.5 text-[0.65rem] font-bold text-[#090807]">
+                <span className="ml-1 rounded-full bg-[var(--color-accent)] px-1.5 py-0.5 text-[0.65rem] font-bold text-[var(--color-background-deep)]">
                   {activeCount}
                 </span>
               )}
             </button>
 
-            <label className="flex items-center gap-2 text-sm text-[#b8b0a2]">
-              <span className="hidden text-[#b8b0a2] sm:inline font-medium">Sort by:</span>
+            <label className="flex items-center gap-2 text-sm text-[var(--color-text-secondary)]">
+              <span className="hidden text-[var(--color-text-secondary)] sm:inline font-medium">Sort by:</span>
               <select
                 value={sort}
                 onChange={(e) => setSort(e.target.value as SortKey)}
                 aria-label="Sort products"
-                className="h-9 w-auto rounded-xl border border-[#c8a96a]/30 bg-[#0f0d0b] px-3 py-1.5 text-xs sm:text-sm font-medium text-white focus:border-[#c8a96a] focus:outline-none cursor-pointer"
+                className="h-9 w-auto rounded-xl border border-[var(--color-accent)]/30 bg-[var(--color-background)] px-3 py-1.5 text-xs sm:text-sm font-medium text-[var(--color-text-primary)] focus:border-[var(--color-accent)] focus:outline-none cursor-pointer"
               >
                 {SORT_OPTIONS.map((opt) => (
-                  <option key={opt.value} value={opt.value} className="bg-[#0f0d0b] text-white">
+                  <option key={opt.value} value={opt.value} className="bg-[var(--color-background)] text-[var(--color-text-primary)]">
                     {opt.label}
                   </option>
                 ))}
@@ -135,12 +135,12 @@ export function ShopClient({
 
         {/* Results */}
         {results.length === 0 ? (
-          <div className="flex flex-col items-center gap-4 py-24 text-center rounded-2xl bg-[#0f0d0b] border border-[#c8a96a]/15 p-8">
-            <p className="text-[#b8b0a2]">No fragrances match your selected filters.</p>
+          <div className="flex flex-col items-center gap-4 py-24 text-center rounded-2xl bg-[var(--color-background)] border border-[var(--color-accent)]/15 p-8">
+            <p className="text-[var(--color-text-secondary)]">No fragrances match your selected filters.</p>
             <button
               type="button"
               onClick={resetAll}
-              className="rounded-full bg-[#c8a96a] px-6 py-2.5 text-xs font-bold uppercase tracking-wider text-[#090807] hover:bg-[#d4b574] transition-all"
+              className="rounded-full bg-[var(--color-accent)] px-6 py-2.5 text-xs font-bold uppercase tracking-wider text-[var(--color-background-deep)] hover:bg-[var(--color-accent-hover)] transition-all"
             >
               Clear All Filters
             </button>
@@ -161,23 +161,23 @@ export function ShopClient({
       >
         <div
           className={cn(
-            'absolute inset-0 bg-black/80 backdrop-blur-sm transition-opacity duration-300',
+            'absolute inset-0 bg-[var(--t-scrim)] backdrop-blur-sm transition-opacity duration-300',
             mobileOpen ? 'opacity-100' : 'opacity-0',
           )}
           onClick={() => setMobileOpen(false)}
         />
         <div
           className={cn(
-            'absolute inset-y-0 left-0 flex w-[88%] max-w-sm flex-col bg-[#0d0c0a] border-r border-[#c8a96a]/30 transition-transform duration-300 ease-out shadow-2xl',
+            'absolute inset-y-0 left-0 flex w-[88%] max-w-sm flex-col bg-[var(--color-background-deep)] border-r border-[var(--color-accent)]/30 transition-transform duration-300 ease-out shadow-2xl',
             mobileOpen ? 'translate-x-0' : '-translate-x-full',
           )}
           role="dialog"
           aria-modal="true"
           aria-label="Filters"
         >
-          <div className="flex items-center justify-between border-b border-[#c8a96a]/20 px-5 py-4">
-            <h2 className="font-serif text-lg font-bold text-white">Refine Selection</h2>
-            <button onClick={() => setMobileOpen(false)} aria-label="Close filters" className="text-[#c8a96a] hover:text-white p-1">
+          <div className="flex items-center justify-between border-b border-[var(--color-accent)]/20 px-5 py-4">
+            <h2 className="font-serif text-lg font-bold text-[var(--color-text-primary)]">Refine Selection</h2>
+            <button onClick={() => setMobileOpen(false)} aria-label="Close filters" className="text-[var(--color-accent)] hover:text-[var(--color-text-primary)] p-1">
               <X size={20} />
             </button>
           </div>
@@ -190,10 +190,10 @@ export function ShopClient({
               onReset={resetAll}
             />
           </div>
-          <div className="border-t border-[#c8a96a]/20 p-4 bg-[#090807]">
+          <div className="border-t border-[var(--color-accent)]/20 p-4 bg-[var(--color-background-deep)]">
             <button
               type="button"
-              className="w-full rounded-xl bg-[#c8a96a] py-3 text-xs font-bold uppercase tracking-wider text-[#090807] shadow-lg hover:bg-[#d4b574] transition-all"
+              className="w-full rounded-xl bg-[var(--color-accent)] py-3 text-xs font-bold uppercase tracking-wider text-[var(--color-background-deep)] shadow-lg hover:bg-[var(--color-accent-hover)] transition-all"
               onClick={() => setMobileOpen(false)}
             >
               Show {results.length} Results

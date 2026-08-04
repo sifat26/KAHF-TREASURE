@@ -1,4 +1,5 @@
 import { BreadcrumbJsonLd } from '@/components/seo/JsonLd';
+import { getCollectionMedia } from '@/lib/collectionMedia';
 import { Breadcrumbs } from '@/components/ui/Breadcrumbs';
 import { Container } from '@/components/ui/Container';
 import { RevealGroup, RevealItem } from '@/components/ui/Reveal';
@@ -14,43 +15,10 @@ export const metadata: Metadata = {
   alternates: { canonical: '/collections' },
 };
 
-/** Mapping of real photorealistic background images & seal badge colors */
-const collectionMedia: Record<string, { bgImage: string; sealBg: string; sealBorder: string }> = {
-  oud: {
-    bgImage: '/images/collection-oud.png',
-    sealBg: 'from-[#c8a96a]/40 via-[#59441a]/60 to-[#1e1607]/90',
-    sealBorder: 'border-[#c8a96a]/70',
-  },
-  floral: {
-    bgImage: '/images/collection-floral.png',
-    sealBg: 'from-[#b82e46]/60 via-[#661220]/70 to-[#240409]/90',
-    sealBorder: 'border-[#e26b80]/70',
-  },
-  fruity: {
-    bgImage: '/images/collection-fruity.png',
-    sealBg: 'from-[#c85a20]/60 via-[#66280b]/70 to-[#240c03]/90',
-    sealBorder: 'border-[#e28850]/70',
-  },
-  fresh: {
-    bgImage: '/images/collection-fresh.png',
-    sealBg: 'from-[#1c7844]/60 via-[#0d3b20]/70 to-[#03140a]/90',
-    sealBorder: 'border-[#4ec480]/70',
-  },
-  arabian: {
-    bgImage: '/images/collection-arabian.png',
-    sealBg: 'from-[#c8a96a]/50 via-[#59441a]/60 to-[#1e1607]/90',
-    sealBorder: 'border-[#c8a96a]/80',
-  },
-  woody: {
-    bgImage: '/images/collection-woody.png',
-    sealBg: 'from-[#9a6e42]/50 via-[#4a341e]/70 to-[#1a1109]/90',
-    sealBorder: 'border-[#c8a96a]/60',
-  },
-};
 
 export default function CollectionsPage() {
   return (
-    <div className='min-h-screen select-none bg-[radial-gradient(circle_at_top,rgba(200,169,106,0.06),transparent_20%),linear-gradient(180deg,var(--color-background)_0%,#11110f_100%)] pt-24 pb-16 text-white'>
+    <div className='min-h-screen select-none bg-[radial-gradient(circle_at_top,var(--color-accent-tint),transparent_20%),linear-gradient(180deg,var(--color-background)_0%,var(--color-surface)_100%)] pt-24 pb-16 text-[var(--color-text-primary)]'>
       <BreadcrumbJsonLd
         items={[
           { name: 'Home', url: '/' },
@@ -75,13 +43,13 @@ export default function CollectionsPage() {
 
         <RevealGroup className='grid gap-4 sm:gap-6 grid-cols-2 sm:grid-cols-3 lg:grid-cols-3 xl:grid-cols-6'>
           {collections.map((collection) => {
-            const media = collectionMedia[collection.slug] ?? collectionMedia.oud;
+            const media = getCollectionMedia(collection.slug);
 
             return (
               <RevealItem key={collection.slug}>
                 <Link
                   href={`/collections/${collection.slug}`}
-                  className='group relative flex h-[180px] sm:h-[220px] flex-col items-center justify-between overflow-hidden rounded-2xl p-3.5 sm:p-5 text-center border border-[#c8a96a]/25 shadow-2xl transition-all duration-300 hover:-translate-y-1.5 hover:border-[#c8a96a]/70 hover:shadow-[0_16px_36px_rgba(0,0,0,0.95)]'
+                  className='group relative flex h-[180px] sm:h-[220px] flex-col items-center justify-between overflow-hidden rounded-2xl p-3.5 sm:p-5 text-center border border-[var(--color-accent)]/25 shadow-2xl transition-all duration-300 hover:-translate-y-1.5 hover:border-[var(--color-accent)]/70 hover:shadow-[0_16px_36px_var(--t-scrim-strong)]'
                   aria-label={`${collection.title} Collection`}
                 >
                   {/* Photorealistic Background Image */}
@@ -94,14 +62,17 @@ export default function CollectionsPage() {
                     className='object-cover transition-transform duration-700 ease-out group-hover:scale-110 filter brightness-[0.70] group-hover:brightness-[0.85]'
                   />
 
-                  {/* Dark Vignette Overlay */}
-                  <div className='absolute inset-0 bg-linear-to-t from-[#090807] via-black/40 to-black/25 pointer-events-none' />
+                  {/* Dark vignette. Anchored to --t-scrim-*, which stays dark in
+                      both themes: the artwork is a dark photo and the label sits
+                      on it in white, so fading into an ivory page background
+                      would strand the text on a near-white card foot. */}
+                  <div className='absolute inset-0 bg-linear-to-t from-[var(--t-scrim-strong)] via-[var(--t-scrim-soft)] to-[var(--t-scrim-soft)] pointer-events-none' />
 
                   {/* Wax Seal Emblem Stamp */}
                   <div
-                    className={`relative z-10 my-auto flex h-11 w-11 items-center justify-center rounded-full border ${media.sealBorder} bg-linear-to-br ${media.sealBg} text-[#f5dd9e] shadow-xl backdrop-blur-sm transition-transform duration-300 group-hover:scale-110`}
+                    className={`relative z-10 my-auto flex h-11 w-11 items-center justify-center rounded-full border ${media.sealBorder} bg-linear-to-br ${media.sealBg} text-[var(--color-accent-strong)] shadow-xl backdrop-blur-sm transition-transform duration-300 group-hover:scale-110`}
                   >
-                    <span className='text-[#f5dd9e]'>
+                    <span className='text-[var(--color-accent-strong)]'>
                       {collection.slug === 'oud' ? (
                         <svg
                           width='20'
@@ -178,10 +149,10 @@ export default function CollectionsPage() {
 
                   {/* Title & Subtitle */}
                   <div className='relative z-10 mt-auto'>
-                    <h3 className='font-sans text-base sm:text-lg font-extrabold uppercase tracking-[0.14em] text-white group-hover:text-[#c8a96a] transition-colors leading-none drop-shadow-md'>
+                    <h3 className='font-sans text-base sm:text-lg font-extrabold uppercase tracking-[0.14em] on-media group-hover:text-[var(--color-accent)] transition-colors leading-none drop-shadow-md'>
                       {collection.title}
                     </h3>
-                    <p className='mt-1.5 text-[0.62rem] sm:text-[0.68rem] font-medium tracking-[0.18em] text-[#d6cdbe] group-hover:text-[#f5dd9e] transition-colors leading-none drop-shadow'>
+                    <p className='mt-1.5 text-[0.62rem] sm:text-[0.68rem] font-medium tracking-[0.18em] text-[var(--color-text-tertiary)] group-hover:text-[var(--color-accent-strong)] transition-colors leading-none drop-shadow'>
                       Collection
                     </p>
                   </div>

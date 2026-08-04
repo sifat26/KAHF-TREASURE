@@ -34,7 +34,7 @@ export function ProductBottle({
         showBackground
           ? {
               background:
-                'radial-gradient(ellipse 85% 85% at 50% 45%, rgba(35, 28, 18, 0.95) 0%, rgba(10, 9, 8, 0.98) 90%)',
+                'radial-gradient(ellipse 85% 85% at 50% 45%, var(--t-bottle-glow) 0%, var(--t-bottle-bed) 90%)',
             }
           : undefined
       }
@@ -43,7 +43,7 @@ export function ProductBottle({
       {/* Soft warm spotlight behind bottle */}
       {showBackground && (
         <div
-          className="pointer-events-none absolute inset-0 bg-[#c8a96a]/15 blur-2xl group-hover:bg-[#c8a96a]/25 transition-all duration-500"
+          className="pointer-events-none absolute inset-0 bg-[var(--color-accent)]/15 blur-2xl group-hover:bg-[var(--color-accent)]/25 transition-all duration-500"
         />
       )}
 
@@ -53,13 +53,13 @@ export function ProductBottle({
         <img
           src="/images/exact-attar-bottle.png"
           alt={`${name} luxury attar bottle`}
-          className="w-full h-full object-contain scale-[1.28] transform group-hover:scale-[1.35] transition-transform duration-500 ease-out filter drop-shadow-[0_16px_32px_rgba(0,0,0,0.9)]"
+          className="w-full h-full object-contain scale-[1.28] transform group-hover:scale-[1.35] transition-transform duration-500 ease-out filter drop-shadow-[0_16px_32px_var(--t-bottle-shadow)]"
         />
       </div>
 
       {/* Subtle floor shadow glow */}
       <div
-        className="pointer-events-none absolute bottom-0 inset-x-0 h-8 opacity-45 bg-gradient-to-t from-[#0d0c0a] to-transparent"
+        className="pointer-events-none absolute bottom-0 inset-x-0 h-8 opacity-45 bg-gradient-to-t from-[var(--t-bottle-bed)] to-transparent"
       />
     </div>
   );

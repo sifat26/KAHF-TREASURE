@@ -36,7 +36,7 @@ export function WhyChooseUs() {
               />
 
               {/* Play Button Overlay */}
-              <div className='absolute inset-0 flex items-center justify-center bg-black/30 backdrop-blur-[1px] transition-colors group-hover:bg-black/20'>
+              <div className='absolute inset-0 flex items-center justify-center bg-[var(--t-scrim-soft)] backdrop-blur-[1px] transition-colors group-hover:bg-[var(--t-scrim-soft)]'>
                 <button
                   type='button'
                   aria-label='Play brand video'
@@ -58,7 +58,7 @@ export function WhyChooseUs() {
                 WHY CHOOSE KAHF TREASURE
               </span>
 
-              <h2 className='font-display text-3xl font-bold leading-tight text-white sm:text-4xl lg:text-[2.6rem]'>
+              <h2 className='font-display text-3xl font-bold leading-tight text-[var(--color-text-primary)] sm:text-4xl lg:text-[2.6rem]'>
                 The Essence of Purity & Luxury
               </h2>
 

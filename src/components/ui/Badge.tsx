@@ -13,7 +13,7 @@ const badge = cva(
     variants: {
       variant: {
         gold:
-          'bg-[rgba(200,169,106,0.12)] text-[var(--color-accent)] border border-[rgba(200,169,106,0.3)]',
+          'bg-[var(--color-accent-tint)] text-[var(--color-accent)] border border-[var(--color-border-strong)]',
         ink:
           'bg-[var(--color-text-primary)] text-[var(--color-background)]',
         neutral:
@@ -21,9 +21,9 @@ const badge = cva(
         outline:
           'bg-transparent text-[var(--color-text-secondary)] border border-[var(--color-border)]',
         success:
-          'bg-[rgba(34,197,94,0.12)] text-[var(--color-success)] border border-[rgba(34,197,94,0.25)]',
+          'bg-[color-mix(in srgb, var(--color-success) 12%, transparent)] text-[var(--color-success)] border border-[color-mix(in srgb, var(--color-success) 25%, transparent)]',
         warning:
-          'bg-[rgba(245,158,11,0.12)] text-[#d4920a] border border-[rgba(245,158,11,0.25)]',
+          'bg-[color-mix(in srgb, var(--color-warning) 12%, transparent)] text-[var(--color-warning)] border border-[color-mix(in srgb, var(--color-warning) 25%, transparent)]',
         muted:
           'bg-[var(--color-card)] text-[var(--color-muted)]',
       },
