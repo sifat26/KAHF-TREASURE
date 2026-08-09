@@ -7,10 +7,13 @@ import { WhatsAppIcon, FacebookIcon } from '@/components/icons/SocialIcons';
 import { BreadcrumbJsonLd } from '@/components/seo/JsonLd';
 import { contact, mailLink, telLink, waLink } from '@/data/site';
 
+export const dynamic = 'force-static';
+
+
 export const metadata: Metadata = {
-  title: 'Contact Us',
+  title: 'যোগাযোগ',
   description:
-    'Get in touch with KAHF Treasure via WhatsApp, Facebook, phone or email — we’re here to help you find your perfect fragrance.',
+    'WhatsApp, Facebook, ফোন বা ইমেইলে KAHF Treasure-এর সঙ্গে যোগাযোগ করুন — আপনার মানানসই সুগন্ধি বেছে নিতে আমরা পাশে আছি।',
   alternates: { canonical: '/contact' },
 };
 
@@ -24,7 +27,7 @@ const channels = [
     highlight: true,
   },
   {
-    label: 'Phone',
+    label: 'ফোন',
     value: contact.phoneDisplay,
     href: telLink,
     external: false,
@@ -38,7 +41,7 @@ const channels = [
     icon: <FacebookIcon size={22} />,
   },
   {
-    label: 'Email',
+    label: 'ইমেইল',
     value: contact.email,
     href: mailLink,
     external: false,
@@ -51,15 +54,15 @@ export default function ContactPage() {
     <>
       <BreadcrumbJsonLd
         items={[
-          { name: 'Home', url: '/' },
-          { name: 'Contact', url: '/contact' },
+          { name: 'হোম', url: '/' },
+          { name: 'যোগাযোগ', url: '/contact' },
         ]}
       />
       <Container className="py-10 lg:py-16">
         <Breadcrumbs
           items={[
-            { name: 'Home', href: '/' },
-            { name: 'Contact', href: '/contact' },
+            { name: 'হোম', href: '/' },
+            { name: 'যোগাযোগ', href: '/contact' },
           ]}
           className="mb-8"
         />
@@ -67,11 +70,11 @@ export default function ContactPage() {
         <div className="grid gap-12 lg:grid-cols-[1fr_1.2fr] lg:gap-16">
           {/* Left: intro + channels */}
           <div>
-            <span className="eyebrow mb-3 block">We’re here to help</span>
-            <h1 className="font-display text-4xl text-ink sm:text-5xl">Get in touch</h1>
+            <span className="eyebrow mb-3 block">আমরা পাশে আছি</span>
+            <h1 className="font-display text-4xl text-ink sm:text-5xl">যোগাযোগ করুন</h1>
             <p className="mt-4 max-w-md text-muted">
-              Have a question about a fragrance, an order, or a gift? Reach us on your favourite
-              channel — WhatsApp is the fastest way to order.
+              কোনো সুগন্ধি, অর্ডার বা উপহার নিয়ে প্রশ্ন আছে? আপনার পছন্দের মাধ্যমে আমাদের জানান —
+              অর্ডারের জন্য WhatsApp সবচেয়ে দ্রুত।
             </p>
 
             <ul className="mt-8 flex flex-col gap-3">
@@ -95,7 +98,7 @@ export default function ContactPage() {
                         {ch.icon}
                       </span>
                       <span>
-                        <span className="block text-xs uppercase tracking-[0.14em] text-muted">
+                        <span className="block text-xs tracking-[0.06em] text-muted">
                           {ch.label}
                         </span>
                         <span className="font-medium text-ink">{ch.value}</span>
@@ -112,16 +115,16 @@ export default function ContactPage() {
                 {/* Business address, hours, Instagram and Google Maps are not yet
                     provided in the business documentation. Add them to
                     src/data/site.ts when available. */}
-                Business address & hours coming soon.
+                ঠিকানা ও খোলার সময় শীঘ্রই জানানো হবে।
               </p>
             )}
           </div>
 
           {/* Right: form */}
           <div className="rounded-[var(--radius-card)] border border-line bg-canvas p-6 shadow-[var(--shadow-card)] sm:p-8">
-            <h2 className="font-display text-2xl text-ink">Send us a message</h2>
+            <h2 className="font-display text-2xl text-ink">আমাদের মেসেজ পাঠান</h2>
             <p className="mt-1 mb-6 text-sm text-muted">
-              We usually respond within a few hours during business hours.
+              খোলার সময়ের মধ্যে সাধারণত কয়েক ঘণ্টার মধ্যেই উত্তর দিই।
             </p>
             <ContactForm />
           </div>

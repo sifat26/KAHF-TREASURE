@@ -3,14 +3,19 @@
 import * as React from 'react';
 
 import Link from 'next/link';
+import { usePathname } from 'next/navigation';
 import { Mail, Phone } from 'lucide-react';
 import { Container } from '@/components/ui/Container';
 import { contact, footerNav, mailLink, site, telLink, waLink } from '@/data/site';
+import { toBanglaDigits } from '@/lib/format';
 import { FacebookIcon, WhatsAppIcon } from '@/components/icons/SocialIcons';
 import { NewsletterForm } from './NewsletterForm';
 
 export function Footer() {
+  const pathname = usePathname();
   const year = new Date().getFullYear();
+
+  if (pathname.startsWith('/admin')) return null;
 
   return (
     <footer
@@ -24,7 +29,7 @@ export function Footer() {
         <div className="grid gap-10 sm:gap-12 lg:grid-cols-[1.5fr_1fr_1fr_1fr]">
           {/* Brand + newsletter */}
           <div className="max-w-xs">
-            <Link href="/" aria-label={`${site.name} — home`}>
+            <Link href="/" aria-label={`${site.name} — হোম`}>
               <span
                 className="font-display text-2xl tracking-[0.18em]"
                 style={{ color: 'var(--color-text-primary)' }}
@@ -42,10 +47,10 @@ export function Footer() {
 
             <div className="mt-7">
               <p
-                className="mb-3 text-[0.65rem] font-medium uppercase tracking-[0.2em]"
+                className="mb-3 text-[0.65rem] font-medium tracking-[0.06em]"
                 style={{ color: 'var(--color-muted)' }}
               >
-                Join our list
+                আমাদের তালিকায় যোগ দিন
               </p>
               <NewsletterForm />
             </div>
@@ -53,9 +58,9 @@ export function Footer() {
 
           {/* Link columns */}
           <div className="grid grid-cols-2 sm:grid-cols-3 gap-8 lg:contents">
-            <FooterColumn title="Shop"     links={footerNav.shop}     />
-            <FooterColumn title="Company"  links={footerNav.company}  />
-            <FooterColumn title="Policies" links={footerNav.policies} />
+            <FooterColumn title="শপ"       links={footerNav.shop}     />
+            <FooterColumn title="আমাদের কথা" links={footerNav.company}  />
+            <FooterColumn title="নীতিমালা"   links={footerNav.policies} />
           </div>
         </div>
 
@@ -109,7 +114,7 @@ export function Footer() {
             <SocialLink href={contact.facebook} label="Facebook">
               <FacebookIcon size={17} />
             </SocialLink>
-            <SocialLink href={mailLink} label="Email" external={false}>
+            <SocialLink href={mailLink} label="ইমেইল" external={false}>
               <Mail size={17} />
             </SocialLink>
           </div>
@@ -120,8 +125,8 @@ export function Footer() {
           className="mt-8 flex flex-col gap-1 text-xs sm:flex-row sm:items-center sm:justify-between"
           style={{ color: 'var(--color-muted)' }}
         >
-          <p>© {year} {site.name}. All rights reserved.</p>
-          <p>Premium alcohol-free attar · Handcrafted in Bangladesh</p>
+          <p>© {toBanglaDigits(year)} {site.name}. সর্বস্বত্ব সংরক্ষিত।</p>
+          <p>প্রিমিয়াম অ্যালকোহল-মুক্ত আতর · বাংলাদেশে যত্নে তৈরি</p>
         </div>
       </Container>
     </footer>
@@ -138,7 +143,7 @@ function FooterColumn({
   return (
     <div>
       <h2
-        className="mb-5 text-[0.65rem] font-semibold uppercase tracking-[0.22em]"
+        className="mb-5 text-[0.65rem] font-semibold tracking-[0.06em]"
         style={{ color: 'var(--color-text-primary)' }}
       >
         {title}

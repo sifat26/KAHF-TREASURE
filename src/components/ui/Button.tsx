@@ -15,7 +15,7 @@ import { cn } from '@/lib/utils';
  *   danger   = error red
  */
 const button = cva(
-  'inline-flex items-center justify-center gap-2 rounded-[var(--radius-btn)] font-medium tracking-wide transition-all duration-200 ease-[var(--ease-lux)] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--color-accent)] disabled:pointer-events-none disabled:opacity-50 whitespace-nowrap select-none',
+  'inline-flex items-center justify-center gap-2 rounded-[var(--radius-btn)] font-medium tracking-[0.06em] transition-all duration-200 ease-[var(--ease-lux)] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--color-accent)] disabled:pointer-events-none disabled:opacity-50 whitespace-nowrap select-none',
   {
     variants: {
       variant: {

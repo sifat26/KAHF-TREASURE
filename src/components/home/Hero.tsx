@@ -50,12 +50,12 @@ export function Hero() {
       <div aria-hidden='true' className='pointer-events-none absolute inset-0' style={{ zIndex: 1 }}>
         <div className='absolute inset-y-0 right-0 w-full sm:w-[85%] lg:w-[78%] overflow-hidden'>
           <Image
-            src='/images/hero_banner.png'
-            alt=''
+            src='/images/hero-banner-dark.png'
+            alt='KAHF Treasure Attar'
             fill
             priority
             sizes='100vw'
-            className='object-cover opacity-90 sm:opacity-95 lg:opacity-100'
+            className='object-cover opacity-90 sm:opacity-95 lg:opacity-100 transition-opacity duration-500'
             style={{ objectPosition: '75% center' }}
           />
           <div
@@ -91,20 +91,20 @@ export function Hero() {
         <div className='grid items-center lg:grid-cols-12'>
           <div className='relative z-20 flex flex-col items-start max-w-xl py-6 sm:py-10 lg:col-span-6 lg:py-16'>
             <motion.span
-              className='mb-3 sm:mb-4 text-[0.65rem] sm:text-[0.72rem] font-bold uppercase tracking-[0.24em] sm:tracking-[0.26em] media-halo-sm'
+              className='mb-3 sm:mb-4 text-[0.65rem] sm:text-[0.72rem] font-bold tracking-[0.06em] media-halo-sm'
               style={{ color: 'var(--color-gold)' }}
               {...fadeUp(0)}
             >
-              PREMIUM ALCOHOL-FREE ATTAR
+              খাঁটি আতর · অ্যালকোহল-মুক্ত · দীর্ঘস্থায়ী
             </motion.span>
 
             <motion.h1
-              className='font-serif text-3xl font-medium leading-[1.12] tracking-tight on-media sm:text-5xl lg:text-[4.15rem] media-halo'
+              className='font-serif text-3xl font-bold leading-[1.15] tracking-wide sm:text-5xl lg:text-[4.25rem] bg-gradient-to-r from-amber-100 via-amber-200 to-amber-500 bg-clip-text text-transparent drop-shadow-[0_4px_25px_rgba(212,175,55,0.4)]'
               {...fadeUp(0.08)}
             >
-              A Drop of Gold,
+              খাঁটি সুবাসে লুকিয়ে আছে
               <br />
-              The Earth Turns Royal
+              আপনার আসল পরিচয়
             </motion.h1>
 
             <motion.div className='my-5 sm:my-7 flex items-center gap-3 sm:gap-3.5' {...fadeUp(0.14)} aria-hidden='true'>
@@ -124,8 +124,8 @@ export function Hero() {
               className='max-w-md text-sm leading-relaxed on-media-soft sm:text-lg font-sans media-halo'
               {...fadeUp(0.2)}
             >
-              Experience the richness of authentic attars crafted with the finest imported oils for everyday elegance
-              and special moments.
+              বিদেশ থেকে আনা খাঁটি পারফিউম অয়েল দিয়ে তৈরি। কোনো অ্যালকোহল নেই, কোনো ভেজাল নেই। গন্ধ থাকে
+              ঘণ্টার পর ঘণ্টা — ত্বকে আর কাপড়ে।
             </motion.p>
 
             <motion.div
@@ -134,15 +134,15 @@ export function Hero() {
             >
               <Link
                 href='/shop'
-                className='inline-flex w-full sm:w-auto items-center justify-center rounded bg-[var(--color-gold)] px-6 sm:px-8 py-3 sm:py-3.5 text-xs font-bold uppercase tracking-[0.16em] text-[var(--color-on-accent)] shadow-xl hover:scale-[1.02] active:scale-[0.98] transition-all text-center'
+                className='inline-flex w-full sm:w-auto items-center justify-center rounded bg-[var(--color-gold)] px-6 sm:px-8 py-3 sm:py-3.5 text-xs font-bold tracking-[0.06em] text-[var(--color-on-accent)] shadow-xl hover:scale-[1.02] active:scale-[0.98] transition-all text-center'
               >
-                SHOP COLLECTION
+                আতর দেখুন
               </Link>
               <Link
                 href='/collections'
-                className='inline-flex w-full sm:w-auto items-center justify-center rounded border border-[var(--color-border-strong)] bg-transparent px-6 sm:px-8 py-3 sm:py-3.5 text-xs font-bold uppercase tracking-[0.16em] on-media-soft on-media-hover hover:border-[var(--color-gold)] hover:bg-[var(--color-gold-tint)] transition-all text-center'
+                className='inline-flex w-full sm:w-auto items-center justify-center rounded border border-[var(--color-border-strong)] bg-transparent px-6 sm:px-8 py-3 sm:py-3.5 text-xs font-bold tracking-[0.06em] on-media-soft on-media-hover hover:border-[var(--color-gold)] hover:bg-[var(--color-gold-tint)] transition-all text-center'
               >
-                EXPLORE ATTARS
+                কালেকশন ব্রাউজ করুন
               </Link>
             </motion.div>
           </div>

@@ -1,13 +1,3 @@
-/**
- * Frequently asked questions.
- *
- * Answers are derived strictly from confirmed facts in the source docs
- * (alcohol-free, WhatsApp ordering, sizes, BDT pricing, Bangladesh market).
- * Anything not defined in the docs (exact delivery time, charges, returns)
- * is written to point the customer to WhatsApp rather than stating an
- * unverified rule. See docs/BUSINESS_REQUIREMENTS.md.
- */
-
 export interface FaqItem {
   question: string;
   answer: string;
@@ -15,43 +5,43 @@ export interface FaqItem {
 
 export const faqs: FaqItem[] = [
   {
-    question: 'Are KAHF Treasure attars alcohol-free?',
+    question: 'আতরে কি অ্যালকোহল আছে?',
     answer:
-      'Yes. Every KAHF Treasure fragrance is a concentrated, alcohol-free attar oil — gentle on the skin and long lasting.',
+      'না, এক ফোঁটাও নেই। আমাদের সব আতর ১০০% অ্যালকোহল-মুক্ত। ঘন অয়েল দিয়ে বানানো — ত্বকে নরম লাগে, আর গন্ধও অনেকক্ষণ থাকে।',
   },
   {
-    question: 'What bottle sizes are available?',
+    question: 'কী কী সাইজে পাওয়া যায়?',
     answer:
-      'Most fragrances are available in 3ml (sample), 6ml (regular) and 12ml (large). Larger sizes may be introduced in future.',
+      '৩ মিলি, ৬ মিলি আর ১২ মিলি — এই তিন সাইজে সবচেয়ে বেশি থাকে। কিছু আতরে ২৪ মিলি আর ৫০ মিলিও আছে। ৩ মিলি দিয়ে প্রথমে ট্রাই করে দেখতে পারেন।',
   },
   {
-    question: 'How do I place an order?',
+    question: 'অর্ডার করব কীভাবে?',
     answer:
-      'Browse the collection, choose your fragrance and size, then tap “Order on WhatsApp”. Your selection is pre-filled into a message so you can confirm details and delivery with our team directly.',
+      'খুব সহজ। পছন্দের আতরটা বেছে নিন, "WhatsApp-এ অর্ডার" বাটনে চাপ দিন — আপনার নাম আর পছন্দ সব অটোমেটিক মেসেজে চলে যাবে। আমরা সরাসরি কথা বলে ডেলিভারি ঠিক করে নেব।',
   },
   {
-    question: 'How long does an attar last on the skin?',
+    question: 'গন্ধ কতক্ষণ থাকে?',
     answer:
-      'Because attars are concentrated oils, they typically last much longer than alcohol-based sprays. Longevity varies by fragrance and skin type — message us and we’ll recommend the best long-lasting options.',
+      'অ্যালকোহল-ভিত্তিক স্প্রের চেয়ে অনেক বেশি থাকে — ত্বকে ৮-১২ ঘণ্টা, আর কাপড়ে তো দিনের পর দিন। তবে কোন আতর, আর কেমন ত্বক — এটার ওপর নির্ভর করে। আমাদের বললে সবচেয়ে বেশি স্থায়ী হবে এমন আতর বেছে দেব।',
   },
   {
-    question: 'Which fragrance should I choose?',
+    question: 'কোনটা আমার জন্য ভালো হবে?',
     answer:
-      'Tell us what you like — fresh, sweet, woody, floral or oud — and the occasion, and our team will suggest the right scent. You can also explore our Collections to narrow down by style.',
+      'আপনি কী পছন্দ করেন — ফ্রেশ? মিষ্টি? কাঠের গন্ধ? ফুলের? নাকি উদ? আর কখন ব্যবহার করবেন — অফিসে, বিয়েতে, নাকি প্রতিদিন? এই কথাগুলো বললে আমরা ঠিক মানানসই আতর বেছে দিতে পারব।',
   },
   {
-    question: 'Do you deliver across Bangladesh?',
+    question: 'সারা বাংলাদেশে ডেলিভারি দেন?',
     answer:
-      'Yes, we deliver across Bangladesh. For current delivery time and charges to your area, please confirm with us on WhatsApp when you place your order.',
+      'জ্বি, সারা দেশে পাঠাই। ঢাকায় ১-২ দিন, বাইরে ২-৪ দিন লাগতে পারে। ক্যাশ অন ডেলিভারি আছে — পণ্য হাতে পেয়ে টাকা দেন। ডেলিভারি চার্জ এলাকাভেদে আলাদা।',
   },
   {
-    question: 'Are the prices fixed?',
+    question: 'দাম কি পরিবর্তন হতে পারে?',
     answer:
-      'All prices are shown in Bangladeshi Taka (BDT). Prices may change without prior notice and availability depends on current stock.',
+      'সব দাম বাংলাদেশি টাকায় দেওয়া। বাজারের ওপর নির্ভর করে মাঝে মাঝে দাম বদলাতে পারে। তবে অর্ডার নিশ্চিত হওয়ার পর দাম আর বদলায় না। স্টক না থাকলে আগে বলে দেই।',
   },
   {
-    question: 'Can I buy a fragrance as a gift?',
+    question: 'উপহার দেওয়ার জন্য কি ভালো?',
     answer:
-      'Absolutely. Many of our attars make elegant gifts. Let us know it’s a gift when you order and we’ll help you choose something memorable.',
+      'খুব ভালো! আতর উপহার হিসেবে দারুণ একটা জিনিস। বিয়ে, জন্মদিন, ঈদ — যেকোনো উপলক্ষে। উপহারের জন্য বললে সুন্দর প্যাকেজিংও করে দেই।',
   },
 ];

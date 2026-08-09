@@ -1,4 +1,5 @@
 import type { Product } from '@/data/products';
+import { familyLabel, genderLabel } from '@/lib/format';
 import { CalendarClock, Droplets, Sun, User, Wind } from 'lucide-react';
 
 /**
@@ -9,19 +10,19 @@ import { CalendarClock, Droplets, Sun, User, Wind } from 'lucide-react';
 export function ProductAttributes({ product }: { product: Product }) {
   const hasNotes = product.topNotes || product.middleNotes || product.baseNotes;
   const attributes: { icon: React.ReactNode; label: string; value?: string }[] = [
-    { icon: <Droplets size={18} />, label: 'Longevity', value: product.longevity },
-    { icon: <Wind size={18} />, label: 'Projection', value: product.projection },
-    { icon: <Sun size={18} />, label: 'Best Season', value: product.season?.join(', ') },
-    { icon: <CalendarClock size={18} />, label: 'Occasion', value: product.occasion?.join(', ') },
+    { icon: <Droplets size={18} />, label: 'স্থায়িত্ব', value: product.longevity },
+    { icon: <Wind size={18} />, label: 'ছড়ানোর ক্ষমতা', value: product.projection },
+    { icon: <Sun size={18} />, label: 'যে ঋতুতে ভালো', value: product.season?.join(', ') },
+    { icon: <CalendarClock size={18} />, label: 'উপলক্ষ', value: product.occasion?.join(', ') },
     {
       icon: <User size={18} />,
-      label: 'Gender',
-      value: product.gender ? capitalize(product.gender) : undefined,
+      label: 'কাদের জন্য',
+      value: product.gender ? genderLabel(product.gender) : undefined,
     },
     {
       icon: <Droplets size={18} />,
-      label: 'Fragrance Family',
-      value: product.family ? capitalize(product.family) : undefined,
+      label: 'সুবাসের ধরন',
+      value: product.family ? familyLabel(product.family) : undefined,
     },
   ].filter((a) => a.value);
 
@@ -30,12 +31,12 @@ export function ProductAttributes({ product }: { product: Product }) {
       {/* Notes */}
       {hasNotes ? (
         <div>
-          <h2 className='font-display text-2xl text-ink'>Fragrance Notes</h2>
+          <h2 className='font-display text-2xl text-ink'>সুবাসের নোট</h2>
           <span className='gold-rule my-4 block w-12' aria-hidden='true' />
           <dl className='grid gap-4 sm:grid-cols-3'>
-            <NoteColumn title='Top' notes={product.topNotes} />
-            <NoteColumn title='Heart' notes={product.middleNotes} />
-            <NoteColumn title='Base' notes={product.baseNotes} />
+            <NoteColumn title='উপরের নোট' notes={product.topNotes} />
+            <NoteColumn title='মধ্যের নোট' notes={product.middleNotes} />
+            <NoteColumn title='শেষের নোট' notes={product.baseNotes} />
           </dl>
         </div>
       ) : (
@@ -43,15 +44,14 @@ export function ProductAttributes({ product }: { product: Product }) {
           className='border border-dashed border-line bg-surface p-5 text-sm text-muted'
           style={{ borderRadius: 'var(--radius-card)' }}
         >
-          Detailed fragrance notes for this scent are being added. Message us on WhatsApp for a full description and
-          recommendations.
+          এই সুগন্ধির বিস্তারিত নোট আমরা যোগ করছি। পুরো বর্ণনা আর পরামর্শের জন্য WhatsApp-এ মেসেজ করুন।
         </p>
       )}
 
       {/* Attributes */}
       {attributes.length > 0 && (
         <div>
-          <h2 className='font-display text-2xl text-ink'>Details</h2>
+          <h2 className='font-display text-2xl text-ink'>বিস্তারিত</h2>
           <span className='gold-rule my-4 block w-12' aria-hidden='true' />
           <dl className='grid grid-cols-2 gap-4 sm:grid-cols-3'>
             {attributes.map((attr) => (
@@ -60,7 +60,7 @@ export function ProductAttributes({ product }: { product: Product }) {
                 className='border border-line bg-surface/80 p-4'
                 style={{ borderRadius: 'var(--radius-card)', boxShadow: 'var(--shadow-card)' }}
               >
-                <dt className='flex items-center gap-2 text-xs uppercase tracking-[0.12em] text-muted'>
+                <dt className='flex items-center gap-2 text-xs tracking-[0.06em] text-muted'>
                   <span style={{ color: 'var(--color-gold-deep)' }}>{attr.icon}</span>
                   {attr.label}
                 </dt>
@@ -80,7 +80,7 @@ function NoteColumn({ title, notes }: { title: string; notes?: string[] }) {
       className='border border-line bg-surface/80 p-5 text-center'
       style={{ borderRadius: 'var(--radius-card)', boxShadow: 'var(--shadow-card)' }}
     >
-      <dt className='text-xs uppercase tracking-[0.16em]' style={{ color: 'var(--color-gold-deep)' }}>
+      <dt className='text-xs tracking-[0.06em]' style={{ color: 'var(--color-gold-deep)' }}>
         {title}
       </dt>
       <dd className='mt-2 text-sm text-ink-soft'>
@@ -88,8 +88,4 @@ function NoteColumn({ title, notes }: { title: string; notes?: string[] }) {
       </dd>
     </div>
   );
-}
-
-function capitalize(s: string): string {
-  return s.charAt(0).toUpperCase() + s.slice(1);
 }

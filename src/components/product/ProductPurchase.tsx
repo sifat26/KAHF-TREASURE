@@ -5,7 +5,8 @@ import { WhatsAppIcon } from '@/components/icons/SocialIcons';
 import { StockBadge } from '@/components/ui/Badge';
 import { Button, ButtonLink } from '@/components/ui/Button';
 import type { Product, ProductSize } from '@/data/products';
-import { availableSizes, formatPrice, formatSize, isOrderable } from '@/lib/format';
+import { availableSizes, formatPrice, formatSize, isOrderable, toBanglaDigits } from '@/lib/format';
+import { productLabel } from '@/lib/products';
 import { cn } from '@/lib/utils';
 import { orderProductUrl } from '@/lib/whatsapp';
 import { Check, Heart, Minus, Plus, Share2 } from 'lucide-react';
@@ -27,9 +28,19 @@ export function ProductPurchase({ product }: { product: Product }) {
   const wished = isWishlisted(product.slug);
   const currentPrice = size ? product.prices[size] : undefined;
 
+  // Bangla digit spans explicitly use Noto Serif Bengali so ১ never
+  // renders as a glyph that looks like ৯ via a Latin font fallback.
+  const bnNum: React.CSSProperties = {
+    fontFamily: 'var(--font-bn-serif), var(--font-bn-sans), sans-serif',
+  };
+
   async function share() {
     const url = typeof window !== 'undefined' ? window.location.href : '';
-    const data = { title: product.name, text: `${product.name} — KAHF Treasure`, url };
+    const data = {
+      title: productLabel(product),
+      text: `${productLabel(product)} — KAHF Treasure`,
+      url,
+    };
     if (navigator.share) {
       try {
         await navigator.share(data);
@@ -52,9 +63,9 @@ export function ProductPurchase({ product }: { product: Product }) {
       {/* Price */}
       <div className='flex items-baseline gap-3'>
         <span className='font-display text-3xl text-ink sm:text-4xl'>
-          {currentPrice ? formatPrice(currentPrice) : 'Price on request'}
+          {currentPrice ? formatPrice(currentPrice) : 'দাম জানতে যোগাযোগ করুন'}
         </span>
-        {size && <span className='text-sm text-muted'>/ {formatSize(size)}</span>}
+        {size && <span className='text-sm text-muted' style={bnNum} translate='no'>/ {formatSize(size)}</span>}
       </div>
 
       <div className='mt-2'>
@@ -65,14 +76,15 @@ export function ProductPurchase({ product }: { product: Product }) {
       {sizes.length > 0 && (
         <div className='mt-6'>
           <div className='mb-2 flex items-center justify-between gap-3'>
-            <span className='block text-xs font-medium uppercase tracking-[0.16em] text-muted'>Size</span>
+            <span className='block text-xs font-medium tracking-[0.06em] text-muted'>সাইজ</span>
             {size && (
-              <span className='text-xs font-medium uppercase tracking-[0.16em]' style={{ color: 'var(--color-gold)' }}>
-                Selected: {formatSize(size)}
+              <span className='text-xs font-medium tracking-[0.06em]' style={{ color: 'var(--color-gold)', ...bnNum }} translate='no'>
+                বেছে নেওয়া হয়েছে: {formatSize(size)}
               </span>
             )}
           </div>
-          <div className='flex flex-wrap gap-2'>
+          {/* translate="no" prevents Chrome auto-translate from rewriting Bangla digits */}
+          <div className='flex flex-wrap gap-2' translate='no'>
             {sizes.map((s) => (
               <button
                 key={s}
@@ -99,8 +111,8 @@ export function ProductPurchase({ product }: { product: Product }) {
                     <Check size={10} />
                   </span>
                 )}
-                <span className='text-sm font-medium'>{formatSize(s)}</span>
-                <span className={cn('text-xs', size === s ? 'text-ink-soft' : 'text-muted')}>
+                <span className='text-sm font-medium' style={bnNum}>{formatSize(s)}</span>
+                <span className={cn('text-xs', size === s ? 'text-ink-soft' : 'text-muted')} style={bnNum}>
                   {formatPrice(product.prices[s]!)}
                 </span>
               </button>
@@ -113,19 +125,19 @@ export function ProductPurchase({ product }: { product: Product }) {
       {orderable && size && (
         <div className='mt-6 flex flex-col gap-3'>
           <div className='flex items-center gap-4'>
-            <span className='text-xs font-medium uppercase tracking-[0.16em] text-muted'>Qty</span>
-            <div className='flex items-center rounded-full border border-line bg-canvas'>
+            <span className='text-xs font-medium tracking-[0.06em] text-muted'>পরিমাণ</span>
+            <div className='flex items-center rounded-full border border-line bg-canvas' translate='no'>
               <button
                 onClick={() => setQty((q) => Math.max(1, q - 1))}
-                aria-label='Decrease quantity'
+                aria-label='পরিমাণ কমান'
                 className='flex h-10 w-10 items-center justify-center text-muted transition-colors hover:text-ink'
               >
                 <Minus size={16} />
               </button>
-              <span className='w-8 text-center text-sm font-medium'>{qty}</span>
+              <span className='w-8 text-center text-sm font-medium' style={bnNum}>{toBanglaDigits(qty)}</span>
               <button
                 onClick={() => setQty((q) => q + 1)}
-                aria-label='Increase quantity'
+                aria-label='পরিমাণ বাড়ান'
                 className='flex h-10 w-10 items-center justify-center text-muted transition-colors hover:text-ink'
               >
                 <Plus size={16} />
@@ -135,11 +147,11 @@ export function ProductPurchase({ product }: { product: Product }) {
 
           <div className='flex gap-3'>
             <Button full size='lg' onClick={() => addItem(product, size, qty)}>
-              Add to Enquiry Bag
+              তালিকায় যোগ করুন
             </Button>
           </div>
           <ButtonLink href={orderProductUrl(product, size)} external variant='gold' size='lg' full>
-            <WhatsAppIcon size={18} /> Order on WhatsApp
+            <WhatsAppIcon size={18} /> WhatsApp-এ অর্ডার করুন
           </ButtonLink>
         </div>
       )}
@@ -147,7 +159,7 @@ export function ProductPurchase({ product }: { product: Product }) {
       {!orderable && (
         <div className='mt-6'>
           <ButtonLink href={orderProductUrl(product)} external variant='secondary' size='lg' full>
-            <WhatsAppIcon size={18} /> Ask about availability
+            <WhatsAppIcon size={18} /> স্টক আছে কিনা জেনে নিন
           </ButtonLink>
         </div>
       )}
@@ -164,11 +176,11 @@ export function ProductPurchase({ product }: { product: Product }) {
             className={cn(wished && 'fill-current')}
             style={wished ? { color: 'var(--color-gold)' } : undefined}
           />
-          {wished ? 'Saved' : 'Save'}
+          {wished ? 'সংরক্ষিত' : 'সংরক্ষণ করুন'}
         </button>
         <button onClick={share} className='inline-flex items-center gap-2 text-muted transition-colors hover:text-ink'>
           {copied ? <Check size={16} /> : <Share2 size={16} />}
-          {copied ? 'Link copied' : 'Share'}
+          {copied ? 'লিংক কপি হয়েছে' : 'শেয়ার করুন'}
         </button>
       </div>
     </div>

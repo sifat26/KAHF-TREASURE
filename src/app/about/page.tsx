@@ -9,10 +9,13 @@ import { WhyChooseUs } from '@/components/home/WhyChooseUs';
 import { BreadcrumbJsonLd } from '@/components/seo/JsonLd';
 import { brandStory, site, trustPoints } from '@/data/site';
 
+export const dynamic = 'force-static';
+
+
 export const metadata: Metadata = {
-  title: 'About Us',
+  title: 'আমাদের কথা',
   description:
-    'The story behind KAHF Treasure — a premium alcohol-free attar brand built on authenticity, quality and trust.',
+    'KAHF Treasure — বিদেশ থেকে আনা খাঁটি পারফিউম অয়েল দিয়ে তৈরি অ্যালকোহল-মুক্ত আতর। খাঁটি সুবাস, দীর্ঘস্থায়ী গন্ধ, আর আস্থার ব্র্যান্ড।',
   alternates: { canonical: '/about' },
 };
 
@@ -21,8 +24,8 @@ export default function AboutPage() {
     <>
       <BreadcrumbJsonLd
         items={[
-          { name: 'Home', url: '/' },
-          { name: 'About', url: '/about' },
+          { name: 'হোম', url: '/' },
+          { name: 'আমাদের কথা', url: '/about' },
         ]}
       />
 
@@ -31,20 +34,20 @@ export default function AboutPage() {
         <Container className="py-14 lg:py-20">
           <Breadcrumbs
             items={[
-              { name: 'Home', href: '/' },
-              { name: 'About', href: '/about' },
+              { name: 'হোম', href: '/' },
+              { name: 'আমাদের কথা', href: '/about' },
             ]}
             className="mb-8"
           />
           <div className="max-w-3xl">
-            <span className="eyebrow mb-4 block">Our Story</span>
+            <span className="eyebrow mb-4 block">আমাদের গল্প</span>
             <h1 className="font-display text-4xl leading-tight text-ink sm:text-5xl lg:text-6xl">
-              The essence of elegance, crafted with care
+              খাঁটি সুবাসের পেছনের গল্প
             </h1>
             <p className="mt-6 max-w-2xl text-lg leading-relaxed text-muted">
-              {site.name} is a premium alcohol-free attar and Islamic lifestyle brand, dedicated to
-              bringing you authentic, long-lasting fragrances with a shopping experience that feels
-              as considered as the scents themselves.
+              {site.name} একটি প্রিমিয়াম অ্যালকোহল-মুক্ত আতর ও ইসলামিক লাইফস্টাইল ব্র্যান্ড। খাঁটি,
+              দীর্ঘস্থায়ী সুবাস আপনার কাছে পৌঁছে দেওয়াই আমাদের কাজ — আর কেনাকাটার অভিজ্ঞতাটিও যেন
+              সুবাসের মতোই যত্নে সাজানো হয়, সেটিই আমাদের চেষ্টা।
             </p>
           </div>
         </Container>
@@ -54,12 +57,12 @@ export default function AboutPage() {
       <Section className="bg-canvas">
         <div className="grid gap-8 lg:grid-cols-2">
           <Reveal className="rounded-[var(--radius-card)] border border-line bg-surface p-8 lg:p-10">
-            <h2 className="font-display text-2xl text-ink">Our Mission</h2>
+            <h2 className="font-display text-2xl text-ink">যা করতে চাই</h2>
             <span className="gold-rule my-4 block w-12" aria-hidden="true" />
             <p className="leading-relaxed text-muted">{brandStory.mission}</p>
           </Reveal>
           <Reveal delay={0.1} className="rounded-[var(--radius-card)] border border-line bg-surface p-8 lg:p-10">
-            <h2 className="font-display text-2xl text-ink">Our Vision</h2>
+            <h2 className="font-display text-2xl text-ink">যেখানে যেতে চাই</h2>
             <span className="gold-rule my-4 block w-12" aria-hidden="true" />
             <p className="leading-relaxed text-muted">{brandStory.vision}</p>
           </Reveal>
@@ -68,7 +71,7 @@ export default function AboutPage() {
 
       {/* Values */}
       <Section className="bg-surface-2">
-        <SectionHeader eyebrow="What we stand for" title="Our Values" />
+        <SectionHeader eyebrow="আমাদের নিয়ম" title="যেসব জিনিস আমরা ছাড়ি না" />
         <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-4">
           {brandStory.values.map((value, i) => (
             <Reveal
@@ -91,16 +94,16 @@ export default function AboutPage() {
       <Section className="bg-surface-2">
         <Container size="narrow">
           <div className="rounded-[var(--radius-card)] border border-line bg-canvas p-10 text-center">
-            <h2 className="font-display text-3xl text-ink">Discover your signature scent</h2>
+            <h2 className="font-display text-3xl text-ink">আপনার পছন্দের আতর খুঁজে নিন</h2>
             <p className="mx-auto mt-3 max-w-md text-muted">
-              Explore our collections or message us for a personal recommendation.
+              কালেকশনটা একটু দেখে নিন। কনফিউশন থাকলে মেসেজ দিন — আমরা সাহায্য করব।
             </p>
             <div className="mt-7 flex flex-wrap justify-center gap-3">
               <ButtonLink href="/shop" variant="primary" size="lg">
-                Shop Fragrances
+                কালেকশন দেখুন
               </ButtonLink>
               <ButtonLink href="/contact" variant="secondary" size="lg">
-                Contact Us
+                মেসেজ দিন
               </ButtonLink>
             </div>
           </div>

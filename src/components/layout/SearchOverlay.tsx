@@ -6,9 +6,21 @@ import { useRouter } from 'next/navigation';
 import { Search, X } from 'lucide-react';
 import { AnimatePresence, motion, useReducedMotion } from 'framer-motion';
 import { products } from '@/data/products';
-import { filterAndSortProducts } from '@/lib/products';
+import { filterAndSortProducts, productLabel } from '@/lib/products';
+import { familyLabel } from '@/lib/format';
 import { ProductBottle } from '@/components/ui/ProductBottle';
 import { PriceDisplay } from '@/components/ui/PriceDisplay';
+
+/** Bangla labels for the catalogue categories shown under each result. */
+const CATEGORY_LABEL: Record<string, string> = {
+  'most-wanted': 'সবচেয়ে জনপ্রিয়',
+  'new-arrivals': 'নতুন এসেছে',
+  oud: 'উদ',
+  floral: 'ফুলেল',
+  fruit: 'ফলের সুবাস',
+  packages: 'প্যাকেজ',
+  unique: 'বিশেষ',
+};
 
 /** Instant search overlay — filters the local catalogue as you type. */
 export function SearchOverlay({ open, onClose }: { open: boolean; onClose: () => void }) {
@@ -82,7 +94,7 @@ export function SearchOverlay({ open, onClose }: { open: boolean; onClose: () =>
             transition={{ duration: 0.25, ease: [0.22, 1, 0.36, 1] }}
             role="dialog"
             aria-modal="true"
-            aria-label="Search fragrances"
+            aria-label="সুগন্ধি খুঁজুন"
           >
             <form
               onSubmit={submit}
@@ -94,17 +106,17 @@ export function SearchOverlay({ open, onClose }: { open: boolean; onClose: () =>
                 ref={inputRef}
                 value={query}
                 onChange={(e) => setQuery(e.target.value)}
-                placeholder="Search fragrances, notes, collections…"
+                placeholder="আতর, নোট বা কালেকশন খুঁজুন…"
                 className="w-full bg-transparent text-lg outline-none"
                 style={{
                   color: 'var(--color-text-primary)',
                 }}
-                aria-label="Search query"
+                aria-label="যা খুঁজছেন"
               />
               <button
                 type="button"
                 onClick={onClose}
-                aria-label="Close search"
+                aria-label="খোঁজা বন্ধ করুন"
                 style={{ color: 'var(--color-muted)' }}
               >
                 <X size={20} />
@@ -117,7 +129,7 @@ export function SearchOverlay({ open, onClose }: { open: boolean; onClose: () =>
                   className="py-8 text-center text-sm"
                   style={{ color: 'var(--color-muted)' }}
                 >
-                  No fragrances match &ldquo;{query}&rdquo;. Try a different word.
+                  &ldquo;{query}&rdquo; দিয়ে কিছু পাওয়া যায়নি। অন্য শব্দ দিয়ে খুঁজে দেখুন।
                 </p>
               )}
               <ul className="flex flex-col">
@@ -138,7 +150,7 @@ export function SearchOverlay({ open, onClose }: { open: boolean; onClose: () =>
                       }}
                     >
                       <ProductBottle
-                        name={product.name}
+                        name={productLabel(product)}
                         family={product.family}
                         className="h-14 w-14 shrink-0 rounded-[10px]"
                         compact
@@ -148,13 +160,14 @@ export function SearchOverlay({ open, onClose }: { open: boolean; onClose: () =>
                           className="block truncate font-medium"
                           style={{ color: 'var(--color-text-primary)' }}
                         >
-                          {product.name}
+                          {productLabel(product)}
                         </span>
                         <span
-                          className="block text-xs capitalize"
+                          className="block text-xs"
                           style={{ color: 'var(--color-muted)' }}
                         >
-                          {product.family ?? 'Attar'} · {product.category.replace('-', ' ')}
+                          {product.family ? familyLabel(product.family) : 'আতর'} ·{' '}
+                          {CATEGORY_LABEL[product.category] ?? 'শপ'}
                         </span>
                       </span>
                       <PriceDisplay
@@ -174,7 +187,7 @@ export function SearchOverlay({ open, onClose }: { open: boolean; onClose: () =>
                     color: 'var(--color-text-secondary)',
                   }}
                 >
-                  See all results for &ldquo;{query}&rdquo;
+                  &ldquo;{query}&rdquo;-এর সব ফলাফল দেখুন
                 </button>
               )}
               {query.trim().length === 0 && (
@@ -182,7 +195,7 @@ export function SearchOverlay({ open, onClose }: { open: boolean; onClose: () =>
                   className="px-2 py-6 text-sm"
                   style={{ color: 'var(--color-muted)' }}
                 >
-                  Start typing to explore our fragrance library.
+                  আমাদের সুগন্ধির সংগ্রহ ঘুরে দেখতে লিখতে শুরু করুন।
                 </p>
               )}
             </div>

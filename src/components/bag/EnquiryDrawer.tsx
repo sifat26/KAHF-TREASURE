@@ -5,7 +5,7 @@ import Link from 'next/link';
 import { Minus, Plus, ShoppingBag, Trash2, X } from 'lucide-react';
 import { AnimatePresence, motion, useReducedMotion } from 'framer-motion';
 import { useEnquiryBag } from './EnquiryBagProvider';
-import { formatPrice, formatSize } from '@/lib/format';
+import { formatPrice, formatSize, toBanglaDigits } from '@/lib/format';
 import { orderBagUrl } from '@/lib/whatsapp';
 import { WhatsAppIcon } from '@/components/icons/SocialIcons';
 import { ProductBottle } from '@/components/ui/ProductBottle';
@@ -53,16 +53,16 @@ export function EnquiryDrawer() {
             transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
             role="dialog"
             aria-modal="true"
-            aria-label="Enquiry bag"
+            aria-label="আপনার তালিকা"
           >
             {/* Header */}
             <div className="flex items-center justify-between border-b border-line px-6 py-5">
               <h2 className="font-display text-xl text-ink">
-                Enquiry Bag {count > 0 && <span className="text-muted">({count})</span>}
+                আপনার তালিকা {count > 0 && <span className="text-muted">({toBanglaDigits(count)})</span>}
               </h2>
               <button
                 onClick={() => setOpen(false)}
-                aria-label="Close enquiry bag"
+                aria-label="তালিকা বন্ধ করুন"
                 className="flex h-9 w-9 items-center justify-center rounded-full text-muted transition-colors hover:bg-surface hover:text-ink"
               >
                 <X size={20} />
@@ -73,9 +73,9 @@ export function EnquiryDrawer() {
             {items.length === 0 ? (
               <div className="flex flex-1 flex-col items-center justify-center gap-4 px-6 text-center">
                 <ShoppingBag size={40} className="text-line" strokeWidth={1.25} />
-                <p className="text-muted">Your enquiry bag is empty.</p>
+                <p className="text-muted">আপনার তালিকা এখন খালি।</p>
                 <Button variant="secondary" onClick={() => setOpen(false)}>
-                  Explore fragrances
+                  সুগন্ধি ঘুরে দেখুন
                 </Button>
               </div>
             ) : (
@@ -89,7 +89,7 @@ export function EnquiryDrawer() {
                         className="shrink-0"
                       >
                         <ProductBottle
-                          name={item.name}
+                          name={item.label ?? item.name}
                           family={item.family}
                           className="h-20 w-20 rounded-lg"
                           compact
@@ -103,17 +103,17 @@ export function EnquiryDrawer() {
                             onClick={() => setOpen(false)}
                             className="font-medium text-ink hover:text-[var(--color-gold-deep)]"
                           >
-                            {item.name}
+                            {item.label ?? item.name}
                           </Link>
                           <button
                             onClick={() => removeItem(item.slug, item.size)}
-                            aria-label={`Remove ${item.name} (${item.size})`}
+                            aria-label={`${item.label ?? item.name} (${formatSize(item.size)}) সরিয়ে ফেলুন`}
                             className="text-muted transition-colors hover:text-[var(--color-error)]"
                           >
                             <Trash2 size={16} />
                           </button>
                         </div>
-                        <span className="text-xs uppercase tracking-wide text-muted">
+                        <span className="text-xs tracking-[0.04em] text-muted">
                           {formatSize(item.size)}
                         </span>
 
@@ -121,15 +121,15 @@ export function EnquiryDrawer() {
                           <div className="flex items-center rounded-full border border-line">
                             <button
                               onClick={() => updateQty(item.slug, item.size, item.qty - 1)}
-                              aria-label="Decrease quantity"
+                              aria-label="পরিমাণ কমান"
                               className="flex h-8 w-8 items-center justify-center text-muted hover:text-ink"
                             >
                               <Minus size={14} />
                             </button>
-                            <span className="w-6 text-center text-sm">{item.qty}</span>
+                            <span className="w-6 text-center text-sm">{toBanglaDigits(item.qty)}</span>
                             <button
                               onClick={() => updateQty(item.slug, item.size, item.qty + 1)}
-                              aria-label="Increase quantity"
+                              aria-label="পরিমাণ বাড়ান"
                               className="flex h-8 w-8 items-center justify-center text-muted hover:text-ink"
                             >
                               <Plus size={14} />
@@ -150,22 +150,22 @@ export function EnquiryDrawer() {
                 <div className="border-t border-line px-6 py-5">
                   {total > 0 && (
                     <div className="mb-4 flex items-center justify-between">
-                      <span className="text-sm text-muted">Estimated total</span>
+                      <span className="text-sm text-muted">সম্ভাব্য মোট</span>
                       <span className="font-display text-xl text-ink">{formatPrice(total)}</span>
                     </div>
                   )}
                   <p className="mb-4 text-xs leading-relaxed text-muted">
-                    Delivery is arranged on WhatsApp. We’ll confirm availability, delivery time and
-                    charges for your area before you pay.
+                    ডেলিভারির কথা WhatsApp-এ ঠিক করা হয়। টাকা দেওয়ার আগেই আমরা স্টক, ডেলিভারির সময় আর
+                    আপনার এলাকার চার্জ জানিয়ে দেব।
                   </p>
                   <ButtonLink href={orderUrl} external variant="primary" size="lg" full className="mb-2">
-                    <WhatsAppIcon size={18} /> Order on WhatsApp
+                    <WhatsAppIcon size={18} /> WhatsApp-এ অর্ডার করুন
                   </ButtonLink>
                   <button
                     onClick={clearBag}
-                    className="w-full py-2 text-xs uppercase tracking-[0.14em] text-muted transition-colors hover:text-ink"
+                    className="w-full py-2 text-xs tracking-[0.06em] text-muted transition-colors hover:text-ink"
                   >
-                    Clear bag
+                    তালিকা মুছে ফেলুন
                   </button>
                 </div>
               </>

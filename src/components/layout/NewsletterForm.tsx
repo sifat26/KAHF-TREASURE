@@ -25,7 +25,7 @@ export function NewsletterForm({ className }: { className?: string }) {
         className={cn('flex items-center gap-2 text-sm', className)}
         style={{ color: 'var(--color-success)' }}
       >
-        <Check size={16} /> Thank you — we&apos;ll be in touch.
+        <Check size={16} /> ধন্যবাদ — আমরা যোগাযোগ করব।
       </p>
     );
   }
@@ -45,15 +45,15 @@ export function NewsletterForm({ className }: { className?: string }) {
       >
         <input
           type="email"
-          placeholder="Your email address"
-          aria-label="Email address"
+          placeholder="আপনার ইমেইল ঠিকানা"
+          aria-label="ইমেইল ঠিকানা"
           className="h-11 w-full bg-transparent px-4 text-sm outline-none"
           style={{
             color: 'var(--color-text-primary)',
           }}
           {...register('email', {
-            required: 'Email is required',
-            pattern: { value: /^[^\s@]+@[^\s@]+\.[^\s@]+$/, message: 'Enter a valid email' },
+            required: 'ইমেইল আবশ্যক',
+            pattern: { value: /^[^\s@]+@[^\s@]+\.[^\s@]+$/, message: 'সঠিক ইমেইল ঠিকানা লিখুন' },
           })}
         />
         <button
@@ -71,7 +71,7 @@ export function NewsletterForm({ className }: { className?: string }) {
             (e.currentTarget as HTMLButtonElement).style.background =
               'var(--color-accent)';
           }}
-          aria-label="Subscribe"
+          aria-label="সাবস্ক্রাইব করুন"
         >
           <ArrowRight size={18} />
         </button>

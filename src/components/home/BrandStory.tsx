@@ -37,8 +37,8 @@ export function BrandStory() {
                 </p>
               </div>
               <div className="h-px w-16 bg-[var(--color-accent)]/30" />
-              <p className="text-[0.62rem] sm:text-[0.68rem] uppercase tracking-[0.22em] text-[var(--color-text-secondary)]">
-                Premium Alcohol-Free Attar
+              <p className="text-[0.62rem] sm:text-[0.68rem] tracking-[0.06em] text-[var(--color-text-secondary)]">
+                খাঁটি আতর · অ্যালকোহল-মুক্ত
               </p>
             </div>
           </div>
@@ -47,11 +47,11 @@ export function BrandStory() {
         {/* Right: Text content */}
         <Reveal delay={0.12}>
           <div className="w-full">
-            <span className="text-[0.7rem] font-bold uppercase tracking-[0.24em] text-[var(--color-accent)] mb-2 block">
-              OUR STORY
+            <span className="text-[0.7rem] font-bold tracking-[0.06em] text-[var(--color-accent)] mb-2 block">
+              আমাদের গল্প
             </span>
             <h2 className="font-serif text-2xl sm:text-4xl lg:text-5xl font-bold leading-[1.15] text-[var(--color-text-primary)] tracking-tight">
-              Crafted for those who appreciate the art of fragrance
+              যাঁরা বুঝেন খাঁটি সুবাসের মূল্য
             </h2>
 
             <div className="my-5 h-px w-16 bg-[var(--color-accent)]/40" aria-hidden="true" />
@@ -68,7 +68,7 @@ export function BrandStory() {
               {brandStory.values.slice(0, 5).map((value) => (
                 <span
                   key={value}
-                  className="rounded-full px-3.5 py-1.5 text-[0.62rem] sm:text-xs font-semibold uppercase tracking-[0.12em] bg-[var(--color-background)] border border-[var(--color-accent)]/25 text-[var(--color-accent-strong)] break-words max-w-full"
+                  className="rounded-full px-3.5 py-1.5 text-[0.62rem] sm:text-xs font-semibold tracking-[0.06em] bg-[var(--color-background)] border border-[var(--color-accent)]/25 text-[var(--color-accent-strong)] break-words max-w-full"
                 >
                   {value}
                 </span>
@@ -78,9 +78,9 @@ export function BrandStory() {
             <ButtonLink
               href="/about"
               variant="link"
-              className="mt-6 text-xs sm:text-sm font-semibold uppercase tracking-wider text-[var(--color-accent)] hover:text-[var(--color-accent-strong)]"
+              className="mt-6 text-xs sm:text-sm font-semibold tracking-[0.04em] text-[var(--color-accent)] hover:text-[var(--color-accent-strong)]"
             >
-              Read Our Story →
+              আমাদের গল্প পড়ুন →
             </ButtonLink>
           </div>
         </Reveal>

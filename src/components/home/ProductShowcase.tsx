@@ -25,7 +25,7 @@ export function ProductShowcase({
   description,
   products,
   viewAllHref,
-  viewAllLabel = 'View All',
+  viewAllLabel = 'সব দেখুন',
   desktopCount = 8,
   mobileCount = 8,
 }: ProductShowcaseProps) {
@@ -64,7 +64,7 @@ export function ProductShowcase({
           <div className='mb-10 flex flex-wrap items-end justify-between gap-4 border-b border-[var(--color-border)] pb-6'>
             <div>
               {eyebrow && (
-                <span className='mb-2 block text-[0.7rem] font-bold uppercase tracking-[0.24em] text-[var(--color-gold)]'>
+                <span className='mb-2 block text-[0.7rem] font-bold tracking-[0.06em] text-[var(--color-gold)]'>
                   {eyebrow}
                 </span>
               )}
@@ -79,7 +79,7 @@ export function ProductShowcase({
               <ButtonLink
                 href={viewAllHref}
                 variant='link'
-                className='shrink-0 text-xs font-semibold uppercase tracking-[0.14em] text-[var(--color-gold)] transition-colors hover:text-[var(--color-gold-deep)] sm:text-sm'
+                className='shrink-0 text-xs font-semibold tracking-[0.06em] text-[var(--color-gold)] transition-colors hover:text-[var(--color-gold-deep)] sm:text-sm'
               >
                 {viewAllLabel} →
               </ButtonLink>
@@ -120,7 +120,7 @@ export function ProductShowcase({
               onClick={() => scroll('left')}
               disabled={!canLeft}
               className='flex h-9 w-9 items-center justify-center rounded-full border border-[var(--color-accent)]/30 text-[var(--color-accent)] disabled:opacity-30 disabled:pointer-events-none hover:bg-[var(--color-accent)]/15 transition-all'
-              aria-label='Scroll left'
+              aria-label='বাঁ দিকে সরান'
             >
               <ChevronLeft size={18} />
             </button>
@@ -129,7 +129,7 @@ export function ProductShowcase({
               onClick={() => scroll('right')}
               disabled={!canRight}
               className='flex h-9 w-9 items-center justify-center rounded-full border border-[var(--color-accent)]/30 text-[var(--color-accent)] disabled:opacity-30 disabled:pointer-events-none hover:bg-[var(--color-accent)]/15 transition-all'
-              aria-label='Scroll right'
+              aria-label='ডান দিকে সরান'
             >
               <ChevronRight size={18} />
             </button>

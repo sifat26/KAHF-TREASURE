@@ -2,6 +2,7 @@
 
 import { useEnquiryBag } from '@/components/bag/EnquiryBagProvider';
 import { mainNav, site } from '@/data/site';
+import { toBanglaDigits } from '@/lib/format';
 import { cn } from '@/lib/utils';
 import { Award, ChevronDown, Clock, Flame, Heart, Menu, Search, ShoppingBag, Truck, X } from 'lucide-react';
 import Image from 'next/image';
@@ -9,6 +10,7 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import * as React from 'react';
 import { SearchOverlay } from './SearchOverlay';
+import { CartButton } from '@/components/cart/CartButton';
 import { ThemeToggle } from '@/components/theme/ThemeToggle';
 
 export function Navbar() {
@@ -47,30 +49,32 @@ export function Navbar() {
 
   const isActive = (href: string) => (href === '/' ? pathname === '/' : pathname.startsWith(href));
 
+  if (pathname.startsWith('/admin')) return null;
+
   return (
     <>
       <header className='fixed inset-x-0 top-0 z-50 transition-all duration-300'>
         {/* ── Top Announcement Bar (matching reference image top bar) ── */}
-        <div className='bg-[var(--color-background-deep)] border-b border-[var(--color-accent)]/20 text-[var(--color-accent)] py-1.5 px-3 text-[0.62rem] sm:text-[0.68rem] font-semibold tracking-[0.14em] sm:tracking-[0.16em] uppercase select-none'>
+        <div className='bg-[var(--color-background-deep)] border-b border-[var(--color-accent)]/20 text-[var(--color-accent)] py-1.5 px-3 text-[0.62rem] sm:text-[0.68rem] font-semibold tracking-[0.06em] select-none'>
           <div className='mx-auto max-w-7xl flex items-center justify-center flex-wrap gap-x-3 sm:gap-x-6 gap-y-1 text-center'>
             <div className='flex items-center gap-1.5'>
               <Award className='w-3.5 h-3.5 text-[var(--color-accent)] shrink-0' />
-              <span className='whitespace-nowrap'>PREMIUM ALCOHOL-FREE ATTAR</span>
+              <span className='whitespace-nowrap'>খাঁটি অ্যালকোহল-মুক্ত আতর</span>
             </div>
             <span className='hidden sm:inline text-[var(--color-accent)]/40 font-light'>|</span>
             <div className='hidden sm:flex items-center gap-1.5'>
               <Flame className='w-3.5 h-3.5 text-[var(--color-accent)] shrink-0' />
-              <span className='whitespace-nowrap'>IMPORTED PERFUME OILS</span>
+              <span className='whitespace-nowrap'>বিদেশ থেকে আনা পারফিউম অয়েল</span>
             </div>
             <span className='hidden md:inline text-[var(--color-accent)]/40 font-light'>|</span>
             <div className='hidden md:flex items-center gap-1.5'>
               <Clock className='w-3.5 h-3.5 text-[var(--color-accent)] shrink-0' />
-              <span className='whitespace-nowrap'>LONG LASTING FRAGRANCE</span>
+              <span className='whitespace-nowrap'>গন্ধ থাকে ঘণ্টার পর ঘণ্টা</span>
             </div>
             <span className='hidden lg:inline text-[var(--color-accent)]/40 font-light'>|</span>
             <div className='hidden lg:flex items-center gap-1.5'>
               <Truck className='w-3.5 h-3.5 text-[var(--color-accent)] shrink-0' />
-              <span className='whitespace-nowrap'>FAST DELIVERY IN BD</span>
+              <span className='whitespace-nowrap'>সারা দেশে ক্যাশ অন ডেলিভারি</span>
             </div>
           </div>
         </div>
@@ -83,7 +87,7 @@ export function Navbar() {
               ? 'bg-[var(--color-background-deep)]/95 backdrop-blur-md border-b border-[var(--color-accent)]/20 shadow-xl'
               : 'bg-[var(--color-background-deep)]/90 backdrop-blur-sm border-b border-[var(--color-accent)]/15 shadow-md',
           )}
-          aria-label='Main'
+          aria-label='প্রধান'
         >
           <div
             className='mx-auto flex h-14 items-center justify-between px-3 sm:px-6 lg:px-8'
@@ -94,21 +98,23 @@ export function Navbar() {
               type='button'
               className='flex h-10 w-10 items-center justify-center rounded-full text-[var(--color-accent)] transition-colors lg:hidden shrink-0'
               onClick={() => setMenuOpen((o) => !o)}
-              aria-label={menuOpen ? 'Close menu' : 'Open menu'}
+              aria-label={menuOpen ? 'মেনু বন্ধ করুন' : 'মেনু খুলুন'}
             >
               {menuOpen ? <X size={22} /> : <Menu size={22} />}
             </button>
 
             {/* Brand Logo with exact gold shield calligraphy emblem */}
-            <Link href='/' className='flex items-center gap-2 sm:gap-3 shrink-0 group py-1' aria-label={`${site.name} — home`}>
-              <Image
-                src='/images/logo.jpg'
-                alt='KAHF Treasure'
-                width={48}
-                height={52}
-                priority
-                className='h-9 sm:h-12 w-auto object-contain filter drop-shadow-[0_2px_10px_var(--color-border-strong)] transform group-hover:scale-105 transition-transform'
-              />
+            <Link href='/' className='flex items-center gap-2 sm:gap-3 shrink-0 group py-1' aria-label={`${site.name} — হোম`}>
+              <div className="relative flex h-10 sm:h-12 w-10 sm:w-12 items-center justify-center rounded-xl bg-stone-950 p-1 shadow-md border border-amber-500/30 group-hover:border-amber-400 transition-all">
+                <Image
+                  src='/images/logo-shield.png'
+                  alt='KAHF Treasure'
+                  width={48}
+                  height={52}
+                  priority
+                  className='h-full w-auto object-contain filter drop-shadow-[0_2px_8px_rgba(212,175,55,0.4)] transform group-hover:scale-105 transition-transform'
+                />
+              </div>
 
               {/* Brand Text */}
               <div className='flex flex-col'>
@@ -132,7 +138,7 @@ export function Navbar() {
                         <Link
                           href={item.href}
                           className={cn(
-                            'relative flex items-center gap-1.5 text-xs xl:text-sm font-semibold tracking-widest uppercase transition-colors duration-200',
+                            'relative flex items-center gap-1.5 text-xs xl:text-sm font-semibold tracking-[0.04em] transition-colors duration-200',
                             isActive(item.href) ? 'text-[var(--color-accent-strong)]' : 'text-[var(--color-text-secondary)] group-hover/drop:text-[var(--color-accent-strong)]',
                           )}
                         >
@@ -150,43 +156,43 @@ export function Navbar() {
                               href='/collections'
                               className='px-3.5 py-2 text-xs font-semibold text-[var(--color-accent-strong)] rounded-lg hover:bg-[var(--color-accent)]/20 transition-colors border-b border-[var(--color-accent)]/15 mb-1'
                             >
-                              All Collections
+                              সব কালেকশন
                             </Link>
                             <Link
                               href='/collections/oud'
                               className='px-3.5 py-1.5 text-xs font-medium text-[var(--color-text-tertiary)] rounded-lg hover:bg-[var(--color-accent)]/15 hover:text-[var(--color-accent-strong)] transition-colors'
                             >
-                              OUD Collection
+                              উদ কালেকশন
                             </Link>
                             <Link
                               href='/collections/floral'
                               className='px-3.5 py-1.5 text-xs font-medium text-[var(--color-text-tertiary)] rounded-lg hover:bg-[var(--color-accent)]/15 hover:text-[var(--color-accent-strong)] transition-colors'
                             >
-                              FLORAL Collection
+                              ফুলেল কালেকশন
                             </Link>
                             <Link
                               href='/collections/fruity'
                               className='px-3.5 py-1.5 text-xs font-medium text-[var(--color-text-tertiary)] rounded-lg hover:bg-[var(--color-accent)]/15 hover:text-[var(--color-accent-strong)] transition-colors'
                             >
-                              FRUITY Collection
+                              ফলের কালেকশন
                             </Link>
                             <Link
                               href='/collections/fresh'
                               className='px-3.5 py-1.5 text-xs font-medium text-[var(--color-text-tertiary)] rounded-lg hover:bg-[var(--color-accent)]/15 hover:text-[var(--color-accent-strong)] transition-colors'
                             >
-                              FRESH Collection
+                              সজীব কালেকশন
                             </Link>
                             <Link
                               href='/collections/arabian'
                               className='px-3.5 py-1.5 text-xs font-medium text-[var(--color-text-tertiary)] rounded-lg hover:bg-[var(--color-accent)]/15 hover:text-[var(--color-accent-strong)] transition-colors'
                             >
-                              ARABIAN Collection
+                              আরবীয় কালেকশন
                             </Link>
                             <Link
                               href='/collections/woody'
                               className='px-3.5 py-1.5 text-xs font-medium text-[var(--color-text-tertiary)] rounded-lg hover:bg-[var(--color-accent)]/15 hover:text-[var(--color-accent-strong)] transition-colors'
                             >
-                              WOODY Collection
+                              কাঠের কালেকশন
                             </Link>
                           </div>
                         </div>
@@ -195,7 +201,7 @@ export function Navbar() {
                       <Link
                         href={item.href}
                         className={cn(
-                          'relative flex items-center gap-1 text-xs xl:text-sm font-semibold tracking-widest uppercase transition-colors duration-200 py-1.5 px-1',
+                          'relative flex items-center gap-1 text-xs xl:text-sm font-semibold tracking-[0.04em] transition-colors duration-200 py-1.5 px-1',
                           isActive(item.href)
                             ? 'text-[var(--color-accent-strong)] after:absolute after:bottom-0 after:left-0 after:w-full after:h-0.5 after:bg-[var(--color-accent)]'
                             : 'text-[var(--color-text-secondary)] hover:text-[var(--color-accent-strong)] after:absolute after:bottom-0 after:left-0 after:w-0 hover:after:w-full after:h-0.5 after:bg-[var(--color-accent)] after:transition-all after:duration-300',
@@ -216,7 +222,7 @@ export function Navbar() {
               <Link
                 href='/favorites'
                 className='relative flex h-10 w-10 items-center justify-center rounded-full text-[var(--color-accent)]/80 hover:text-[var(--color-accent)] hover:bg-[var(--color-accent)]/10 transition-colors'
-                aria-label={`Favorites${wishlist.length ? `, ${wishlist.length} saved` : ''}`}
+                aria-label={`পছন্দের তালিকা${wishlist.length ? `, ${toBanglaDigits(wishlist.length)}টি সংরক্ষিত` : ''}`}
               >
                 <Heart size={20} />
                 {wishlist.length > 0 && (
@@ -224,7 +230,7 @@ export function Navbar() {
                     className='absolute -right-1 -top-1 flex h-4 min-w-[18px] items-center justify-center rounded-full px-1 text-[0.62rem] font-bold shadow-sm'
                     style={{ background: 'var(--color-accent)', color: 'var(--color-on-accent)' }}
                   >
-                    {wishlist.length}
+                    {toBanglaDigits(wishlist.length)}
                   </span>
                 )}
               </Link>
@@ -234,32 +240,13 @@ export function Navbar() {
                 type='button'
                 onClick={() => setSearchOpen(true)}
                 className='flex h-10 w-10 items-center justify-center rounded-full text-[var(--color-accent)]/80 hover:text-[var(--color-accent)] hover:bg-[var(--color-accent)]/10 transition-colors'
-                aria-label='Search fragrances'
+                aria-label='সুগন্ধি খুঁজুন'
               >
                 <Search size={20} />
               </button>
 
-              {/* Shopping Bag with accurate dynamic count badge */}
-              <button
-                type='button'
-                onClick={() => setBagOpen(true)}
-                className='relative flex h-10 w-10 items-center justify-center rounded-full text-[var(--color-accent)]/80 hover:text-[var(--color-accent)] hover:bg-[var(--color-accent)]/10 transition-colors'
-                aria-label={`Enquiry bag${count ? `, ${count} items` : ''}`}
-              >
-                <ShoppingBag size={20} />
-                {count > 0 && (
-                  <span
-                    className='absolute -right-1 -top-1 flex h-4 items-center justify-center rounded-full px-1 text-[0.62rem] font-bold shadow-sm animate-in fade-in zoom-in'
-                    style={{
-                      background: 'var(--color-accent)',
-                      color: 'var(--color-on-accent)',
-                      minWidth: '18px',
-                    }}
-                  >
-                    {count}
-                  </span>
-                )}
-              </button>
+              {/* Cart Drawer Button */}
+              <CartButton />
             </div>
           </div>
         </nav>
@@ -285,65 +272,65 @@ export function Navbar() {
             <li className='border-b border-[var(--color-accent)]/15'>
               <Link
                 href='/favorites'
-                className='flex items-center justify-between py-3.5 text-sm font-semibold tracking-wider text-[var(--color-text-tertiary)] hover:text-[var(--color-accent-strong)]'
+                className='flex items-center justify-between py-3.5 text-sm font-semibold tracking-[0.04em] text-[var(--color-text-tertiary)] hover:text-[var(--color-accent-strong)]'
                 onClick={() => setMenuOpen(false)}
               >
-                <span>FAVORITES</span>
+                <span>পছন্দের তালিকা</span>
               </Link>
             </li>
             {mainNav.map((item) => (
               <li key={item.href} className='border-b border-[var(--color-accent)]/15'>
                 <Link
                   href={item.href}
-                  className='flex items-center justify-between py-3.5 text-sm font-semibold tracking-wider text-[var(--color-text-tertiary)] hover:text-[var(--color-accent-strong)]'
+                  className='flex items-center justify-between py-3.5 text-sm font-semibold tracking-[0.04em] text-[var(--color-text-tertiary)] hover:text-[var(--color-accent-strong)]'
                   onClick={() => setMenuOpen(false)}
                 >
                   <span>{item.label}</span>
                 </Link>
                 {/* Sub-menu inside Mobile Drawer for Collections */}
-                {item.label === 'COLLECTIONS' && (
+                {'hasDropdown' in item && item.hasDropdown && (
                   <div className='pl-4 pb-3 flex flex-col gap-2'>
                     <Link
                       href='/collections/oud'
                       className='text-xs text-[var(--color-text-secondary)] hover:text-[var(--color-accent)] py-1'
                       onClick={() => setMenuOpen(false)}
                     >
-                      • OUD Collection
+                      • উদ কালেকশন
                     </Link>
                     <Link
                       href='/collections/floral'
                       className='text-xs text-[var(--color-text-secondary)] hover:text-[var(--color-accent)] py-1'
                       onClick={() => setMenuOpen(false)}
                     >
-                      • FLORAL Collection
+                      • ফুলেল কালেকশন
                     </Link>
                     <Link
                       href='/collections/fruity'
                       className='text-xs text-[var(--color-text-secondary)] hover:text-[var(--color-accent)] py-1'
                       onClick={() => setMenuOpen(false)}
                     >
-                      • FRUITY Collection
+                      • ফলের কালেকশন
                     </Link>
                     <Link
                       href='/collections/fresh'
                       className='text-xs text-[var(--color-text-secondary)] hover:text-[var(--color-accent)] py-1'
                       onClick={() => setMenuOpen(false)}
                     >
-                      • FRESH Collection
+                      • সজীব কালেকশন
                     </Link>
                     <Link
                       href='/collections/arabian'
                       className='text-xs text-[var(--color-text-secondary)] hover:text-[var(--color-accent)] py-1'
                       onClick={() => setMenuOpen(false)}
                     >
-                      • ARABIAN Collection
+                      • আরবীয় কালেকশন
                     </Link>
                     <Link
                       href='/collections/woody'
                       className='text-xs text-[var(--color-text-secondary)] hover:text-[var(--color-accent)] py-1'
                       onClick={() => setMenuOpen(false)}
                     >
-                      • WOODY Collection
+                      • কাঠের কালেকশন
                     </Link>
                   </div>
                 )}

@@ -93,11 +93,18 @@
   --color-emerald:   #0f766e;
 
 
-  /* ── Typography ── */
-  --font-display: var(--font-display); /* Playfair Display */
-  --font-serif:   var(--font-serif);   /* Cormorant Garamond */
-  --font-sans:    var(--font-sans);    /* Inter */
-  --font-bengali: var(--font-bengali); /* Noto Serif Bengali */
+  /* ── Typography ──
+     Bangla-first stacks. The LATIN face is listed first on purpose: font
+     fallback is per-character, and each latin face is subset with a
+     unicode-range, so Latin brand names (Blue Mask, CR7) render in
+     Playfair/Inter while Bangla text falls through to the Bangla face.
+     Raw faces come from next/font as --font-latin-* / --font-bn-*
+     (see app/layout.tsx). */
+  --font-display: 'qayyum-book', 'Kalpurush', sans-serif;
+  --font-serif:   'qayyum-book', 'Kalpurush', sans-serif;
+  --font-sans:    var(--font-latin-sans),    var(--font-bn-sans),  ui-sans-serif, system-ui, sans-serif;
+  /* Bangla-only escape hatch, for text that must never use a Latin face. */
+  --font-bengali: var(--font-bn-sans), ui-sans-serif, system-ui, sans-serif;
 
   /* ── Radius (BRAND_GUIDELINES.md » 12–16 px) ── */
   --radius-btn:   12px;
@@ -295,7 +302,13 @@ html {
 body {
   background-color: var(--color-background);
   color: var(--color-text-primary);
-  font-family: var(--font-sans), ui-sans-serif, system-ui, sans-serif;
+  font-family: var(--font-sans);
+  /* Bangla sets taller than Latin: the matra (headline stroke) plus the
+     descenders on ু / ৃ / ্র need vertical room, and conjuncts stack. 1.8 is
+     the floor for comfortable Bangla body copy; 1.5 leaves it cramped. */
+  line-height: 1.8;
+  /* Bangla glyphs read smaller than Latin at the same px, so lift the base. */
+  font-size: 1.0625rem;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-rendering: optimizeLegibility;
@@ -321,23 +334,39 @@ body {
    TYPOGRAPHIC HELPERS
    ═══════════════════════════════════════════════════════════════ */
 .font-display {
-  font-family: var(--font-display), ui-serif, Georgia, serif;
-  letter-spacing: -0.01em;
+  font-family: var(--font-display);
+  /* No negative tracking: it collides the matra of adjacent Bangla glyphs. */
+  letter-spacing: 0;
+  /* Headings still need more leading than a Latin display face would. */
+  line-height: 1.42;
 }
 .font-serif {
-  font-family: var(--font-serif), ui-serif, Georgia, serif;
+  font-family: var(--font-serif);
+  line-height: 1.45;
 }
 .font-bengali {
-  font-family: var(--font-bengali), var(--font-sans), sans-serif;
+  font-family: var(--font-bengali);
 }
 
-/* Eyebrow / kicker label — small all-caps label above section headings */
+/* Tailwind's leading-* utilities are tuned for Latin and are routinely applied
+   to headings in this codebase. Re-floor the tightest ones so a Bangla matra
+   never clips into the line above. */
+.leading-none,
+.leading-tight,
+.leading-snug {
+  line-height: 1.35;
+}
+
+/* Eyebrow / kicker label above section headings.
+   Bangla has no letter case, so `text-transform: uppercase` is a no-op on it
+   while still shouting at any inline Latin. Wide tracking is worse: it prises
+   apart the matra and breaks conjuncts. Both are deliberately dropped. */
 .eyebrow {
-  font-family: var(--font-sans), sans-serif;
-  text-transform: uppercase;
-  letter-spacing: 0.28em;
-  font-size: 0.7rem;
-  font-weight: 500;
+  font-family: var(--font-sans);
+  letter-spacing: 0.06em;
+  font-size: 0.78rem;
+  font-weight: 600;
+  line-height: 1.7;
   color: var(--color-accent);
 }
 
@@ -469,4 +498,11 @@ body {
 }
 .no-scrollbar::-webkit-scrollbar {
   display: none;
+}
+
+/* Explicit Title Font Rule requested by user */
+.font-serif,
+.font-display,
+h1, h2, h3, h4, h5, h6 {
+  font-family: 'qayyum-book', 'Kalpurush', sans-serif !important;
 }

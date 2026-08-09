@@ -48,12 +48,12 @@ export function ProductBottle({
       )}
 
       {/* Photorealistic Attar Bottle Image — Large & Prominent */}
-      <div className="relative w-full h-full flex items-center justify-center p-1.5 overflow-hidden">
+      <div className="relative w-full h-full flex items-center justify-center p-1 sm:p-2 overflow-hidden">
         {/* eslint-disable-next-img-element */}
         <img
           src="/images/exact-attar-bottle.png"
-          alt={`${name} luxury attar bottle`}
-          className="w-full h-full object-contain scale-[1.28] transform group-hover:scale-[1.35] transition-transform duration-500 ease-out filter drop-shadow-[0_16px_32px_var(--t-bottle-shadow)]"
+          alt={`${name} আতরের বোতল`}
+          className="w-full h-full object-contain scale-[1.05] sm:scale-[1.1] transform group-hover:scale-[1.15] transition-transform duration-500 ease-out filter drop-shadow-[0_16px_32px_var(--t-bottle-shadow)]"
         />
       </div>
 

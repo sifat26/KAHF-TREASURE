@@ -5,6 +5,7 @@ import { WhatsAppIcon } from '@/components/icons/SocialIcons';
 import { ButtonLink } from '@/components/ui/Button';
 import type { Product } from '@/data/products';
 import { availableSizes, formatPrice, isOrderable, startingPrice } from '@/lib/format';
+import { productLabel } from '@/lib/products';
 import { cn } from '@/lib/utils';
 import { orderProductUrl } from '@/lib/whatsapp';
 import * as React from 'react';
@@ -37,17 +38,18 @@ export function StickyPurchaseBar({ product }: { product: Product }) {
     >
       <div className='flex items-center gap-3'>
         <div className='min-w-0 flex-1'>
-          <p className='truncate text-sm font-medium text-ink'>{product.name}</p>
-          {from !== null && <p className='text-xs text-muted'>from {formatPrice(from)}</p>}
+          <p className='truncate text-sm font-medium text-ink'>{productLabel(product)}</p>
+          {from !== null && <p className='text-xs text-muted'>{formatPrice(from)} থেকে</p>}
         </div>
         <button
           onClick={() => addItem(product, size)}
+          aria-label={`${productLabel(product)} তালিকায় যোগ করুন`}
           className='h-11 rounded-(--radius-btn) border border-(--color-gold) px-4 text-sm font-medium text-ink'
         >
-          Add
+          যোগ করুন
         </button>
         <ButtonLink href={orderProductUrl(product, size)} external variant='gold' className='h-11 px-4'>
-          <WhatsAppIcon size={16} /> Order
+          <WhatsAppIcon size={16} /> অর্ডার
         </ButtonLink>
       </div>
     </div>

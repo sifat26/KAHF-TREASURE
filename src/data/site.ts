@@ -1,11 +1,12 @@
 export const site = {
+  /** Kept Latin: it is the registered brand name and the wordmark. */
   name: 'KAHF Treasure',
-  tagline: 'Luxury in Every Drop',
+  tagline: 'খাঁটি সুবাসে আপনার পরিচয়',
   description:
-    'KAHF Treasure is a premium alcohol-free attar brand offering authentic, long-lasting fragrance oils crafted for everyday elegance and special occasions.',
+    'KAHF Treasure — বিদেশ থেকে আনা খাঁটি পারফিউম অয়েল দিয়ে তৈরি অ্যালকোহল-মুক্ত আতর। কোনো রাসায়নিক নেই, কোনো প্রতারণা নেই — শুধু খাঁটি সুবাস, দীর্ঘস্থায়ী গন্ধ।',
   url: 'https://kahftreasure.com',
   ogImage: '/images/hero-perfume-bottle.png',
-  locale: 'en_US',
+  locale: 'bn_BD',
 } as const;
 
 export const contact = {
@@ -15,15 +16,15 @@ export const contact = {
   whatsappDisplay: '+880 1681-253714',
   facebookHandle: 'KAHF Treasure',
   email: 'info@kahftreasure.com',
-  address: 'Dhaka, Bangladesh',
-  addressLine: 'Dhaka, Bangladesh',
-  businessHours: '10:00 AM - 10:00 PM',
+  address: 'ঢাকা, বাংলাদেশ',
+  addressLine: 'ঢাকা, বাংলাদেশ',
+  businessHours: 'সকাল ১০টা – রাত ১০টা',
   facebook: 'https://facebook.com/kahftreasure',
   instagram: 'https://instagram.com/kahftreasure',
 } as const;
 
 export const waLink = `https://wa.me/${contact.whatsapp}?text=${encodeURIComponent(
-  'Hello KAHF Treasure! I would like to enquire about your luxury attars.',
+  'আসসালামু আলাইকুম, ভাই। আতরের ব্যাপারে জানতে চাই।',
 )}`;
 
 export const mailLink = `mailto:${contact.email}`;
@@ -31,67 +32,69 @@ export const telLink = `tel:${contact.phone.replace(/\s+/g, '')}`;
 
 /** Primary navigation links. */
 export const mainNav = [
-  { label: 'HOME', href: '/' },
-  { label: 'SHOP', href: '/shop' },
-  { label: 'COLLECTIONS', href: '/collections', hasDropdown: true },
-  { label: 'ABOUT', href: '/about' },
-  { label: 'FAQ', href: '/faq' },
-  { label: 'CONTACT', href: '/contact' },
+  { label: 'হোম', href: '/' },
+  { label: 'শপ', href: '/shop' },
+  { label: 'কালেকশন', href: '/collections', hasDropdown: true },
+  { label: 'আমাদের কথা', href: '/about' },
+  { label: 'জিজ্ঞাসা', href: '/faq' },
+  { label: 'যোগাযোগ', href: '/contact' },
 ] as const;
 
 /** Footer navigation links structured for Footer.tsx */
 export const footerNav = {
   shop: [
-    { label: 'Most Wanted', href: '/collections/most-wanted' },
-    { label: 'New Arrivals', href: '/collections/new-arrivals' },
-    { label: 'All Attars', href: '/shop' },
-    { label: 'Collections', href: '/collections' },
-    { label: 'Packages & Bundles', href: '/#bundles' },
+    { label: 'সবচেয়ে চাওয়া', href: '/collections/most-wanted' },
+    { label: 'নতুন এসেছে', href: '/collections/new-arrivals' },
+    { label: 'সব আতর', href: '/shop' },
+    { label: 'কালেকশন', href: '/collections' },
+    { label: 'প্যাকেজ ও অফার', href: '/#bundles' },
   ],
   company: [
-    { label: 'Our Story', href: '/about' },
-    { label: 'Why Choose Us', href: '/#why-choose-us' },
-    { label: 'Frequently Asked Questions', href: '/faq' },
-    { label: 'Contact Us', href: '/#contact' },
+    { label: 'আমাদের গল্প', href: '/about' },
+    { label: 'কেন আমরা', href: '/#why-choose-us' },
+    { label: 'সাধারণ জিজ্ঞাসা', href: '/faq' },
+    { label: 'যোগাযোগ করুন', href: '/#contact' },
   ],
   policies: [
-    { label: 'Shipping & Delivery', href: '/faq#shipping' },
-    { label: 'Authenticity Guarantee', href: '/about#guarantee' },
-    { label: 'WhatsApp Order', href: waLink, external: true },
+    { label: 'ডেলিভারি তথ্য', href: '/faq#shipping' },
+    { label: 'আসল পণ্যের গ্যারান্টি', href: '/about#guarantee' },
+    { label: 'WhatsApp-এ অর্ডার', href: waLink, external: true },
+    { label: 'অর্ডার ট্র্যাক করুন', href: '/track-order' },
   ],
 } as const;
 
 export const brandStory = {
-  mission: 'To bring back the royal tradition of pure, alcohol-free attar making with authentic imported perfume oils.',
-  vision: 'To be Bangladesh’s most trusted luxury Islamic lifestyle and fragrance brand.',
+  mission:
+    'বিদেশের সেরা পারফিউম অয়েল এনে অ্যালকোহল-মুক্ত আতর বানানো — এই পুরোনো ঐতিহ্যকে আবার ফিরিয়ে আনা। আমরা চাই, বাংলাদেশের মানুষ যেন চিনে জানে খাঁটি আতরের গন্ধ কেমন।',
+  vision: 'বাংলাদেশের মানুষের কাছে সবচেয়ে বিশ্বস্ত আর নির্ভরযোগ্য আতরের নাম হওয়া — এটাই আমাদের স্বপ্ন।',
   values: [
-    'Pure & Alcohol-Free',
-    'Long-Lasting Projection',
-    'Imported Perfume Oils',
-    'Authentic Quality Guaranteed',
-    'Fast Delivery in Bangladesh',
+    '১০০% অ্যালকোহল-মুক্ত আর খাঁটি',
+    'গন্ধ থাকে ঘণ্টার পর ঘণ্টা',
+    'বিদেশ থেকে আনা পারফিউম অয়েল',
+    'আসল পণ্য — নয় নকল',
+    'সারা দেশে দ্রুত ডেলিভারি',
   ],
 } as const;
 
 export const trustPoints = [
   {
     icon: 'ShieldCheck',
-    title: '100% Pure & Alcohol-Free',
-    description: 'All our attars are formulated without alcohol, providing pure, long-lasting fragrance.',
+    title: '১০০% খাঁটি আর অ্যালকোহল-মুক্ত',
+    description: 'আমাদের আতরে এক ফোঁটাও অ্যালকোহল নেই। ত্বকে নরম লাগে, আর গন্ধ যেন সারাদিন সঙ্গে থাকে।',
   },
   {
     icon: 'Sparkles',
-    title: 'Imported Perfume Oils',
-    description: 'We source high-grade perfume oils to ensure rich projection and authentic notes.',
+    title: 'বিদেশ থেকে আনা পারফিউম অয়েল',
+    description: 'দুবাই, সৌদি আরব থেকে আনা উঁচু মানের অয়েল দিয়ে বানানো — তাই গন্ধ যেমন গাঢ়, তেমনি আসল।',
   },
   {
     icon: 'Clock',
-    title: 'Long-Lasting Projection',
-    description: 'Concentrated oil formulations that remain on your skin and clothes for hours.',
+    title: 'গন্ধ থাকে ঘণ্টার পর ঘণ্টা',
+    description: 'ঘন অয়েল-এর ফর্মুলা — ত্বকে লাগিয়ে রাখলে ৮-১২ ঘণ্টাও গন্ধ ধরে রাখে। কাপড়ে তো দিনের পর দিন।',
   },
   {
     icon: 'Truck',
-    title: 'Fast Delivery across BD',
-    description: 'Reliable Cash on Delivery and quick shipping to all districts in Bangladesh.',
+    title: 'সারা দেশে দ্রুত পৌঁছে দিই',
+    description: 'ঢাকা থেকে সিলেট, চট্টগ্রাম, রাজশাহী — সব জেলায় ডেলিভারি। ক্যাশ অন ডেলিভারিও আছে।',
   },
 ] as const;

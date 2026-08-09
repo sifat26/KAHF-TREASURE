@@ -53,7 +53,7 @@ export function Field({
     <div className={cn('flex flex-col gap-1.5', className)}>
       <label
         htmlFor={htmlFor}
-        className="text-xs font-medium uppercase tracking-[0.14em] text-muted"
+        className="text-xs font-medium tracking-[0.06em] text-muted"
       >
         {label}
         {required && <span className="ml-1 text-[var(--color-gold-deep)]">*</span>}

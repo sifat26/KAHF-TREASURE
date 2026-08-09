@@ -3,6 +3,7 @@
 import * as React from 'react';
 import type { Product, ProductSize } from '@/data/products';
 import { availableSizes } from '@/lib/format';
+import { productLabel } from '@/lib/products';
 
 /**
  * Enquiry Bag — the WhatsApp-first equivalent of a cart.
@@ -15,7 +16,16 @@ import { availableSizes } from '@/lib/format';
 
 export interface BagItem {
   slug: string;
+  /**
+   * Latin `product.name`. Stays Latin because the WhatsApp order message built
+   * from these lines is read by the shop owner, who matches it to inventory.
+   */
   name: string;
+  /**
+   * Bangla `productLabel()` — what the customer sees in the drawer. Optional so
+   * bags persisted before this field existed still load; fall back to `name`.
+   */
+  label?: string;
   size: ProductSize;
   price?: number;
   qty: number;
@@ -90,6 +100,7 @@ export function EnquiryBagProvider({ children }: { children: React.ReactNode }) 
             {
               slug: product.slug,
               name: product.name,
+              label: productLabel(product),
               size,
               price: product.prices[size],
               qty,

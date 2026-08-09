@@ -2,11 +2,20 @@ import type { NextConfig } from 'next';
 
 const nextConfig: NextConfig = {
   images: {
-    // Modern formats for when real product photography is added.
+    unoptimized: true,
     formats: ['image/avif', 'image/webp'],
-    // Remote image hosts. Add the business CDN here when real 1:1 product
-    // photography is available (BRAND_GUIDELINES.md » Product Images).
-    remotePatterns: [],
+    remotePatterns: [
+      { protocol: 'https', hostname: '**' },
+    ],
+  },
+  async rewrites() {
+    const apiUrl = process.env.BACKEND_URL || 'http://localhost:5000';
+    return [
+      {
+        source: '/api/:path*',
+        destination: `${apiUrl}/api/:path*`,
+      },
+    ];
   },
 };
 

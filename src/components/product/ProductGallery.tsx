@@ -13,7 +13,12 @@ import * as React from 'react';
  * images exist, swap the panes for <Image> and keep the same thumbnail UX.
  */
 export function ProductGallery({ name, family }: { name: string; family?: FragranceFamily }) {
-  const views = ['front', 'angle', 'detail'] as const;
+  // `id` stays Latin (it is the React key); `label` is what the customer hears.
+  const views = [
+    { id: 'front', label: 'সামনে থেকে' },
+    { id: 'angle', label: 'কোণ থেকে' },
+    { id: 'detail', label: 'কাছ থেকে' },
+  ] as const;
   const [active, setActive] = React.useState(0);
   const [zoom, setZoom] = React.useState(false);
 
@@ -40,9 +45,9 @@ export function ProductGallery({ name, family }: { name: string; family?: Fragra
       <div className='flex gap-3'>
         {views.map((view, i) => (
           <button
-            key={view}
+            key={view.id}
             onClick={() => setActive(i)}
-            aria-label={`View ${view}`}
+            aria-label={`${view.label} দেখুন`}
             aria-pressed={active === i}
             className={cn(
               'relative h-20 w-20 overflow-hidden rounded-[var(--radius-image)] border bg-canvas transition-all duration-300',

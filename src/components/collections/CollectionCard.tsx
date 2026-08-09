@@ -2,6 +2,7 @@ import Link from 'next/link';
 import { ArrowUpRight } from 'lucide-react';
 import type { Collection } from '@/data/collections';
 import type { FragranceFamily } from '@/data/products';
+import { toBanglaDigits } from '@/lib/format';
 import { ProductBottle } from '@/components/ui/ProductBottle';
 import { cn } from '@/lib/utils';
 
@@ -44,7 +45,7 @@ export function CollectionCard({
           <h3 className="font-display text-xl text-ink">{collection.title}</h3>
           <p className="mt-1 text-sm text-muted">
             {collection.tagline}
-            {typeof count === 'number' && ` · ${count} fragrances`}
+            {typeof count === 'number' && ` · ${toBanglaDigits(count)}টি সুগন্ধি`}
           </p>
         </div>
         <ArrowUpRight

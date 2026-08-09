@@ -1,6 +1,18 @@
 import { products, type FragranceFamily, type Gender, type Product } from '@/data/products';
 import { availableSizes, startingPrice } from './format';
 
+/**
+ * The customer-facing product name: the Bangla `displayName` when the product
+ * has one, otherwise the Latin `name`. Every UI surface should call this rather
+ * than reading `product.name` directly, so Western dupes keep their Latin name
+ * while Bangla and Arabic titles read natively.
+ *
+ * Structured data (JSON-LD) and the slug deliberately keep `name`.
+ */
+export function productLabel(product: Product): string {
+  return product.displayName ?? product.name;
+}
+
 /** Look up a single product by slug. */
 export function getProductBySlug(slug: string): Product | undefined {
   return products.find((p) => p.slug === slug);
@@ -81,7 +93,9 @@ export function filterAndSortProducts(
     }
     if (query) {
       const q = query.trim().toLowerCase();
-      const haystack = `${p.name} ${p.description ?? ''} ${p.family ?? ''} ${p.category}`.toLowerCase();
+      // Match on both names so "কাঠগোলাপ" and "Kathgolap" each find the product.
+      const haystack =
+        `${p.name} ${p.displayName ?? ''} ${p.description ?? ''} ${p.family ?? ''} ${p.category}`.toLowerCase();
       if (!haystack.includes(q)) return false;
     }
     return true;
@@ -103,7 +117,8 @@ function sortProducts(list: Product[], sort: SortKey): Product[] {
         (a, b) => (startingPrice(b.prices) ?? -Infinity) - (startingPrice(a.prices) ?? -Infinity),
       );
     case 'name':
-      return copy.sort((a, b) => a.name.localeCompare(b.name));
+      // Sort on what the customer actually reads, collated for Bangla.
+      return copy.sort((a, b) => productLabel(a).localeCompare(productLabel(b), 'bn'));
     case 'newest':
       return copy.sort(
         (a, b) => Number(Boolean(b.newArrival)) - Number(Boolean(a.newArrival)),

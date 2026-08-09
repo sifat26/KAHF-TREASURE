@@ -10,8 +10,8 @@ export function FaqPreview() {
     <Section style={{ background: 'var(--color-background)' }}>
       <Container size="narrow">
         <SectionHeader
-          eyebrow="Good to know"
-          title="Frequently asked questions"
+          eyebrow="জানতে চান?"
+          title="সাধারণ জিজ্ঞাসা"
         />
         <Accordion items={faqs.slice(0, 5)} />
         <div className="mt-10 text-center">
@@ -20,7 +20,7 @@ export function FaqPreview() {
             variant="outline"
             className="rounded-[14px] border-[var(--color-border)] text-[var(--color-text-secondary)] hover:border-[var(--color-accent)] hover:text-[var(--color-text-primary)]"
           >
-            View all questions
+            সব প্রশ্ন দেখুন
           </ButtonLink>
         </div>
       </Container>

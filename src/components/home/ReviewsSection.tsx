@@ -11,9 +11,9 @@ export function ReviewsSection() {
   return (
     <Section style={{ background: 'var(--color-background)' }}>
       <SectionHeader
-        eyebrow="Loved by customers"
-        title="What our customers say"
-        description="Real experiences from the KAHF Treasure community."
+        eyebrow="ক্রেতাদের অভিজ্ঞতা"
+        title="আমাদের ক্রেতারা কী বলেন"
+        description="যাঁরা ব্যবহার করেছেন, তাঁদের নিজের মুখের কথা।"
       />
 
       {REVIEWS_ARE_PLACEHOLDER && (
@@ -25,7 +25,7 @@ export function ReviewsSection() {
             color: 'var(--color-muted)',
           }}
         >
-          Placeholder testimonials — to be replaced with verified customer reviews before launch.
+          নমুনা মন্তব্য — লঞ্চের আগে যাচাই করা প্রকৃত ক্রেতার রিভিউ বসানো হবে।
         </p>
       )}
 
@@ -93,7 +93,7 @@ export function ReviewsSection() {
                     className="mt-1 block text-xs"
                     style={{ color: 'var(--color-accent)', opacity: 0.8 }}
                   >
-                    on {review.productName}
+                    {review.productName} সম্পর্কে
                   </span>
                 )}
               </figcaption>

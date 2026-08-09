@@ -9,16 +9,16 @@ export function ProductReviews({ productName }: { productName: string }) {
   const avg = list.reduce((s, r) => s + r.rating, 0) / list.length;
 
   return (
-    <section aria-label='Customer reviews'>
+    <section aria-label='ক্রেতাদের রিভিউ'>
       <div className='flex flex-wrap items-center justify-between gap-3'>
-        <h2 className='font-display text-2xl text-ink'>Customer Reviews</h2>
+        <h2 className='font-display text-2xl text-ink'>ক্রেতাদের রিভিউ</h2>
         <Rating value={avg} count={list.length} />
       </div>
       <span className='gold-rule my-4 block w-12' aria-hidden='true' />
 
       {REVIEWS_ARE_PLACEHOLDER && (
         <p className='mb-5 rounded-[var(--radius-card)] border border-dashed border-line bg-surface/80 px-4 py-2 text-xs text-muted'>
-          Placeholder reviews — to be replaced with verified customer feedback before launch.
+          নমুনা রিভিউ — লঞ্চের আগে যাচাই করা ক্রেতার মন্তব্য দিয়ে বদলে দেওয়া হবে।
         </p>
       )}
 

@@ -3,12 +3,7 @@ import { site } from '@/data/site';
 
 export default function robots(): MetadataRoute.Robots {
   return {
-    rules: {
-      userAgent: '*',
-      allow: '/',
-      // No admin/checkout routes exist in this release; nothing to disallow.
-    },
+    rules: { userAgent: '*', allow: '/' },
     sitemap: `${site.url}/sitemap.xml`,
-    host: site.url,
   };
 }

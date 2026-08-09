@@ -3,7 +3,7 @@
 import * as React from 'react';
 import { RotateCcw } from 'lucide-react';
 import type { CategorySlug, FragranceFamily, Gender } from '@/data/products';
-import { formatPrice } from '@/lib/format';
+import { familyLabel, formatPrice, genderLabel } from '@/lib/format';
 import { cn } from '@/lib/utils';
 
 export interface FilterState {
@@ -15,17 +15,17 @@ export interface FilterState {
 }
 
 const CATEGORY_OPTIONS: { value: CategorySlug; label: string }[] = [
-  { value: 'most-wanted', label: 'Most Wanted' },
-  { value: 'new-arrivals', label: 'New Arrivals' },
-  { value: 'oud', label: 'Oud' },
-  { value: 'floral', label: 'Floral' },
-  { value: 'fruit', label: 'Fruity' },
+  { value: 'most-wanted', label: 'সবচেয়ে জনপ্রিয়' },
+  { value: 'new-arrivals', label: 'নতুন এসেছে' },
+  { value: 'oud', label: 'উদ' },
+  { value: 'floral', label: 'ফুলেল' },
+  { value: 'fruit', label: 'ফলের সুবাস' },
 ];
 
 const GENDER_OPTIONS: { value: Gender; label: string }[] = [
-  { value: 'men', label: 'Men' },
-  { value: 'women', label: 'Women' },
-  { value: 'unisex', label: 'Unisex' },
+  { value: 'men', label: genderLabel('men') },
+  { value: 'women', label: genderLabel('women') },
+  { value: 'unisex', label: genderLabel('unisex') },
 ];
 
 /** Filter panel shared by the desktop sidebar and the mobile drawer. */
@@ -49,7 +49,7 @@ export function ShopFilters({
 
   return (
     <div className={cn('flex flex-col gap-7 p-5 rounded-2xl bg-[var(--color-background)] border border-[var(--color-accent)]/20 shadow-xl text-[var(--color-text-primary)]', className)}>
-      <FilterGroup title="Category">
+      <FilterGroup title="ধরন">
         <div className="flex flex-col gap-2.5">
           {CATEGORY_OPTIONS.map((opt) => (
             <CheckRow
@@ -62,7 +62,7 @@ export function ShopFilters({
         </div>
       </FilterGroup>
 
-      <FilterGroup title="Gender">
+      <FilterGroup title="কার জন্য">
         <div className="flex flex-col gap-2.5">
           {GENDER_OPTIONS.map((opt) => (
             <CheckRow
@@ -75,7 +75,7 @@ export function ShopFilters({
         </div>
       </FilterGroup>
 
-      <FilterGroup title="Fragrance Family">
+      <FilterGroup title="ঘ্রাণ">
         <div className="flex flex-wrap gap-2">
           {families.map((fam) => {
             const active = state.families.includes(fam);
@@ -85,20 +85,20 @@ export function ShopFilters({
                 onClick={() => onChange({ ...state, families: toggle(state.families, fam) })}
                 aria-pressed={active}
                 className={cn(
-                  'rounded-full border px-3 py-1 text-xs capitalize transition-all duration-200',
+                  'rounded-full border px-3 py-1 text-xs transition-all duration-200',
                   active
                     ? 'border-[var(--color-accent)] bg-[var(--color-accent)] text-[var(--color-background-deep)] font-bold shadow-md'
                     : 'border-[var(--color-accent)]/30 text-[var(--color-text-secondary)] hover:border-[var(--color-accent)] hover:text-[var(--color-text-primary)] bg-[var(--color-background-deep)]',
                 )}
               >
-                {fam}
+                {familyLabel(fam)}
               </button>
             );
           })}
         </div>
       </FilterGroup>
 
-      <FilterGroup title={`Max Price · ${formatPrice(state.maxPrice)}`}>
+      <FilterGroup title={`সর্বোচ্চ · ${formatPrice(state.maxPrice)}`}>
         <input
           type="range"
           min={100}
@@ -107,7 +107,7 @@ export function ShopFilters({
           value={state.maxPrice}
           onChange={(e) => onChange({ ...state, maxPrice: Number(e.target.value) })}
           className="w-full accent-[var(--color-accent)] cursor-pointer"
-          aria-label="Maximum starting price"
+          aria-label="সর্বোচ্চ দাম"
         />
         <div className="mt-1 flex justify-between text-xs text-[var(--color-text-secondary)]">
           <span>{formatPrice(100)}</span>
@@ -115,9 +115,9 @@ export function ShopFilters({
         </div>
       </FilterGroup>
 
-      <FilterGroup title="Availability">
+      <FilterGroup title="স্টক">
         <CheckRow
-          label="In stock only"
+          label="শুধু যেগুলো স্টকে আছে"
           checked={state.inStockOnly}
           onChange={() => onChange({ ...state, inStockOnly: !state.inStockOnly })}
         />
@@ -128,7 +128,7 @@ export function ShopFilters({
         onClick={onReset}
         className="inline-flex items-center gap-2 text-xs font-semibold text-[var(--color-accent)] hover:text-[var(--color-accent-strong)] transition-colors pt-2 border-t border-[var(--color-accent)]/15 w-full"
       >
-        <RotateCcw size={13} /> Reset All Filters
+        <RotateCcw size={13} /> সব রিসেট করুন
       </button>
     </div>
   );
@@ -137,7 +137,7 @@ export function ShopFilters({
 function FilterGroup({ title, children }: { title: string; children: React.ReactNode }) {
   return (
     <div>
-      <h3 className="mb-3 text-[0.7rem] font-bold uppercase tracking-[0.2em] text-[var(--color-accent)]">{title}</h3>
+      <h3 className="mb-3 text-[0.7rem] font-bold tracking-[0.06em] text-[var(--color-accent)]">{title}</h3>
       {children}
     </div>
   );

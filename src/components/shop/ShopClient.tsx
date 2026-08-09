@@ -4,17 +4,18 @@ import * as React from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { SlidersHorizontal, X } from 'lucide-react';
 import type { CategorySlug, FragranceFamily, Gender, Product } from '@/data/products';
+import { toBanglaDigits } from '@/lib/format';
 import { filterAndSortProducts, type SortKey } from '@/lib/products';
 import { ProductCard } from '@/components/product/ProductCard';
 import { ShopFilters, type FilterState } from './ShopFilters';
 import { cn } from '@/lib/utils';
 
 const SORT_OPTIONS: { value: SortKey; label: string }[] = [
-  { value: 'featured', label: 'Featured' },
-  { value: 'newest', label: 'Newest' },
-  { value: 'price-asc', label: 'Price: Low to High' },
-  { value: 'price-desc', label: 'Price: High to Low' },
-  { value: 'name', label: 'Name: A–Z' },
+  { value: 'featured', label: 'জনপ্রিয়' },
+  { value: 'newest', label: 'নতুন' },
+  { value: 'price-asc', label: 'দাম: কম → বেশি' },
+  { value: 'price-desc', label: 'দাম: বেশি → কম' },
+  { value: 'name', label: 'নাম অনুযায়ী' },
 ];
 
 export function ShopClient({
@@ -93,34 +94,34 @@ export function ShopClient({
 
       <div>
         {/* Toolbar */}
-        <div className="mb-6 flex items-center justify-between gap-4 border-b border-[var(--color-accent)]/20 pb-4">
-          <p className="text-sm text-[var(--color-text-secondary)]">
-            <span className="font-semibold text-[var(--color-text-primary)]">{results.length}</span>{' '}
-            {results.length === 1 ? 'fragrance' : 'fragrances'}
-            {query && <span className="text-[var(--color-accent)]"> for “{query}”</span>}
+        <div className="mb-6 flex flex-wrap items-center justify-between gap-3 border-b border-[var(--color-accent)]/20 pb-4">
+          <p className="text-xs sm:text-sm text-[var(--color-text-secondary)]">
+            <span className="font-semibold text-[var(--color-text-primary)]">{toBanglaDigits(results.length)}</span>টি
+            আতর
+            {query && <span className="text-[var(--color-accent)]"> — “{query}”-এর জন্য</span>}
           </p>
 
           <div className="flex items-center gap-3">
             <button
               type="button"
-              className="lg:hidden inline-flex items-center gap-2 rounded-xl border border-[var(--color-accent)]/40 bg-[var(--color-background)] px-3.5 py-2 text-xs font-semibold uppercase tracking-wider text-[var(--color-accent)] hover:bg-[var(--color-accent)]/15 transition-all"
+              className="lg:hidden inline-flex items-center gap-2 rounded-xl border border-[var(--color-accent)]/40 bg-[var(--color-background)] px-3.5 py-2 text-xs font-semibold tracking-[0.04em] text-[var(--color-accent)] hover:bg-[var(--color-accent)]/15 transition-all"
               onClick={() => setMobileOpen(true)}
             >
               <SlidersHorizontal size={15} />
-              Filters
+              ফিল্টার
               {activeCount > 0 && (
                 <span className="ml-1 rounded-full bg-[var(--color-accent)] px-1.5 py-0.5 text-[0.65rem] font-bold text-[var(--color-background-deep)]">
-                  {activeCount}
+                  {toBanglaDigits(activeCount)}
                 </span>
               )}
             </button>
 
             <label className="flex items-center gap-2 text-sm text-[var(--color-text-secondary)]">
-              <span className="hidden text-[var(--color-text-secondary)] sm:inline font-medium">Sort by:</span>
+              <span className="hidden text-[var(--color-text-secondary)] sm:inline font-medium">সাজান</span>
               <select
                 value={sort}
                 onChange={(e) => setSort(e.target.value as SortKey)}
-                aria-label="Sort products"
+                aria-label="সুগন্ধি সাজান"
                 className="h-9 w-auto rounded-xl border border-[var(--color-accent)]/30 bg-[var(--color-background)] px-3 py-1.5 text-xs sm:text-sm font-medium text-[var(--color-text-primary)] focus:border-[var(--color-accent)] focus:outline-none cursor-pointer"
               >
                 {SORT_OPTIONS.map((opt) => (
@@ -136,13 +137,13 @@ export function ShopClient({
         {/* Results */}
         {results.length === 0 ? (
           <div className="flex flex-col items-center gap-4 py-24 text-center rounded-2xl bg-[var(--color-background)] border border-[var(--color-accent)]/15 p-8">
-            <p className="text-[var(--color-text-secondary)]">No fragrances match your selected filters.</p>
+            <p className="text-[var(--color-text-secondary)]">এই ফিল্টারে কোনো আতর পাওয়া গেল না। ফিল্টার বদলে আবার দেখুন।</p>
             <button
               type="button"
               onClick={resetAll}
-              className="rounded-full bg-[var(--color-accent)] px-6 py-2.5 text-xs font-bold uppercase tracking-wider text-[var(--color-background-deep)] hover:bg-[var(--color-accent-hover)] transition-all"
+              className="rounded-full bg-[var(--color-accent)] px-6 py-2.5 text-xs font-bold tracking-[0.04em] text-[var(--color-background-deep)] hover:bg-[var(--color-accent-hover)] transition-all"
             >
-              Clear All Filters
+              সব ফিল্টার মুছে ফেলুন
             </button>
           </div>
         ) : (
@@ -173,11 +174,11 @@ export function ShopClient({
           )}
           role="dialog"
           aria-modal="true"
-          aria-label="Filters"
+          aria-label="ফিল্টার"
         >
           <div className="flex items-center justify-between border-b border-[var(--color-accent)]/20 px-5 py-4">
-            <h2 className="font-serif text-lg font-bold text-[var(--color-text-primary)]">Refine Selection</h2>
-            <button onClick={() => setMobileOpen(false)} aria-label="Close filters" className="text-[var(--color-accent)] hover:text-[var(--color-text-primary)] p-1">
+            <h2 className="font-serif text-lg font-bold text-[var(--color-text-primary)]">ফিল্টার</h2>
+            <button onClick={() => setMobileOpen(false)} aria-label="ফিল্টার বন্ধ করুন" className="text-[var(--color-accent)] hover:text-[var(--color-text-primary)] p-1">
               <X size={20} />
             </button>
           </div>
@@ -193,10 +194,10 @@ export function ShopClient({
           <div className="border-t border-[var(--color-accent)]/20 p-4 bg-[var(--color-background-deep)]">
             <button
               type="button"
-              className="w-full rounded-xl bg-[var(--color-accent)] py-3 text-xs font-bold uppercase tracking-wider text-[var(--color-background-deep)] shadow-lg hover:bg-[var(--color-accent-hover)] transition-all"
+              className="w-full rounded-xl bg-[var(--color-accent)] py-3 text-xs font-bold tracking-[0.04em] text-[var(--color-background-deep)] shadow-lg hover:bg-[var(--color-accent-hover)] transition-all"
               onClick={() => setMobileOpen(false)}
             >
-              Show {results.length} Results
+              {toBanglaDigits(results.length)}টি আতর দেখুন
             </button>
           </div>
         </div>

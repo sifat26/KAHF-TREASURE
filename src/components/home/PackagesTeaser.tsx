@@ -41,23 +41,23 @@ export function PackagesTeaser() {
 
           <div className="relative mx-auto max-w-2xl">
             <span
-              className="mb-2 block text-[0.68rem] font-bold uppercase tracking-[0.25em]"
+              className="mb-2 block text-[0.68rem] font-bold tracking-[0.06em]"
               style={{ color: 'var(--color-accent)' }}
             >
-              STAY UPDATED
+              যোগাযোগে থাকুন
             </span>
 
             <h2 className="font-display text-3xl font-bold leading-tight text-[var(--color-text-primary)] sm:text-4xl">
-              Join Our Fragrance Family
+              আমাদের সুবাসের পরিবারে যোগ দিন
             </h2>
 
             <p className="mx-auto mt-3 max-w-md text-sm text-[var(--color-text-secondary)]">
-              Get exclusive offers, new arrivals and fragrance tips directly to your inbox.
+              বিশেষ অফার, নতুন আতর আর সুগন্ধি ব্যবহারের টিপস সরাসরি আপনার ইমেইলে।
             </p>
 
             {subscribed ? (
               <div className="mt-8 rounded-lg bg-[var(--color-accent)]/15 p-4 border border-[var(--color-accent)]/30 text-sm font-semibold text-[var(--color-accent-strong)]">
-                Thank you for joining our fragrance family!
+                আমাদের সুবাসের পরিবারে যোগ দেওয়ার জন্য ধন্যবাদ।
               </div>
             ) : (
               <form onSubmit={handleSubmit} className="mt-8 flex flex-col items-center justify-center gap-3 sm:flex-row">
@@ -65,15 +65,15 @@ export function PackagesTeaser() {
                   type="email"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  placeholder="Enter your email"
+                  placeholder="আপনার ইমেইল লিখুন"
                   required
                   className="h-12 w-full max-w-md rounded-md border border-[var(--color-accent)]/20 bg-[var(--color-background-deep)] px-4 text-sm text-[var(--color-text-primary)] placeholder-[var(--color-muted)] outline-none transition-colors focus:border-[var(--color-accent)]"
                 />
                 <button
                   type="submit"
-                  className="h-12 w-full sm:w-auto rounded-md bg-[var(--color-accent)] px-8 text-xs font-bold uppercase tracking-[0.15em] text-[var(--color-background-deep)] transition-colors hover:bg-[var(--color-accent-hover)]"
+                  className="h-12 w-full sm:w-auto rounded-md bg-[var(--color-accent)] px-8 text-xs font-bold tracking-[0.06em] text-[var(--color-background-deep)] transition-colors hover:bg-[var(--color-accent-hover)]"
                 >
-                  SUBSCRIBE
+                  সাবস্ক্রাইব করুন
                 </button>
               </form>
             )}

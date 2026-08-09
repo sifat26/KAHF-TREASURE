@@ -12,12 +12,12 @@ import { CheckCircle2, Play } from 'lucide-react';
  */
 export function WhyChooseUs() {
   const points = [
-    'Alcohol-Free & Skin Friendly',
-    'Elegant & Unique Blends',
-    'Premium Imported Oils',
-    'Perfect for Every Occasion',
-    'Long Lasting Fragrance',
-    'Trusted by Thousands',
+    'অ্যালকোহল-মুক্ত ও ত্বকে কোমল',
+    'অনন্য ও রুচিসম্মত মিশ্রণ',
+    'আমদানি করা প্রিমিয়াম অয়েল',
+    'যেকোনো উপলক্ষে মানানসই',
+    'দীর্ঘস্থায়ী সুবাস',
+    'হাজারো ক্রেতার আস্থা',
   ];
 
   return (
@@ -39,7 +39,7 @@ export function WhyChooseUs() {
               <div className='absolute inset-0 flex items-center justify-center bg-[var(--t-scrim-soft)] backdrop-blur-[1px] transition-colors group-hover:bg-[var(--t-scrim-soft)]'>
                 <button
                   type='button'
-                  aria-label='Play brand video'
+                  aria-label='ব্র্যান্ড ভিডিও চালান'
                   className='flex h-14 w-14 items-center justify-center rounded-full border border-[var(--color-gold)] bg-[var(--color-card)]/80 text-[var(--color-gold)] shadow-lg transition-transform duration-300 group-hover:scale-110'
                 >
                   <Play size={20} className='ml-1 fill-[var(--color-gold)]' />
@@ -52,19 +52,19 @@ export function WhyChooseUs() {
           <Reveal className='lg:col-span-7'>
             <div className='flex flex-col items-start lg:pl-6'>
               <span
-                className='mb-2 text-[0.68rem] font-bold uppercase tracking-[0.25em]'
+                className='mb-2 text-[0.68rem] font-bold tracking-[0.06em]'
                 style={{ color: 'var(--color-gold)' }}
               >
-                WHY CHOOSE KAHF TREASURE
+                কেন KAHF Treasure
               </span>
 
               <h2 className='font-display text-3xl font-bold leading-tight text-[var(--color-text-primary)] sm:text-4xl lg:text-[2.6rem]'>
-                The Essence of Purity & Luxury
+                খাঁটি সুবাস, রাজকীয় ছোঁয়া
               </h2>
 
               <p className='mt-4 text-base leading-relaxed text-[var(--color-text-secondary)]'>
-                Kahf Treasure offers premium alcohol-free attars crafted with the world&apos;s finest imported oils. Our
-                fragrances are designed to leave a lasting impression for everyday elegance and royal moments.
+                KAHF Treasure-এর আতর তৈরি হয় আমদানি করা খাঁটি পারফিউম অয়েল দিয়ে, অ্যালকোহল ছাড়াই।
+                প্রতিদিনের আভিজাত্য থেকে বিশেষ মুহূর্ত — সুবাস রেখে যায় মনে রাখার মতো এক রেশ।
               </p>
 
               {/* 2-Column Checklist */}

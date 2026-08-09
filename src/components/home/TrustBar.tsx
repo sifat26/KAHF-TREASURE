@@ -8,28 +8,28 @@ export function TrustBar() {
   const points = [
     {
       icon: 'droplet',
-      title: 'ALCOHOL-FREE',
-      sub: '100% Safe & Pure',
+      title: 'অ্যালকোহল-মুক্ত',
+      sub: '১০০% নিরাপদ ও খাঁটি',
     },
     {
       icon: 'sparkles',
-      title: 'PREMIUM OILS',
-      sub: 'Imported Quality',
+      title: 'প্রিমিয়াম অয়েল',
+      sub: 'আমদানি করা মান',
     },
     {
       icon: 'clock',
-      title: 'LONG LASTING',
-      sub: 'Fragrance That Stays',
+      title: 'দীর্ঘস্থায়ী',
+      sub: 'সুবাস থাকে অনেকক্ষণ',
     },
     {
       icon: 'truck',
-      title: 'FAST DELIVERY',
-      sub: 'Across Bangladesh',
+      title: 'দ্রুত ডেলিভারি',
+      sub: 'সারা বাংলাদেশে',
     },
     {
       icon: 'badge-check',
-      title: 'TRUSTED BRAND',
-      sub: 'Loved by Thousands',
+      title: 'বিশ্বস্ত ব্র্যান্ড',
+      sub: 'হাজারো ক্রেতার পছন্দ',
     },
   ];
 
@@ -53,7 +53,7 @@ export function TrustBar() {
               <DataIcon name={point.icon} size={20} />
             </span>
             <div>
-              <p className='text-[0.65rem] sm:text-[0.7rem] font-bold uppercase tracking-[0.16em] sm:tracking-[0.18em] text-[var(--color-text-primary)]'>
+              <p className='text-[0.65rem] sm:text-[0.7rem] font-bold tracking-[0.06em] text-[var(--color-text-primary)]'>
                 {point.title}
               </p>
               <p className='mt-0.5 text-[0.62rem] sm:text-[0.68rem] text-[var(--color-muted)]'>{point.sub}</p>

@@ -16,21 +16,21 @@ export function CollectionsShowcase() {
         <Reveal>
           <div className='mb-10 flex flex-wrap items-end justify-between gap-4 border-b border-[var(--color-border)] pb-6'>
             <div>
-              <span className='mb-2 block text-[0.7rem] font-bold uppercase tracking-[0.24em] text-[var(--color-gold)]'>
-                EXPLORE OUR COLLECTIONS
+              <span className='mb-2 block text-[0.7rem] font-bold tracking-[0.06em] text-[var(--color-gold)]'>
+                আমাদের কালেকশন
               </span>
               <h2 className='font-serif text-3xl sm:text-4xl md:text-5xl font-bold tracking-tight text-[var(--color-text-primary)]'>
-                Curated Fragrance Libraries
+                বাছাই করা সুবাসের সংগ্রহ
               </h2>
               <p className='mt-2 max-w-xl text-sm text-[var(--color-text-secondary)] sm:text-base'>
-                Discover scents grouped by character — from fresh daily wear to deep, luxurious oud.
+                ধরন অনুযায়ী সাজানো সুগন্ধি — প্রতিদিনের সজীব সুবাস থেকে গভীর, রাজকীয় উদ পর্যন্ত।
               </p>
             </div>
             <Link
               href='/collections'
-              className='shrink-0 text-xs font-semibold uppercase tracking-[0.14em] text-[var(--color-gold)] transition-colors hover:text-[var(--color-gold-deep)] sm:text-sm'
+              className='shrink-0 text-xs font-semibold tracking-[0.06em] text-[var(--color-gold)] transition-colors hover:text-[var(--color-gold-deep)] sm:text-sm'
             >
-              View All Collections →
+              সব কালেকশন দেখুন →
             </Link>
           </div>
         </Reveal>
@@ -45,12 +45,12 @@ export function CollectionsShowcase() {
                 <Link
                   href={`/collections/${collection.slug}`}
                   className='group relative flex h-[180px] sm:h-[220px] lg:h-[250px] flex-col items-center justify-between overflow-hidden rounded-[var(--radius-card)] border border-[var(--color-border)] p-3.5 sm:p-5 text-center shadow-[var(--shadow-card)] transition-all duration-300 hover:-translate-y-1.5 hover:shadow-[var(--shadow-card-hover)]'
-                  aria-label={`${collection.title} Collection`}
+                  aria-label={`${collection.title} কালেকশন`}
                 >
                   {/* Realistic Background Image */}
                   <Image
                     src={media.bgImage}
-                    alt={`${collection.title} collection background`}
+                    alt={`${collection.title} কালেকশনের ছবি`}
                     fill
                     sizes='(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 16vw'
                     priority
@@ -144,11 +144,11 @@ export function CollectionsShowcase() {
 
                   {/* Bottom Title & Subtitle */}
                   <div className='relative z-10 mt-auto'>
-                    <h3 className='font-sans text-base font-extrabold uppercase tracking-[0.14em] on-media transition-colors leading-none drop-shadow-md group-hover:text-[var(--color-gold)] sm:text-lg'>
+                    <h3 className='font-sans text-base font-extrabold tracking-[0.04em] on-media transition-colors leading-none drop-shadow-md group-hover:text-[var(--color-gold)] sm:text-lg'>
                       {collection.title}
                     </h3>
-                    <p className='mt-1.5 text-[0.62rem] font-medium tracking-[0.18em] text-[var(--color-text-secondary)] transition-colors leading-none drop-shadow group-hover:text-[var(--color-text-primary)] sm:text-[0.68rem]'>
-                      Collection
+                    <p className='mt-1.5 text-[0.62rem] font-medium tracking-[0.06em] text-[var(--color-text-secondary)] transition-colors leading-none drop-shadow group-hover:text-[var(--color-text-primary)] sm:text-[0.68rem]'>
+                      কালেকশন
                     </p>
                   </div>
                 </Link>

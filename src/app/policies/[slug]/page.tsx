@@ -19,7 +19,7 @@ export async function generateMetadata({
 }): Promise<Metadata> {
   const { slug } = await params;
   const doc = policies[slug as keyof typeof policies];
-  if (!doc) return { title: 'Policy Not Found' };
+  if (!doc) return { title: 'নীতিমালাটি খুঁজে পাওয়া যায়নি' };
   return {
     title: doc.title,
     description: doc.intro,
@@ -40,14 +40,14 @@ export default async function PolicyPage({
     <>
       <BreadcrumbJsonLd
         items={[
-          { name: 'Home', url: '/' },
+          { name: 'হোম', url: '/' },
           { name: doc.title, url: `/policies/${doc.slug}` },
         ]}
       />
       <Container size="narrow" className="py-10 lg:py-16">
         <Breadcrumbs
           items={[
-            { name: 'Home', href: '/' },
+            { name: 'হোম', href: '/' },
             { name: doc.title, href: `/policies/${doc.slug}` },
           ]}
           className="mb-8"
@@ -84,9 +84,9 @@ export default async function PolicyPage({
         </div>
 
         <div className="mt-12 rounded-[var(--radius-card)] border border-line bg-surface p-6 text-center">
-          <p className="text-muted">Have a question about this policy?</p>
+          <p className="text-muted">এই নীতিমালা নিয়ে কোনো প্রশ্ন আছে?</p>
           <ButtonLink href={waLink} external variant="secondary" className="mt-4">
-            <WhatsAppIcon size={18} /> Ask us on WhatsApp
+            <WhatsAppIcon size={18} /> WhatsApp-এ জিজ্ঞেস করুন
           </ButtonLink>
         </div>
       </Container>

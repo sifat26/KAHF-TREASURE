@@ -9,9 +9,12 @@ import type { Metadata } from 'next';
 import Image from 'next/image';
 import Link from 'next/link';
 
+export const dynamic = 'force-static';
+
+
 export const metadata: Metadata = {
-  title: 'Fragrance Collections',
-  description: 'Explore KAHF Treasure fragrance collections — Oud, Floral, Fruity, Fresh, Arabian and Woody.',
+  title: 'আতরের কালেকশন',
+  description: 'KAHF Treasure-এর আতরের কালেকশন ঘুরে দেখুন — উদ, ফুলেল, ফলের সুবাস, সজীব, আরবীয় আর কাঠের সুবাস।',
   alternates: { canonical: '/collections' },
 };
 
@@ -21,22 +24,22 @@ export default function CollectionsPage() {
     <div className='min-h-screen select-none bg-[radial-gradient(circle_at_top,var(--color-accent-tint),transparent_20%),linear-gradient(180deg,var(--color-background)_0%,var(--color-surface)_100%)] pt-24 pb-16 text-[var(--color-text-primary)]'>
       <BreadcrumbJsonLd
         items={[
-          { name: 'Home', url: '/' },
-          { name: 'Collections', url: '/collections' },
+          { name: 'হোম', url: '/' },
+          { name: 'কালেকশন', url: '/collections' },
         ]}
       />
       <Container className='py-6 lg:py-10'>
         <Breadcrumbs
           items={[
-            { name: 'Home', href: '/' },
-            { name: 'Collections', href: '/collections' },
+            { name: 'হোম', href: '/' },
+            { name: 'কালেকশন', href: '/collections' },
           ]}
           className='mb-6 text-xs text-(--color-text-secondary)'
         />
         <SectionHeader
-          eyebrow='CURATED BY CHARACTER'
-          title='Fragrance Libraries'
-          description='Every fragrance has a unique personality. Explore our signature collections to discover the scent profile that defines your presence.'
+          eyebrow='ধরন অনুযায়ী সাজানো'
+          title='সুবাসের কালেকশন'
+          description='প্রতিটি সুবাসের নিজের একটা চরিত্র আছে। আমাদের কালেকশনগুলো ঘুরে দেখে খুঁজে নিন সেই সুবাস, যা আপনাকে চিনিয়ে দেবে।'
           align='left'
           className='mb-12 max-w-3xl border-b border-line pb-8'
         />
@@ -50,12 +53,12 @@ export default function CollectionsPage() {
                 <Link
                   href={`/collections/${collection.slug}`}
                   className='group relative flex h-[180px] sm:h-[220px] flex-col items-center justify-between overflow-hidden rounded-2xl p-3.5 sm:p-5 text-center border border-[var(--color-accent)]/25 shadow-2xl transition-all duration-300 hover:-translate-y-1.5 hover:border-[var(--color-accent)]/70 hover:shadow-[0_16px_36px_var(--t-scrim-strong)]'
-                  aria-label={`${collection.title} Collection`}
+                  aria-label={`${collection.title} কালেকশন`}
                 >
                   {/* Photorealistic Background Image */}
                   <Image
                     src={media.bgImage}
-                    alt={`${collection.title} collection background`}
+                    alt={`${collection.title} কালেকশনের ব্যাকগ্রাউন্ড`}
                     fill
                     sizes='(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 16vw'
                     priority
@@ -149,11 +152,11 @@ export default function CollectionsPage() {
 
                   {/* Title & Subtitle */}
                   <div className='relative z-10 mt-auto'>
-                    <h3 className='font-sans text-base sm:text-lg font-extrabold uppercase tracking-[0.14em] on-media group-hover:text-[var(--color-accent)] transition-colors leading-none drop-shadow-md'>
+                    <h3 className='font-sans text-base sm:text-lg font-extrabold tracking-[0.06em] on-media group-hover:text-[var(--color-accent)] transition-colors leading-none drop-shadow-md'>
                       {collection.title}
                     </h3>
-                    <p className='mt-1.5 text-[0.62rem] sm:text-[0.68rem] font-medium tracking-[0.18em] text-[var(--color-text-tertiary)] group-hover:text-[var(--color-accent-strong)] transition-colors leading-none drop-shadow'>
-                      Collection
+                    <p className='mt-1.5 text-[0.62rem] sm:text-[0.68rem] font-medium tracking-[0.06em] text-[var(--color-text-tertiary)] group-hover:text-[var(--color-accent-strong)] transition-colors leading-none drop-shadow'>
+                      কালেকশন
                     </p>
                   </div>
                 </Link>

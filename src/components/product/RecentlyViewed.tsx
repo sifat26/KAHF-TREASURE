@@ -49,8 +49,8 @@ export function RecentlyViewed({ currentSlug }: { currentSlug: string }) {
   if (items.length === 0) return null;
 
   return (
-    <section aria-label="Recently viewed" className="mt-4">
-      <SectionHeader align="left" title="Recently Viewed" />
+    <section aria-label="সম্প্রতি দেখা" className="mt-4">
+      <SectionHeader align="left" title="সম্প্রতি দেখা" />
       <div className="grid grid-cols-2 gap-4 sm:gap-6 lg:grid-cols-4">
         {items.map((product) => (
           <ProductCard key={product.slug} product={product} />

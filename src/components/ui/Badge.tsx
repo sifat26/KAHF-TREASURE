@@ -8,7 +8,7 @@ import type { ProductStatus } from '@/data/products';
  * Dark luxury edition: thin borders, warm fills, uppercase micro-type.
  */
 const badge = cva(
-  'inline-flex items-center gap-1 rounded-full font-medium uppercase tracking-[0.12em] leading-none',
+  'inline-flex items-center gap-1 rounded-full font-medium tracking-[0.06em] leading-none',
   {
     variants: {
       variant: {
@@ -57,20 +57,20 @@ export function StockBadge({
   if (status === 'available') {
     return (
       <Badge variant="success" size={size} className={className}>
-        In Stock
+        স্টকে আছে
       </Badge>
     );
   }
   if (status === 'coming-soon') {
     return (
       <Badge variant="neutral" size={size} className={className}>
-        Coming Soon
+        শীঘ্রই আসছে
       </Badge>
     );
   }
   return (
     <Badge variant="warning" size={size} className={className}>
-      Out of Stock
+      স্টক শেষ
     </Badge>
   );
 }

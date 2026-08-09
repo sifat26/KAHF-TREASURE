@@ -9,6 +9,7 @@ import { BreadcrumbJsonLd } from '@/components/seo/JsonLd';
 import { collections, collectionMatcher, getCollection } from '@/data/collections';
 import { products } from '@/data/products';
 import { site } from '@/data/site';
+import { toBanglaDigits } from '@/lib/format';
 
 export function generateStaticParams() {
   return collections.map((c) => ({ slug: c.slug }));
@@ -21,7 +22,7 @@ export async function generateMetadata({
 }): Promise<Metadata> {
   const { slug } = await params;
   const collection = getCollection(slug);
-  if (!collection) return { title: 'Collection Not Found' };
+  if (!collection) return { title: 'কালেকশন খুঁজে পাওয়া যায়নি' };
   return {
     title: collection.title,
     description: collection.description,
@@ -59,16 +60,16 @@ export default async function CollectionPage({
     <div className="bg-[var(--color-background-deep)] text-[var(--color-text-primary)] min-h-screen pt-24 pb-16">
       <BreadcrumbJsonLd
         items={[
-          { name: 'Home', url: '/' },
-          { name: 'Collections', url: '/collections' },
+          { name: 'হোম', url: '/' },
+          { name: 'কালেকশন', url: '/collections' },
           { name: collection.title, url: `/collections/${collection.slug}` },
         ]}
       />
       <Container className="py-6 lg:py-10">
         <Breadcrumbs
           items={[
-            { name: 'Home', href: '/' },
-            { name: 'Collections', href: '/collections' },
+            { name: 'হোম', href: '/' },
+            { name: 'কালেকশন', href: '/collections' },
             { name: collection.title, href: `/collections/${collection.slug}` },
           ]}
           className="mb-6 text-xs text-[var(--color-text-secondary)]"
@@ -78,7 +79,7 @@ export default async function CollectionPage({
         <header className="relative mb-12 overflow-hidden rounded-3xl border border-[var(--color-accent)]/25 bg-[var(--color-background)] p-8 sm:p-12 shadow-2xl">
           <Image
             src={bgImage}
-            alt={collection.title}
+            alt={`${collection.title} কালেকশন`}
             fill
             priority
             className="object-cover object-center filter brightness-[0.40]"
@@ -86,7 +87,7 @@ export default async function CollectionPage({
           <div className="absolute inset-0 bg-gradient-to-r from-[var(--color-background-deep)] via-[var(--color-background-deep)]/80 to-transparent pointer-events-none" />
 
           <div className="relative z-10 max-w-xl">
-            <span className="text-[0.7rem] font-bold uppercase tracking-[0.24em] text-[var(--color-accent)] mb-2 block">
+            <span className="text-[0.7rem] font-bold tracking-[0.06em] text-[var(--color-accent)] mb-2 block">
               {collection.tagline}
             </span>
             <h1 className="font-serif text-4xl sm:text-5xl lg:text-6xl font-bold tracking-tight text-[var(--color-text-primary)]">
@@ -96,7 +97,7 @@ export default async function CollectionPage({
               {collection.description}
             </p>
             <div className="mt-4 inline-flex items-center gap-2 rounded-full border border-[var(--color-accent)]/30 bg-[var(--color-background-deep)]/70 backdrop-blur px-3.5 py-1 text-xs font-semibold text-[var(--color-accent-strong)]">
-              <span>{matched.length} {matched.length === 1 ? 'fragrance' : 'fragrances'} in this library</span>
+              <span>এই কালেকশনে {toBanglaDigits(matched.length)}টি আতর</span>
             </div>
           </div>
         </header>
@@ -105,9 +106,9 @@ export default async function CollectionPage({
           <ProductGrid products={matched} />
         ) : (
           <div className="flex flex-col items-center gap-4 py-20 text-center rounded-2xl bg-[var(--color-background)] border border-[var(--color-accent)]/15 p-8">
-            <p className="text-[var(--color-text-secondary)]">This collection is currently being curated. Check back soon.</p>
+            <p className="text-[var(--color-text-secondary)]">এই কালেকশনটি এখন সাজানো হচ্ছে। একটু পরে আবার দেখুন।</p>
             <ButtonLink href="/shop" variant="secondary" className="bg-[var(--color-accent)] text-[var(--color-background-deep)] hover:bg-[var(--color-accent-hover)]">
-              Browse All Fragrances
+              সব আতর দেখুন
             </ButtonLink>
           </div>
         )}
