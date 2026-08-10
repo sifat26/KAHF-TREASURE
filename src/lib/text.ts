@@ -6,7 +6,7 @@ export function fixMojibake(value: string): string {
   if (!looksMojibake(value)) return value;
 
   try {
-    const bytes = Uint8Array.from(value, character => character.charCodeAt(0));
+    const bytes = Uint8Array.from(value, (character) => character.charCodeAt(0));
     return new TextDecoder('utf-8').decode(bytes);
   } catch {
     return value;
@@ -19,7 +19,7 @@ export function normalizeText<T>(value: T): T {
   }
 
   if (Array.isArray(value)) {
-    return value.map(item => normalizeText(item)) as T;
+    return value.map((item) => normalizeText(item)) as T;
   }
 
   if (value && typeof value === 'object') {

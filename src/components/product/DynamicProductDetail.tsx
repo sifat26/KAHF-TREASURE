@@ -23,11 +23,15 @@ export function DynamicProductDetail({ slug, initialProduct }: { slug: string; i
   const dispatch = useAppDispatch();
 
   useEffect(() => {
-    if (initialProduct) { setLoading(false); return; }
+    if (initialProduct) {
+      setLoading(false);
+      return;
+    }
     setLoading(true);
     setError(null);
-    productServices.getProduct(slug)
-      .then(res => {
+    productServices
+      .getProduct(slug)
+      .then((res) => {
         if (res.success && res.data) {
           setProduct(res.data);
           setSelectedVariant(res.data.variants?.[0] || null);
@@ -61,7 +65,10 @@ export function DynamicProductDetail({ slug, initialProduct }: { slug: string; i
       <div className='min-h-screen pt-24'>
         <Container className='py-20 text-center'>
           <p className='text-lg font-medium text-[var(--color-text-secondary)]'>{error || 'পণ্য পাওয়া যায়নি'}</p>
-          <Link href='/shop' className='mt-4 inline-block rounded-full bg-[var(--color-accent)] px-6 py-2.5 text-sm font-medium text-[var(--color-on-accent)]'>
+          <Link
+            href='/shop'
+            className='mt-4 inline-block rounded-full bg-[var(--color-accent)] px-6 py-2.5 text-sm font-medium text-[var(--color-on-accent)]'
+          >
             শপে ফিরুন
           </Link>
         </Container>
@@ -74,25 +81,30 @@ export function DynamicProductDetail({ slug, initialProduct }: { slug: string; i
   const inStock = stock > 0;
 
   const handleAddToCart = () => {
-    dispatch(addToCart({
-      productId: product._id,
-      title: product.title,
-      image: product.images?.[0] || '',
-      basePrice: product.basePrice,
-      price,
-      quantity,
-      variantId: selectedVariant?._id,
-      variantLabel: selectedVariant?.label,
-      slug: product.slug,
-      maxStock: stock,
-      availableVariants: product.variants?.map(v => ({
-        _id: v._id, label: v.label, stock: v.stock, priceOverride: v.priceOverride
-      })),
-    }));
+    dispatch(
+      addToCart({
+        productId: product._id,
+        title: product.title,
+        image: product.images?.[0] || '',
+        basePrice: product.basePrice,
+        price,
+        quantity,
+        variantId: selectedVariant?._id,
+        variantLabel: selectedVariant?.label,
+        slug: product.slug,
+        maxStock: stock,
+        availableVariants: product.variants?.map((v) => ({
+          _id: v._id,
+          label: v.label,
+          stock: v.stock,
+          priceOverride: v.priceOverride,
+        })),
+      }),
+    );
     dispatch(openCart());
   };
 
-  const attrs = product.attributes as Record<string, string> || {};
+  const attrs = (product.attributes as Record<string, string>) || {};
 
   return (
     <div className='min-h-screen bg-[var(--color-background)] pt-24 pb-16'>
@@ -118,7 +130,12 @@ export function DynamicProductDetail({ slug, initialProduct }: { slug: string; i
                 />
               ) : (
                 <div className='aspect-square w-full'>
-                  <ProductBottle name={product.title} family={undefined} showBackground={true} className='h-full w-full' />
+                  <ProductBottle
+                    name={product.title}
+                    family={undefined}
+                    showBackground={true}
+                    className='h-full w-full'
+                  />
                 </div>
               )}
               {product.images && product.images.length > 1 && (
@@ -132,7 +149,7 @@ export function DynamicProductDetail({ slug, initialProduct }: { slug: string; i
                         'h-16 w-16 overflow-hidden rounded-xl border-2 transition-all cursor-pointer',
                         selectedImageIndex === i
                           ? 'border-[var(--color-accent)] ring-2 ring-[var(--color-accent)]/30 scale-105'
-                          : 'border-[var(--color-border)] opacity-70 hover:opacity-100'
+                          : 'border-[var(--color-border)] opacity-70 hover:opacity-100',
                       )}
                     >
                       <img src={img} alt={`${product.title} ${i + 1}`} className='h-full w-full object-cover' />
@@ -151,7 +168,9 @@ export function DynamicProductDetail({ slug, initialProduct }: { slug: string; i
                   ফিচার্ড
                 </span>
               )}
-              <h1 className='font-serif text-2xl sm:text-3xl font-bold text-[var(--color-text-primary)]'>{product.title}</h1>
+              <h1 className='font-serif text-2xl sm:text-3xl font-bold text-[var(--color-text-primary)]'>
+                {product.title}
+              </h1>
               {product.brand && <p className='mt-1 text-sm text-[var(--color-text-tertiary)]'>{product.brand}</p>}
             </div>
 
@@ -160,10 +179,20 @@ export function DynamicProductDetail({ slug, initialProduct }: { slug: string; i
               <div className='flex items-center gap-2'>
                 <div className='flex'>
                   {Array.from({ length: 5 }).map((_, i) => (
-                    <Star key={i} size={16} className={cn(i < Math.round(product.averageRating!) ? 'fill-[var(--color-gold)] text-[var(--color-gold)]' : 'text-[var(--color-border)]')} />
+                    <Star
+                      key={i}
+                      size={16}
+                      className={cn(
+                        i < Math.round(product.averageRating!)
+                          ? 'fill-[var(--color-gold)] text-[var(--color-gold)]'
+                          : 'text-[var(--color-border)]',
+                      )}
+                    />
                   ))}
                 </div>
-                <span className='text-sm text-[var(--color-text-tertiary)]'>{product.averageRating} ({product.reviewCount} রিভিউ)</span>
+                <span className='text-sm text-[var(--color-text-tertiary)]'>
+                  {product.averageRating} ({product.reviewCount} রিভিউ)
+                </span>
               </div>
             )}
 
@@ -192,19 +221,24 @@ export function DynamicProductDetail({ slug, initialProduct }: { slug: string; i
             {/* Variant Selector */}
             {product.variants && product.variants.length > 0 && (
               <div>
-                <label className='mb-2 block text-sm font-semibold text-[var(--color-text-primary)]'>সাইজ নির্বাচন করুন</label>
+                <label className='mb-2 block text-sm font-semibold text-[var(--color-text-primary)]'>
+                  সাইজ নির্বাচন করুন
+                </label>
                 <div className='flex flex-wrap gap-2'>
-                  {product.variants.map(variant => (
+                  {product.variants.map((variant) => (
                     <button
                       key={variant._id || variant.label}
-                      onClick={() => { setSelectedVariant(variant); setQuantity(1); }}
+                      onClick={() => {
+                        setSelectedVariant(variant);
+                        setQuantity(1);
+                      }}
                       disabled={variant.stock === 0}
                       className={cn(
                         'rounded-lg border px-4 py-2 text-sm font-semibold transition',
                         selectedVariant?._id === variant._id || selectedVariant?.label === variant.label
                           ? 'border-[var(--color-accent)] bg-[var(--color-accent)]/10 text-[var(--color-accent-strong)]'
                           : 'border-[var(--color-border)] text-[var(--color-text-secondary)] hover:border-[var(--color-accent)]',
-                        variant.stock === 0 && 'cursor-not-allowed opacity-40 line-through'
+                        variant.stock === 0 && 'cursor-not-allowed opacity-40 line-through',
                       )}
                     >
                       {variant.label}
@@ -220,11 +254,19 @@ export function DynamicProductDetail({ slug, initialProduct }: { slug: string; i
             {/* Quantity + Add to Cart */}
             <div className='flex items-center gap-3'>
               <div className='flex items-center rounded-full border border-[var(--color-border)]'>
-                <button onClick={() => setQuantity(q => Math.max(1, q - 1))} className='flex h-10 w-10 items-center justify-center text-[var(--color-text-secondary)] hover:text-[var(--color-accent)]'>
+                <button
+                  onClick={() => setQuantity((q) => Math.max(1, q - 1))}
+                  className='flex h-10 w-10 items-center justify-center text-[var(--color-text-secondary)] hover:text-[var(--color-accent)]'
+                >
                   <Minus size={16} />
                 </button>
-                <span className='min-w-[40px] text-center font-semibold text-[var(--color-text-primary)]'>{quantity}</span>
-                <button onClick={() => setQuantity(q => Math.min(stock || 99, q + 1))} className='flex h-10 w-10 items-center justify-center text-[var(--color-text-secondary)] hover:text-[var(--color-accent)]'>
+                <span className='min-w-[40px] text-center font-semibold text-[var(--color-text-primary)]'>
+                  {quantity}
+                </span>
+                <button
+                  onClick={() => setQuantity((q) => Math.min(stock || 99, q + 1))}
+                  className='flex h-10 w-10 items-center justify-center text-[var(--color-text-secondary)] hover:text-[var(--color-accent)]'
+                >
                   <Plus size={16} />
                 </button>
               </div>
@@ -268,5 +310,3 @@ function Attr({ label, value }: { label: string; value: string }) {
     </div>
   );
 }
-
-

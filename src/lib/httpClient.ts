@@ -24,7 +24,8 @@ export function getToken(): string | null {
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 export function setToken(_: string): void {
   // No-op — cookie is set by backend
-} {
+}
+{
   // No-op — cookie is set by backend
 }
 
@@ -33,18 +34,13 @@ export function removeToken(): void {
   // No-op — cookie is cleared by backend logout endpoint
 }
 
-async function request<T>(
-  endpoint: string,
-  options: RequestInit = {}
-): Promise<ApiResponse<T>> {
+async function request<T>(endpoint: string, options: RequestInit = {}): Promise<ApiResponse<T>> {
   const url = `${API_BASE_URL}${endpoint}`;
 
   // For FormData, let the browser set Content-Type (with multipart boundary).
   // For everything else, default to application/json.
   const isFormData = options.body instanceof FormData;
-  const headers: Record<string, string> = isFormData
-    ? {}
-    : { 'Content-Type': 'application/json' };
+  const headers: Record<string, string> = isFormData ? {} : { 'Content-Type': 'application/json' };
 
   // Merge caller-supplied headers (but never inject Authorization ourselves —
   // the httpOnly cookie is sent automatically by the browser).
@@ -85,10 +81,11 @@ async function request<T>(
 export const httpClient = {
   get: <T>(endpoint: string, params?: Record<string, unknown>) => {
     const query = params
-      ? '?' + new URLSearchParams(
+      ? '?' +
+        new URLSearchParams(
           Object.entries(params)
             .filter(([, v]) => v !== undefined && v !== null && v !== '')
-            .map(([k, v]) => [k, String(v)])
+            .map(([k, v]) => [k, String(v)]),
         ).toString()
       : '';
     return request<T>(query ? `${endpoint}${query}` : endpoint);
@@ -112,8 +109,7 @@ export const httpClient = {
       body: data ? JSON.stringify(data) : undefined,
     }),
 
-  delete: <T>(endpoint: string) =>
-    request<T>(endpoint, { method: 'DELETE' }),
+  delete: <T>(endpoint: string) => request<T>(endpoint, { method: 'DELETE' }),
 
   upload: <T>(endpoint: string, formData: FormData) =>
     request<T>(endpoint, {
@@ -121,7 +117,3 @@ export const httpClient = {
       body: formData,
     }),
 };
-
-
-
-
