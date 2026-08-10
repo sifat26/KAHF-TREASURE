@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 
 import { useState, useMemo } from 'react';
 import { useRouter } from 'next/navigation';
@@ -7,6 +7,7 @@ import { clearCart } from '@/store/cartSlice';
 import { orderServices } from '@/services/order.services';
 import { couponServices } from '@/services/coupon.services';
 import { ArrowLeft, Loader2, Tag, X } from 'lucide-react';
+import { trackEvent } from '@/components/seo/GoogleAnalytics';
 import Link from 'next/link';
 
 export default function CheckoutPage() {
@@ -50,12 +51,12 @@ export default function CheckoutPage() {
       if (res.success && res.data) {
         setAppliedCoupon(code);
         setCouponDiscount(res.data.discount);
-        setCouponMsg(`✓ কুপন প্রযোজ্য! ছাড়: ৳${res.data.discount}`);
+        setCouponMsg(`âœ“ à¦•à§à¦ªà¦¨ à¦ªà§à¦°à¦¯à§‹à¦œà§à¦¯! à¦›à¦¾à¦¡à¦¼: à§³${res.data.discount}`);
       }
     } catch (err: any) {
       setAppliedCoupon(null);
       setCouponDiscount(0);
-      setCouponMsg(err?.message || 'কুপন ভুল বা মেয়াদোত্তীর্ণ');
+      setCouponMsg(err?.message || 'à¦•à§à¦ªà¦¨ à¦­à§à¦² à¦¬à¦¾ à¦®à§‡à¦¯à¦¼à¦¾à¦¦à§‹à¦¤à§à¦¤à§€à¦°à§à¦£');
     } finally {
       setApplyingCoupon(false);
     }
@@ -66,7 +67,7 @@ export default function CheckoutPage() {
     setError(null);
 
     if (items.length === 0) {
-      setError('কার্ট খালি। প্রথমে পণ্য যোগ করুন।');
+      setError('à¦•à¦¾à¦°à§à¦Ÿ à¦–à¦¾à¦²à¦¿à¥¤ à¦ªà§à¦°à¦¥à¦®à§‡ à¦ªà¦£à§à¦¯ à¦¯à§‹à¦— à¦•à¦°à§à¦¨à¥¤');
       return;
     }
 
@@ -94,10 +95,10 @@ export default function CheckoutPage() {
         dispatch(clearCart());
         router.push(`/order-success?tracking=${res.data.trackingNumber}`);
       } else {
-        setError(res.message || 'অর্ডার সম্পন্ন করা যায়নি');
+        setError(res.message || 'à¦…à¦°à§à¦¡à¦¾à¦° à¦¸à¦®à§à¦ªà¦¨à§à¦¨ à¦•à¦°à¦¾ à¦¯à¦¾à¦¯à¦¼à¦¨à¦¿');
       }
     } catch (err: any) {
-      setError(err?.message || 'অর্ডার সম্পন্ন করা যায়নি। আবার চেষ্টা করুন।');
+      setError(err?.message || 'à¦…à¦°à§à¦¡à¦¾à¦° à¦¸à¦®à§à¦ªà¦¨à§à¦¨ à¦•à¦°à¦¾ à¦¯à¦¾à¦¯à¦¼à¦¨à¦¿à¥¤ à¦†à¦¬à¦¾à¦° à¦šà§‡à¦·à§à¦Ÿà¦¾ à¦•à¦°à§à¦¨à¥¤');
     } finally {
       setPlacingOrder(false);
     }
@@ -107,13 +108,13 @@ export default function CheckoutPage() {
     return (
       <div className="flex min-h-[60vh] flex-col items-center justify-center px-4 text-center">
         <div className="rounded-3xl border border-stone-200 bg-white p-10 shadow-sm">
-          <p className="text-xl font-semibold text-stone-800">কার্ট খালি</p>
-          <p className="mt-2 text-sm text-stone-500">চেকআউট করতে প্রথমে পণ্য কার্টে যোগ করুন</p>
+          <p className="text-xl font-semibold text-stone-800">à¦•à¦¾à¦°à§à¦Ÿ à¦–à¦¾à¦²à¦¿</p>
+          <p className="mt-2 text-sm text-stone-500">à¦šà§‡à¦•à¦†à¦‰à¦Ÿ à¦•à¦°à¦¤à§‡ à¦ªà§à¦°à¦¥à¦®à§‡ à¦ªà¦£à§à¦¯ à¦•à¦¾à¦°à§à¦Ÿà§‡ à¦¯à§‹à¦— à¦•à¦°à§à¦¨</p>
           <Link
             href="/shop"
             className="mt-4 inline-block rounded-full bg-amber-700 px-6 py-2.5 text-sm font-medium text-white hover:bg-amber-800"
           >
-            শপ করুন
+            à¦¶à¦ª à¦•à¦°à§à¦¨
           </Link>
         </div>
       </div>
@@ -124,28 +125,28 @@ export default function CheckoutPage() {
     <div className="min-h-screen bg-stone-50 pb-16">
       <div className="mx-auto max-w-6xl px-4 py-6 sm:px-6 lg:px-8">
         <Link href="/shop" className="mb-4 inline-flex items-center gap-2 text-sm text-stone-500 hover:text-amber-700">
-          <ArrowLeft className="h-4 w-4" /> শপে ফিরুন
+          <ArrowLeft className="h-4 w-4" /> à¦¶à¦ªà§‡ à¦«à¦¿à¦°à§à¦¨
         </Link>
 
-        <h1 className="mb-6 text-2xl font-bold text-stone-900">চেকআউট</h1>
+        <h1 className="mb-6 text-2xl font-bold text-stone-900">à¦šà§‡à¦•à¦†à¦‰à¦Ÿ</h1>
 
         <form onSubmit={handlePlaceOrder} className="grid gap-6 lg:grid-cols-[1.5fr_1fr]">
           {/* Left: Form */}
           <div className="space-y-6">
             <section className="rounded-3xl border border-stone-200 bg-white p-6">
-              <h2 className="mb-4 text-lg font-semibold text-stone-900">ডেলিভারি তথ্য</h2>
+              <h2 className="mb-4 text-lg font-semibold text-stone-900">à¦¡à§‡à¦²à¦¿à¦­à¦¾à¦°à¦¿ à¦¤à¦¥à§à¦¯</h2>
               <div className="grid gap-4 sm:grid-cols-2">
-                <Field label="নাম *" required>
+                <Field label="à¦¨à¦¾à¦® *" required>
                   <input
                     type="text"
                     required
                     value={formState.customerName}
                     onChange={e => setFormState(s => ({ ...s, customerName: e.target.value }))}
                     className="kahf-input"
-                    placeholder="আপনার নাম"
+                    placeholder="à¦†à¦ªà¦¨à¦¾à¦° à¦¨à¦¾à¦®"
                   />
                 </Field>
-                <Field label="মোবাইল নম্বর *" required>
+                <Field label="à¦®à§‹à¦¬à¦¾à¦‡à¦² à¦¨à¦®à§à¦¬à¦° *" required>
                   <input
                     type="tel"
                     required
@@ -155,27 +156,27 @@ export default function CheckoutPage() {
                     placeholder="01XXXXXXXXX"
                   />
                 </Field>
-                <Field label="জেলা *" required>
+                <Field label="à¦œà§‡à¦²à¦¾ *" required>
                   <input
                     type="text"
                     required
                     value={formState.district}
                     onChange={e => setFormState(s => ({ ...s, district: e.target.value }))}
                     className="kahf-input"
-                    placeholder="ঢাকা"
+                    placeholder="à¦¢à¦¾à¦•à¦¾"
                   />
                 </Field>
-                <Field label="উপজেলা *" required>
+                <Field label="à¦‰à¦ªà¦œà§‡à¦²à¦¾ *" required>
                   <input
                     type="text"
                     required
                     value={formState.upazila}
                     onChange={e => setFormState(s => ({ ...s, upazila: e.target.value }))}
                     className="kahf-input"
-                    placeholder="ধানমন্ডি"
+                    placeholder="à¦§à¦¾à¦¨à¦®à¦¨à§à¦¡à¦¿"
                   />
                 </Field>
-                <Field label="ইমেইল (ঐচ্ছিক)">
+                <Field label="à¦‡à¦®à§‡à¦‡à¦² (à¦à¦šà§à¦›à¦¿à¦•)">
                   <input
                     type="email"
                     value={formState.email}
@@ -184,7 +185,7 @@ export default function CheckoutPage() {
                     placeholder="you@email.com"
                   />
                 </Field>
-                <Field label="পোস্ট কোড (ঐচ্ছিক)">
+                <Field label="à¦ªà§‹à¦¸à§à¦Ÿ à¦•à§‹à¦¡ (à¦à¦šà§à¦›à¦¿à¦•)">
                   <input
                     type="text"
                     value={formState.postalCode}
@@ -194,25 +195,25 @@ export default function CheckoutPage() {
                   />
                 </Field>
                 <div className="sm:col-span-2">
-                  <Field label="ঠিকানা *" required>
+                  <Field label="à¦ à¦¿à¦•à¦¾à¦¨à¦¾ *" required>
                     <textarea
                       required
                       rows={2}
                       value={formState.addressLine}
                       onChange={e => setFormState(s => ({ ...s, addressLine: e.target.value }))}
                       className="kahf-input"
-                      placeholder="বাসা নম্বর, রাস্তা, ল্যান্ডমার্ক"
+                      placeholder="à¦¬à¦¾à¦¸à¦¾ à¦¨à¦®à§à¦¬à¦°, à¦°à¦¾à¦¸à§à¦¤à¦¾, à¦²à§à¦¯à¦¾à¦¨à§à¦¡à¦®à¦¾à¦°à§à¦•"
                     />
                   </Field>
                 </div>
                 <div className="sm:col-span-2">
-                  <Field label="অর্ডার নোট (ঐচ্ছিক)">
+                  <Field label="à¦…à¦°à§à¦¡à¦¾à¦° à¦¨à§‹à¦Ÿ (à¦à¦šà§à¦›à¦¿à¦•)">
                     <textarea
                       rows={2}
                       value={formState.orderNote}
                       onChange={e => setFormState(s => ({ ...s, orderNote: e.target.value }))}
                       className="kahf-input"
-                      placeholder="ডেলিভারির আগে কল করবেন"
+                      placeholder="à¦¡à§‡à¦²à¦¿à¦­à¦¾à¦°à¦¿à¦° à¦†à¦—à§‡ à¦•à¦² à¦•à¦°à¦¬à§‡à¦¨"
                     />
                   </Field>
                 </div>
@@ -220,12 +221,12 @@ export default function CheckoutPage() {
             </section>
 
             <section className="rounded-3xl border border-stone-200 bg-white p-6">
-              <h2 className="mb-4 text-lg font-semibold text-stone-900">পেমেন্ট মেথড</h2>
+              <h2 className="mb-4 text-lg font-semibold text-stone-900">à¦ªà§‡à¦®à§‡à¦¨à§à¦Ÿ à¦®à§‡à¦¥à¦¡</h2>
               <div className="space-y-2">
                 {[
-                  { id: 'cod', label: 'ক্যাশ অন ডেলিভারি', note: 'পণ্য হাতে পেয়ে টাকা দিন' },
-                  { id: 'bkash', label: 'বিকাশ', note: 'বিকাশ পেমেন্ট পেজে রিডাইরেক্ট হবে' },
-                  { id: 'nagad', label: 'নগদ', note: 'নগদ পেমেন্ট পেজে রিডাইরেক্ট হবে' },
+                  { id: 'cod', label: 'à¦•à§à¦¯à¦¾à¦¶ à¦…à¦¨ à¦¡à§‡à¦²à¦¿à¦­à¦¾à¦°à¦¿', note: 'à¦ªà¦£à§à¦¯ à¦¹à¦¾à¦¤à§‡ à¦ªà§‡à¦¯à¦¼à§‡ à¦Ÿà¦¾à¦•à¦¾ à¦¦à¦¿à¦¨' },
+                  { id: 'bkash', label: 'à¦¬à¦¿à¦•à¦¾à¦¶', note: 'à¦¬à¦¿à¦•à¦¾à¦¶ à¦ªà§‡à¦®à§‡à¦¨à§à¦Ÿ à¦ªà§‡à¦œà§‡ à¦°à¦¿à¦¡à¦¾à¦‡à¦°à§‡à¦•à§à¦Ÿ à¦¹à¦¬à§‡' },
+                  { id: 'nagad', label: 'à¦¨à¦—à¦¦', note: 'à¦¨à¦—à¦¦ à¦ªà§‡à¦®à§‡à¦¨à§à¦Ÿ à¦ªà§‡à¦œà§‡ à¦°à¦¿à¦¡à¦¾à¦‡à¦°à§‡à¦•à§à¦Ÿ à¦¹à¦¬à§‡' },
                 ].map(opt => (
                   <label
                     key={opt.id}
@@ -256,7 +257,7 @@ export default function CheckoutPage() {
           {/* Right: Summary */}
           <aside className="space-y-4 lg:sticky lg:top-6 lg:self-start">
             <div className="rounded-3xl border border-stone-200 bg-white p-5">
-              <h2 className="mb-4 text-lg font-semibold text-stone-900">অর্ডার সারাংশ</h2>
+              <h2 className="mb-4 text-lg font-semibold text-stone-900">à¦…à¦°à§à¦¡à¦¾à¦° à¦¸à¦¾à¦°à¦¾à¦‚à¦¶</h2>
 
               <div className="space-y-2">
                 {items.map(item => (
@@ -268,22 +269,22 @@ export default function CheckoutPage() {
                       <div>
                         <p className="text-xs font-semibold text-stone-800">{item.title}</p>
                         {item.variantLabel && <p className="text-[10px] text-stone-500">{item.variantLabel}</p>}
-                        <p className="text-[10px] text-stone-500">×{item.quantity}</p>
+                        <p className="text-[10px] text-stone-500">Ã—{item.quantity}</p>
                       </div>
                     </div>
-                    <p className="text-sm font-semibold text-stone-900">৳{item.price * item.quantity}</p>
+                    <p className="text-sm font-semibold text-stone-900">à§³{item.price * item.quantity}</p>
                   </div>
                 ))}
               </div>
 
               {/* Coupon */}
               <div className="mt-4 rounded-xl border border-dashed border-amber-200 bg-amber-50/40 p-3">
-                <p className="mb-2 text-xs font-semibold uppercase tracking-wide text-amber-700">কুপন</p>
+                <p className="mb-2 text-xs font-semibold uppercase tracking-wide text-amber-700">à¦•à§à¦ªà¦¨</p>
                 {appliedCoupon ? (
                   <div className="flex items-center justify-between">
                     <div>
-                      <p className="text-sm font-semibold text-emerald-600">✓ {appliedCoupon}</p>
-                      <p className="text-xs text-stone-600">ছাড়: ৳{couponDiscount}</p>
+                      <p className="text-sm font-semibold text-emerald-600">âœ“ {appliedCoupon}</p>
+                      <p className="text-xs text-stone-600">à¦›à¦¾à¦¡à¦¼: à§³{couponDiscount}</p>
                     </div>
                     <button
                       type="button"
@@ -299,7 +300,7 @@ export default function CheckoutPage() {
                       type="text"
                       value={couponCode}
                       onChange={e => setCouponCode(e.target.value.toUpperCase())}
-                      placeholder="কুপন কোড"
+                      placeholder="à¦•à§à¦ªà¦¨ à¦•à§‹à¦¡"
                       className="kahf-input h-10 text-sm"
                       disabled={applyingCoupon}
                     />
@@ -309,7 +310,7 @@ export default function CheckoutPage() {
                       disabled={applyingCoupon}
                       className="rounded-lg bg-amber-700 px-4 text-sm font-semibold text-white hover:bg-amber-800 disabled:opacity-50"
                     >
-                      {applyingCoupon ? '...' : 'প্রয়োগ'}
+                      {applyingCoupon ? '...' : 'à¦ªà§à¦°à¦¯à¦¼à§‹à¦—'}
                     </button>
                   </div>
                 )}
@@ -318,19 +319,19 @@ export default function CheckoutPage() {
 
               <div className="mt-4 space-y-2 text-sm">
                 <div className="flex justify-between text-stone-500">
-                  <span>সাবটোটাল</span><span>৳{subtotal}</span>
+                  <span>à¦¸à¦¾à¦¬à¦Ÿà§‹à¦Ÿà¦¾à¦²</span><span>à§³{subtotal}</span>
                 </div>
                 <div className="flex justify-between text-stone-500">
-                  <span>ডেলিভারি চার্জ</span><span>৳{shipping}</span>
+                  <span>à¦¡à§‡à¦²à¦¿à¦­à¦¾à¦°à¦¿ à¦šà¦¾à¦°à§à¦œ</span><span>à§³{shipping}</span>
                 </div>
                 {couponDiscount > 0 && (
                   <div className="flex justify-between text-emerald-600">
-                    <span>ছাড়</span><span>-৳{couponDiscount}</span>
+                    <span>à¦›à¦¾à¦¡à¦¼</span><span>-à§³{couponDiscount}</span>
                   </div>
                 )}
                 <div className="h-px bg-stone-100" />
                 <div className="flex justify-between text-base font-bold text-stone-900">
-                  <span>মোট</span><span>৳{total}</span>
+                  <span>à¦®à§‹à¦Ÿ</span><span>à§³{total}</span>
                 </div>
               </div>
 
@@ -345,10 +346,10 @@ export default function CheckoutPage() {
               >
                 {placingOrder ? (
                   <span className="flex items-center justify-center gap-2">
-                    <Loader2 className="h-4 w-4 animate-spin" /> অর্ডার হচ্ছে...
+                    <Loader2 className="h-4 w-4 animate-spin" /> à¦…à¦°à§à¦¡à¦¾à¦° à¦¹à¦šà§à¦›à§‡...
                   </span>
                 ) : (
-                  `অর্ডার কনফার্ম করুন → ৳${total}`
+                  `à¦…à¦°à§à¦¡à¦¾à¦° à¦•à¦¨à¦«à¦¾à¦°à§à¦® à¦•à¦°à§à¦¨ â†’ à§³${total}`
                 )}
               </button>
             </div>
@@ -387,3 +388,4 @@ function Field({ label, required, children }: { label: string; required?: boolea
     </div>
   );
 }
+

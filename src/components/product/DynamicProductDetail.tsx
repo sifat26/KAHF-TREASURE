@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 
 import { useEffect, useState } from 'react';
 import { productServices } from '@/services/product.services';
@@ -10,10 +10,11 @@ import { Breadcrumbs } from '@/components/ui/Breadcrumbs';
 import { Container } from '@/components/ui/Container';
 import { Star, Plus, Minus, ShoppingBag, Truck, ShieldCheck, Clock } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { trackEvent } from '@/components/seo/GoogleAnalytics';
 import Link from 'next/link';
 
-export function DynamicProductDetail({ slug }: { slug: string }) {
-  const [product, setProduct] = useState<Product | null>(null);
+export function DynamicProductDetail({ slug, initialProduct }: { slug: string; initialProduct?: Product | null }) {
+  const [product, setProduct] = useState<Product | null>(initialProduct || null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [selectedVariant, setSelectedVariant] = useState<ProductVariant | null>(null);
@@ -22,6 +23,7 @@ export function DynamicProductDetail({ slug }: { slug: string }) {
   const dispatch = useAppDispatch();
 
   useEffect(() => {
+    if (initialProduct) { setLoading(false); return; }
     setLoading(true);
     setError(null);
     productServices.getProduct(slug)
@@ -30,10 +32,10 @@ export function DynamicProductDetail({ slug }: { slug: string }) {
           setProduct(res.data);
           setSelectedVariant(res.data.variants?.[0] || null);
         } else {
-          setError('পণ্য পাওয়া যায়নি');
+          setError('à¦ªà¦£à§à¦¯ à¦ªà¦¾à¦“à¦¯à¦¼à¦¾ à¦¯à¦¾à¦¯à¦¼à¦¨à¦¿');
         }
       })
-      .catch(() => setError('পণ্য লোড করা যায়নি'))
+      .catch(() => setError('à¦ªà¦£à§à¦¯ à¦²à§‹à¦¡ à¦•à¦°à¦¾ à¦¯à¦¾à¦¯à¦¼à¦¨à¦¿'))
       .finally(() => setLoading(false));
   }, [slug]);
 
@@ -58,9 +60,9 @@ export function DynamicProductDetail({ slug }: { slug: string }) {
     return (
       <div className='min-h-screen pt-24'>
         <Container className='py-20 text-center'>
-          <p className='text-lg font-medium text-[var(--color-text-secondary)]'>{error || 'পণ্য পাওয়া যায়নি'}</p>
+          <p className='text-lg font-medium text-[var(--color-text-secondary)]'>{error || 'à¦ªà¦£à§à¦¯ à¦ªà¦¾à¦“à¦¯à¦¼à¦¾ à¦¯à¦¾à¦¯à¦¼à¦¨à¦¿'}</p>
           <Link href='/shop' className='mt-4 inline-block rounded-full bg-[var(--color-accent)] px-6 py-2.5 text-sm font-medium text-[var(--color-on-accent)]'>
-            শপে ফিরুন
+            à¦¶à¦ªà§‡ à¦«à¦¿à¦°à§à¦¨
           </Link>
         </Container>
       </div>
@@ -97,8 +99,8 @@ export function DynamicProductDetail({ slug }: { slug: string }) {
       <Container className='py-6 lg:py-10'>
         <Breadcrumbs
           items={[
-            { name: 'হোম', href: '/' },
-            { name: 'শপ', href: '/shop' },
+            { name: 'à¦¹à§‹à¦®', href: '/' },
+            { name: 'à¦¶à¦ª', href: '/shop' },
             { name: product.title, href: `/products/${product.slug}` },
           ]}
           className='mb-6 text-xs text-[var(--color-text-secondary)]'
@@ -146,7 +148,7 @@ export function DynamicProductDetail({ slug }: { slug: string }) {
             <div>
               {product.isFeatured && (
                 <span className='mb-2 inline-block rounded-full bg-[var(--color-gold-tint)] px-3 py-0.5 text-xs font-bold text-[var(--color-text-primary)]'>
-                  ফিচার্ড
+                  à¦«à¦¿à¦šà¦¾à¦°à§à¦¡
                 </span>
               )}
               <h1 className='font-serif text-2xl sm:text-3xl font-bold text-[var(--color-text-primary)]'>{product.title}</h1>
@@ -161,15 +163,15 @@ export function DynamicProductDetail({ slug }: { slug: string }) {
                     <Star key={i} size={16} className={cn(i < Math.round(product.averageRating!) ? 'fill-[var(--color-gold)] text-[var(--color-gold)]' : 'text-[var(--color-border)]')} />
                   ))}
                 </div>
-                <span className='text-sm text-[var(--color-text-tertiary)]'>{product.averageRating} ({product.reviewCount} রিভিউ)</span>
+                <span className='text-sm text-[var(--color-text-tertiary)]'>{product.averageRating} ({product.reviewCount} à¦°à¦¿à¦­à¦¿à¦‰)</span>
               </div>
             )}
 
             {/* Price */}
             <div className='flex items-baseline gap-3'>
-              <span className='text-3xl font-bold text-[var(--color-text-primary)]'>৳{price}</span>
+              <span className='text-3xl font-bold text-[var(--color-text-primary)]'>à§³{price}</span>
               {Boolean(product.compareAtPrice) && Number(product.compareAtPrice) > price && (
-                <span className='text-lg text-[var(--color-muted)] line-through'>৳{product.compareAtPrice}</span>
+                <span className='text-lg text-[var(--color-muted)] line-through'>à§³{product.compareAtPrice}</span>
               )}
             </div>
 
@@ -181,16 +183,16 @@ export function DynamicProductDetail({ slug }: { slug: string }) {
             {/* Attributes */}
             {Object.keys(attrs).length > 0 && (
               <div className='grid grid-cols-2 gap-3 rounded-2xl border border-[var(--color-border)] bg-[var(--color-surface)] p-4'>
-                {attrs.family && <Attr label='ফ্যামিলি' value={attrs.family} />}
-                {attrs.gender && <Attr label='ধরন' value={attrs.gender} />}
-                {attrs.longevity && <Attr label='স্থায়িত্ব' value={attrs.longevity} />}
+                {attrs.family && <Attr label='à¦«à§à¦¯à¦¾à¦®à¦¿à¦²à¦¿' value={attrs.family} />}
+                {attrs.gender && <Attr label='à¦§à¦°à¦¨' value={attrs.gender} />}
+                {attrs.longevity && <Attr label='à¦¸à§à¦¥à¦¾à¦¯à¦¼à¦¿à¦¤à§à¦¬' value={attrs.longevity} />}
               </div>
             )}
 
             {/* Variant Selector */}
             {product.variants && product.variants.length > 0 && (
               <div>
-                <label className='mb-2 block text-sm font-semibold text-[var(--color-text-primary)]'>সাইজ নির্বাচন করুন</label>
+                <label className='mb-2 block text-sm font-semibold text-[var(--color-text-primary)]'>à¦¸à¦¾à¦‡à¦œ à¦¨à¦¿à¦°à§à¦¬à¦¾à¦šà¦¨ à¦•à¦°à§à¦¨</label>
                 <div className='flex flex-wrap gap-2'>
                   {product.variants.map(variant => (
                     <button
@@ -207,7 +209,7 @@ export function DynamicProductDetail({ slug }: { slug: string }) {
                     >
                       {variant.label}
                       {variant.priceOverride && variant.priceOverride !== product.basePrice && (
-                        <span className='ml-1 text-xs'>৳{variant.priceOverride}</span>
+                        <span className='ml-1 text-xs'>à§³{variant.priceOverride}</span>
                       )}
                     </button>
                   ))}
@@ -232,7 +234,7 @@ export function DynamicProductDetail({ slug }: { slug: string }) {
                 className='flex flex-1 items-center justify-center gap-2 rounded-full bg-[var(--color-accent)] py-3 text-sm font-bold text-[var(--color-on-accent)] shadow-lg transition hover:brightness-110 disabled:opacity-50'
               >
                 <ShoppingBag size={18} />
-                {inStock ? 'কার্টে যোগ করুন' : 'স্টক শেষ'}
+                {inStock ? 'à¦•à¦¾à¦°à§à¦Ÿà§‡ à¦¯à§‹à¦— à¦•à¦°à§à¦¨' : 'à¦¸à§à¦Ÿà¦• à¦¶à§‡à¦·'}
               </button>
             </div>
 
@@ -240,15 +242,15 @@ export function DynamicProductDetail({ slug }: { slug: string }) {
             <div className='grid grid-cols-3 gap-3 border-t border-[var(--color-border)] pt-4'>
               <div className='flex flex-col items-center gap-1 text-center'>
                 <Truck className='h-5 w-5 text-[var(--color-accent)]' />
-                <span className='text-[0.65rem] text-[var(--color-text-tertiary)]'>সারা দেশে ডেলিভারি</span>
+                <span className='text-[0.65rem] text-[var(--color-text-tertiary)]'>à¦¸à¦¾à¦°à¦¾ à¦¦à§‡à¦¶à§‡ à¦¡à§‡à¦²à¦¿à¦­à¦¾à¦°à¦¿</span>
               </div>
               <div className='flex flex-col items-center gap-1 text-center'>
                 <ShieldCheck className='h-5 w-5 text-[var(--color-accent)]' />
-                <span className='text-[0.65rem] text-[var(--color-text-tertiary)]'>১০০% অরিজিনাল</span>
+                <span className='text-[0.65rem] text-[var(--color-text-tertiary)]'>à§§à§¦à§¦% à¦…à¦°à¦¿à¦œà¦¿à¦¨à¦¾à¦²</span>
               </div>
               <div className='flex flex-col items-center gap-1 text-center'>
                 <Clock className='h-5 w-5 text-[var(--color-accent)]' />
-                <span className='text-[0.65rem] text-[var(--color-text-tertiary)]'>দ্রুত ডেলিভারি</span>
+                <span className='text-[0.65rem] text-[var(--color-text-tertiary)]'>à¦¦à§à¦°à§à¦¤ à¦¡à§‡à¦²à¦¿à¦­à¦¾à¦°à¦¿</span>
               </div>
             </div>
           </div>
@@ -266,3 +268,5 @@ function Attr({ label, value }: { label: string; value: string }) {
     </div>
   );
 }
+
+

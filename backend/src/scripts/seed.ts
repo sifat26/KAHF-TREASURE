@@ -98,12 +98,14 @@ async function seed() {
   console.log('Created 6 categories');
 
   // Helper to construct variants
-  const makeVariants = (prices: { [label: string]: number }) => {
-    return Object.entries(prices).map(([label, priceOverride]) => ({
+  const makeVariants = (prices: Partial<Record<string, number>>) => {
+    return Object.entries(prices)
+      .filter((entry): entry is [string, number] => typeof entry[1] === 'number')
+      .map(([label, priceOverride]) => ({
       label,
       stock: 40,
       priceOverride,
-    }));
+      }));
   };
 
   // Full Attar list from chatgpt document

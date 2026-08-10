@@ -1,3 +1,5 @@
+﻿// Google Analytics 4 e-commerce event tracking
+import { trackEvent } from '@/components/seo/GoogleAnalytics';
 import { createSlice, type PayloadAction } from '@reduxjs/toolkit';
 
 export interface CartVariant {
@@ -59,7 +61,18 @@ const cartSlice = createSlice({
         const availableSlots = Math.max(0, MAX_ORDER_ITEMS - totalQuantity);
         const nextQty = Math.min(action.payload.quantity, availableSlots);
         if (nextQty <= 0) return;
-        state.items.push({
+            trackEvent('add_to_cart', {
+        currency: 'BDT',
+        value: action.payload.price * action.payload.quantity,
+        items: [{
+          item_id: action.payload.productId,
+          item_name: action.payload.title,
+          price: action.payload.price,
+          quantity: action.payload.quantity,
+          item_variant: action.payload.variantLabel,
+        }],
+      });
+      state.items.push({
           ...action.payload,
           quantity: nextQty,
           id: variantId ? `${productId}-${variantId}` : `${productId}-default`,
@@ -131,3 +144,4 @@ export const {
 } = cartSlice.actions;
 
 export default cartSlice.reducer;
+

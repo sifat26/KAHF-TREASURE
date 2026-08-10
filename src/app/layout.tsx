@@ -1,4 +1,4 @@
-import type { Metadata, Viewport } from 'next';
+﻿﻿import type { Metadata, Viewport } from 'next';
 import { Cinzel, Inter, Noto_Serif_Bengali, Hind_Siliguri } from 'next/font/google';
 import { cn } from '@/lib/utils';
 import { site } from '@/data/site';
@@ -9,7 +9,8 @@ import { Navbar } from '@/components/layout/Navbar';
 import { Footer } from '@/components/layout/Footer';
 import { ThemeProvider, themeInitScript } from '@/components/theme/ThemeProvider';
 import { WhatsappFAB } from '@/components/ui/WhatsappFAB';
-import { OrganizationJsonLd } from '@/components/seo/JsonLd';
+import { OrganizationJsonLd, WebSiteJsonLd, LocalBusinessJsonLd } from '@/components/seo/JsonLd';
+import { GoogleAnalytics } from '@/components/seo/GoogleAnalytics';
 import './globals.css';
 
 const inter = Inter({ subsets: ['latin'], variable: '--font-latin-sans', display: 'swap' });
@@ -19,7 +20,7 @@ const hindSiliguri = Hind_Siliguri({ subsets: ['bengali'], variable: '--font-bn-
 
 export const metadata: Metadata = {
   metadataBase: new URL(site.url),
-  title: { default: `${site.name} — ${site.tagline}`, template: `%s | ${site.name}` },
+  title: { default: `${site.name} â€” ${site.tagline}`, template: `%s | ${site.name}` },
   description: site.description,
   applicationName: site.name,
   keywords: ['attar', 'alcohol-free attar', 'premium attar Bangladesh', 'perfume oil', 'oud', 'KAHF Treasure', 'long lasting fragrance', 'islamic fragrance'],
@@ -27,11 +28,12 @@ export const metadata: Metadata = {
   creator: site.name,
   publisher: site.name,
   alternates: { canonical: '/' },
-  openGraph: {
+    openGraph: {
+    images: [{ url: site.ogImage, width: 1200, height: 630, alt: site.name + ' - ' + site.tagline }],
     type: 'website', locale: site.locale, url: site.url, siteName: site.name,
-    title: `${site.name} — ${site.tagline}`, description: site.description,
+    title: `${site.name} â€” ${site.tagline}`, description: site.description,
   },
-  twitter: { card: 'summary_large_image', title: `${site.name} — ${site.tagline}`, description: site.description },
+  twitter: { card: 'summary_large_image', title: `${site.name} â€” ${site.tagline}`, description: site.description },
   robots: { index: true, follow: true, googleBot: { index: true, follow: true, 'max-image-preview': 'large', 'max-snippet': -1 } },
 };
 
@@ -57,11 +59,14 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       </head>
       <body className="min-h-dvh bg-canvas antialiased">
         <OrganizationJsonLd />
+        <WebSiteJsonLd />
+        <LocalBusinessJsonLd />
+        <GoogleAnalytics />
         <a
           href="#main"
           className="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-[100] focus:rounded-lg focus:bg-[var(--color-accent)] focus:px-4 focus:py-2 focus:text-sm focus:text-[var(--color-on-accent)]"
         >
-          মূল কন্টেন্টে যান
+          à¦®à§‚à¦² à¦•à¦¨à§à¦Ÿà§‡à¦¨à§à¦Ÿà§‡ à¦¯à¦¾à¦¨
         </a>
         <ThemeProvider>
           <Providers>
@@ -80,3 +85,6 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     </html>
   );
 }
+
+
+
