@@ -1,4 +1,4 @@
-import dotenv from 'dotenv';
+﻿import dotenv from 'dotenv';
 import path from 'path';
 
 dotenv.config({ path: path.join(process.cwd(), '.env') });
@@ -19,5 +19,10 @@ export default {
     cloud_name: process.env.CLOUDINARY_CLOUD_NAME || '',
     api_key: process.env.CLOUDINARY_API_KEY || '',
     api_secret: process.env.CLOUDINARY_API_SECRET || '',
+  },
+  cookie: {
+    secure: process.env.COOKIE_SECURE === 'true',
+    sameSite: (process.env.COOKIE_SAMESITE as 'strict' | 'lax' | 'none') || 'strict',
+    domain: process.env.COOKIE_DOMAIN || undefined,
   },
 };

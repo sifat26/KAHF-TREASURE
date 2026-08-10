@@ -1,22 +1,36 @@
-import { ApiResponse } from '@/types/api';
+﻿import { ApiResponse } from '@/types/api';
 
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL || 'http://localhost:5000/api/v1';
 
-const TOKEN_KEY = 'kahf_access_token';
+/**
+ * Auth token management.
+ *
+ * Phase 0 migration: JWT is now stored in an httpOnly cookie set by the backend.
+ * The frontend no longer reads or writes the token to localStorage.
+ * The browser automatically sends the cookie with every same-site request,
+ * and `credentials: 'include'` is set on all fetch calls for cross-origin dev.
+ *
+ * The localStorage token functions are kept ONLY for reading stale tokens during
+ * the migration window — they return null for new logins.
+ */
 
+/** @deprecated Token is now managed via httpOnly cookie. This always returns null. */
 export function getToken(): string | null {
-  if (typeof window === 'undefined') return null;
-  return localStorage.getItem(TOKEN_KEY);
+  return null;
 }
 
-export function setToken(token: string): void {
-  if (typeof window === 'undefined') return;
-  localStorage.setItem(TOKEN_KEY, token);
+/** @deprecated No-op. Token is set by the backend as an httpOnly cookie. */
+/** @deprecated No-op. Token is set by the backend as an httpOnly cookie. */
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+export function setToken(_: string): void {
+  // No-op — cookie is set by backend
+} {
+  // No-op — cookie is set by backend
 }
 
+/** @deprecated No-op. Call POST /auth/logout to clear the cookie. */
 export function removeToken(): void {
-  if (typeof window === 'undefined') return;
-  localStorage.removeItem(TOKEN_KEY);
+  // No-op — cookie is cleared by backend logout endpoint
 }
 
 async function request<T>(
@@ -32,27 +46,21 @@ async function request<T>(
     ? {}
     : { 'Content-Type': 'application/json' };
 
-  // Always inject Authorization if a token exists — critical for upload endpoints too
-  const token = getToken();
-  if (token) {
-    headers['Authorization'] = `Bearer ${token}`;
-  }
-
-  // Merge caller-supplied headers last (but never override Authorization)
+  // Merge caller-supplied headers (but never inject Authorization ourselves —
+  // the httpOnly cookie is sent automatically by the browser).
   const callerHeaders = (options.headers as Record<string, string>) || {};
   const mergedHeaders = { ...callerHeaders, ...headers };
 
   const response = await fetch(url, {
     ...options,
     headers: mergedHeaders,
+    credentials: 'include', // Critical: send httpOnly auth cookie cross-origin
   });
 
-  // Handle 401 Unauthorized — clear stale credentials and redirect to login
+  // Handle 401 Unauthorized — clear stale user data and redirect if in admin
   if (response.status === 401) {
-    removeToken();
     if (typeof window !== 'undefined') {
       localStorage.removeItem('kahf_user');
-      // Only redirect inside admin area to avoid disrupting public pages
       if (window.location.pathname.startsWith('/admin')) {
         window.location.href = '/admin/login';
       }
@@ -106,11 +114,13 @@ export const httpClient = {
   delete: <T>(endpoint: string) =>
     request<T>(endpoint, { method: 'DELETE' }),
 
-  // Upload FormData (images etc.) — Authorization header is included automatically
   upload: <T>(endpoint: string, formData: FormData) =>
     request<T>(endpoint, {
       method: 'POST',
       body: formData,
-      // No Content-Type header here — browser sets it with proper multipart boundary
     }),
 };
+
+
+
+

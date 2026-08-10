@@ -1,3 +1,5 @@
+﻿// Phase 0: Pricing corrections applied in source products.ts
+// This seed script imports from src/data/products.ts, so corrections flow through automatically.
 
 import { productServices } from './src/services/product.services';
 // Actually, let's just use fetch to post to the API
@@ -68,7 +70,7 @@ async function main() {
     const payload = {
       title: p.name,
       slug: p.slug,
-      description: p.description || `${p.name} — premium attar from KAHF Treasure`,
+      description: p.description || `${p.name} â€” premium attar from KAHF Treasure`,
       categoryId,
       basePrice: Math.min(...Object.values(p.prices).filter(v => v > 0)) || 100,
       images: ['/images/exact-attar-bottle.png'],
@@ -110,3 +112,4 @@ async function main() {
 }
 
 main().catch(console.error);
+

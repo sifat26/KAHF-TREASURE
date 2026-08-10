@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 
 import { createContext, useContext, useEffect, useState, type ReactNode } from 'react';
 import { getStoredUser, clearAuth } from '@/lib/auth';
@@ -11,7 +11,7 @@ interface AuthContextValue {
   isAuthenticated: boolean;
   isAdmin: boolean;
   login: (email: string, password: string) => Promise<void>;
-  logout: () => void;
+  logout: () => Promise<void>;
   refreshUser: () => Promise<void>;
 }
 
@@ -21,31 +21,39 @@ const AuthContext = createContext<AuthContextValue>({
   isAuthenticated: false,
   isAdmin: false,
   login: async () => {},
-  logout: () => {},
+  logout: async () => {},
   refreshUser: async () => {},
 });
 
 export function AuthProvider({ children }: { children: ReactNode }) {
-  const [user, setUser] = useState<UserInfo | null>(null);
+  // Initialize synchronously from localStorage to avoid cascading renders
+  const [user, setUser] = useState<UserInfo | null>(() => {
+    if (typeof window === 'undefined') return null;
+    return getStoredUser();
+  });
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const stored = getStoredUser();
-    if (stored) {
-      setUser(stored);
-      // Verify token is still valid
-      authServices.getMe()
-        .then(res => {
-          if (res.success && res.data) setUser(res.data);
-        })
-        .catch(() => {
+    // Verify the httpOnly cookie is still valid by calling /auth/me
+    authServices.getMe()
+      .then(res => {
+        if (res.success && res.data) {
+          setUser(res.data);
+        } else {
+          if (getStoredUser()) {
+            clearAuth();
+            setUser(null);
+          }
+        }
+      })
+      .catch(() => {
+        // Cookie might be expired or the user wasn't logged in — that's fine
+        if (getStoredUser()) {
           clearAuth();
           setUser(null);
-        })
-        .finally(() => setLoading(false));
-    } else {
-      setLoading(false);
-    }
+        }
+      })
+      .finally(() => setLoading(false));
   }, []);
 
   const login = async (email: string, password: string) => {
@@ -57,7 +65,12 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     }
   };
 
-  const logout = () => {
+  const logout = async () => {
+    try {
+      await authServices.logout();
+    } catch {
+      // Even if the backend call fails, clear local state
+    }
     clearAuth();
     setUser(null);
   };
@@ -69,8 +82,6 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     } catch {}
   };
 
-  // Derive isAdmin reactively from user state rather than calling isAdmin()
-  // once at render (which would be stale after user state updates)
   const adminRoles = ['super_admin', 'admin', 'editor'];
   const isAdminUser = !!user && adminRoles.includes(user.role);
 

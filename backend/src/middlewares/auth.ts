@@ -1,4 +1,4 @@
-import { Request, Response, NextFunction } from 'express';
+﻿import { Request, Response, NextFunction } from 'express';
 import jwt, { JwtPayload } from 'jsonwebtoken';
 import config from '../config';
 import { ApiError } from '../utils/ApiError';
@@ -12,10 +12,25 @@ export interface AuthRequest extends Request {
   };
 }
 
+const TOKEN_COOKIE_NAME = 'kahf_token';
+
+/** Extract token from httpOnly cookie, falling back to Authorization header for API clients. */
+function extractToken(req: Request): string | undefined {
+  // Priority 1: httpOnly cookie (set by our login/register endpoints)
+  const cookieToken = req.cookies?.[TOKEN_COOKIE_NAME];
+  if (cookieToken) return cookieToken;
+
+  // Priority 2: Bearer header (for mobile/API clients that can't use cookies)
+  const headerToken = req.headers.authorization?.split(' ')[1];
+  if (headerToken) return headerToken;
+
+  return undefined;
+}
+
 export const auth = (...requiredRoles: string[]) =>
   async (req: AuthRequest, res: Response, next: NextFunction) => {
     try {
-      const token = req.headers.authorization?.split(' ')[1];
+      const token = extractToken(req);
       if (!token) {
         throw new ApiError(401, 'You are not authorized');
       }

@@ -1,4 +1,4 @@
-import { Response } from 'express';
+﻿import { Response } from 'express';
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 import config from '../config';
@@ -8,6 +8,8 @@ import { catchAsync } from '../utils/catchAsync';
 import { sendResponse } from '../utils/sendResponse';
 import { ApiError } from '../utils/ApiError';
 import { z } from 'zod';
+
+const TOKEN_COOKIE_NAME = 'kahf_token';
 
 const registerSchema = z.object({
   name: z.string().min(2),
@@ -20,6 +22,40 @@ const loginSchema = z.object({
   email: z.string().email(),
   password: z.string().min(1),
 });
+
+/** Set the JWT as an httpOnly cookie on the response. */
+function setAuthCookie(res: Response, token: string) {
+  const maxAgeMs = parseExpiryToMs(config.jwt.expires_in);
+  res.cookie(TOKEN_COOKIE_NAME, token, {
+    httpOnly: true,
+    secure: config.cookie.secure,
+    sameSite: config.cookie.sameSite,
+    maxAge: maxAgeMs,
+    domain: config.cookie.domain,
+    path: '/',
+  });
+}
+
+/** Clear the auth cookie. */
+function clearAuthCookie(res: Response) {
+  res.clearCookie(TOKEN_COOKIE_NAME, {
+    httpOnly: true,
+    secure: config.cookie.secure,
+    sameSite: config.cookie.sameSite,
+    domain: config.cookie.domain,
+    path: '/',
+  });
+}
+
+/** Convert JWT expiry string (e.g. "7d", "24h", "3600s") to milliseconds. */
+function parseExpiryToMs(expiresIn: string): number {
+  const match = /^(\d+)([smhd])$/.exec(expiresIn);
+  if (!match) return 7 * 24 * 60 * 60 * 1000; // default 7 days
+  const num = parseInt(match[1], 10);
+  const unit = match[2];
+  const multipliers: Record<string, number> = { s: 1000, m: 60000, h: 3600000, d: 86400000 };
+  return num * (multipliers[unit] || 86400000);
+}
 
 export const register = catchAsync(async (req: AuthRequest, res: Response) => {
   const body = registerSchema.parse(req.body);
@@ -35,12 +71,13 @@ export const register = catchAsync(async (req: AuthRequest, res: Response) => {
     { expiresIn: config.jwt.expires_in as any }
   );
 
+  setAuthCookie(res, token);
+
   sendResponse(res, {
     statusCode: 201,
     success: true,
     message: 'Registration successful',
     data: {
-      token,
       user: { id: user._id, name: user.name, email: user.email, role: user.role },
     },
   });
@@ -61,15 +98,21 @@ export const login = catchAsync(async (req: AuthRequest, res: Response) => {
     { expiresIn: config.jwt.expires_in as any }
   );
 
+  setAuthCookie(res, token);
+
   sendResponse(res, {
     statusCode: 200,
     success: true,
     message: 'Login successful',
     data: {
-      token,
       user: { id: user._id, name: user.name, email: user.email, role: user.role },
     },
   });
+});
+
+export const logout = catchAsync(async (_req: AuthRequest, res: Response) => {
+  clearAuthCookie(res);
+  sendResponse(res, { statusCode: 200, success: true, message: 'Logged out successfully' });
 });
 
 export const getMe = catchAsync(async (req: AuthRequest, res: Response) => {

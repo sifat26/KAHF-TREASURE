@@ -1,4 +1,4 @@
-import { getToken, removeToken, setToken } from './httpClient';
+﻿import { removeToken } from './httpClient';
 import { UserInfo } from '@/types/user';
 
 const USER_KEY = 'kahf_user';
@@ -19,14 +19,14 @@ export function setStoredUser(user: UserInfo): void {
 }
 
 export function clearAuth(): void {
-  removeToken();
+  removeToken(); // No-op now (cookie cleared by backend logout), kept for compatibility
   if (typeof window !== 'undefined') {
     localStorage.removeItem(USER_KEY);
   }
 }
 
 export function isAuthenticated(): boolean {
-  return !!getToken();
+  return !!getStoredUser();
 }
 
 export function isAdmin(): boolean {
@@ -35,4 +35,5 @@ export function isAdmin(): boolean {
   return ['super_admin', 'admin', 'editor'].includes(user.role);
 }
 
-export { getToken, setToken, removeToken };
+// Re-export token functions for backward compatibility (all no-ops now)
+export { getToken, setToken } from './httpClient';

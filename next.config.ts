@@ -1,11 +1,16 @@
-import type { NextConfig } from 'next';
+﻿import type { NextConfig } from 'next';
 
 const nextConfig: NextConfig = {
   images: {
     unoptimized: true,
     formats: ['image/avif', 'image/webp'],
     remotePatterns: [
-      { protocol: 'https', hostname: '**' },
+      // Cloudinary — primary image host
+      { protocol: 'https', hostname: 'res.cloudinary.com' },
+      { protocol: 'https', hostname: '*.cloudinary.com' },
+      // imgbb — legacy image host (migrate to Cloudinary when possible)
+      { protocol: 'https', hostname: 'i.ibb.co' },
+      { protocol: 'https', hostname: '*.ibb.co' },
     ],
   },
   async rewrites() {
