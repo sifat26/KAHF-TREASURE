@@ -61,7 +61,8 @@ async function request<T>(
   if (response.status === 401) {
     if (typeof window !== 'undefined') {
       localStorage.removeItem('kahf_user');
-      if (window.location.pathname.startsWith('/admin')) {
+      const isAdminLoginPage = window.location.pathname === '/admin/login';
+      if (window.location.pathname.startsWith('/admin') && !isAdminLoginPage) {
         window.location.href = '/admin/login';
       }
     }

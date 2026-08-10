@@ -1,5 +1,5 @@
 import type { Metadata, Viewport } from 'next';
-import { Cinzel, Inter, Noto_Serif_Bengali, Hind_Siliguri } from 'next/font/google';
+import { Cinzel, Inter } from 'next/font/google';
 import { cn } from '@/lib/utils';
 import { site } from '@/data/site';
 import { Providers } from '@/providers/Providers';
@@ -15,8 +15,6 @@ import './globals.css';
 
 const inter = Inter({ subsets: ['latin'], variable: '--font-latin-sans', display: 'swap' });
 const cinzel = Cinzel({ subsets: ['latin'], variable: '--font-latin-display', weight: ['400', '600', '700', '800', '900'], display: 'swap' });
-const notoBengali = Noto_Serif_Bengali({ subsets: ['bengali'], variable: '--font-bn-serif', weight: ['400', '500', '600', '700'], display: 'swap' });
-const hindSiliguri = Hind_Siliguri({ subsets: ['bengali'], variable: '--font-bn-sans', weight: ['400', '500', '600', '700'], display: 'swap' });
 
 export const metadata: Metadata = {
   metadataBase: new URL(site.url),
@@ -51,10 +49,14 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     <html
       lang="bn"
       suppressHydrationWarning
-      className={cn(inter.variable, cinzel.variable, notoBengali.variable, hindSiliguri.variable)}
+      className={cn(inter.variable, cinzel.variable)}
+      style={{
+        ['--font-bn-sans' as any]: 'Adorsho Lipi, serif',
+        ['--font-bn-serif' as any]: 'Adorsho Lipi, serif',
+      }}
     >
       <head>
-        <link rel="stylesheet" href="https://fonts.maateen.me/kalpurush/font.css" />
+        <link rel="stylesheet" href="https://fonts.maateen.me/adorsho-lipi/font.css" />
         <script dangerouslySetInnerHTML={{ __html: themeInitScript }} />
       </head>
       <body className="min-h-dvh bg-canvas antialiased">

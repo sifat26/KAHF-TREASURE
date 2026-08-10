@@ -171,9 +171,12 @@ export default function AdminProductsPage() {
                       </td>
                       <td className="p-3">
                         <p className="font-bold text-stone-900">৳{product.basePrice.toLocaleString()}</p>
-                        {Boolean(product.compareAtPrice) && Number(product.compareAtPrice) > product.basePrice && (
-                          <p className="text-xs text-stone-400 line-through">৳{product.compareAtPrice.toLocaleString()}</p>
-                        )}
+                        {(() => {
+                          const compareAtPrice = product.compareAtPrice ?? 0;
+                          return compareAtPrice > product.basePrice && (
+                            <p className="text-xs text-stone-400 line-through">৳{compareAtPrice.toLocaleString()}</p>
+                          );
+                        })()}
                       </td>
                       <td className="p-3">
                         <span className={`font-semibold ${isOutOfStock ? 'text-red-600' : isLowStock ? 'text-amber-600' : 'text-emerald-600'}`}>

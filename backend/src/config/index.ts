@@ -21,8 +21,11 @@ export default {
     api_secret: process.env.CLOUDINARY_API_SECRET || '',
   },
   cookie: {
-    secure: process.env.COOKIE_SECURE === 'true',
-    sameSite: (process.env.COOKIE_SAMESITE as 'strict' | 'lax' | 'none') || 'strict',
+    secure: process.env.COOKIE_SECURE
+      ? process.env.COOKIE_SECURE === 'true'
+      : process.env.NODE_ENV === 'production',
+    sameSite: (process.env.COOKIE_SAMESITE as 'strict' | 'lax' | 'none')
+      || (process.env.NODE_ENV === 'production' ? 'none' : 'lax'),
     domain: process.env.COOKIE_DOMAIN || undefined,
   },
 };

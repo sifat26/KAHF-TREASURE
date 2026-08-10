@@ -1,14 +1,15 @@
 import { httpClient, getToken } from '@/lib/httpClient';
+import { normalizeText } from '@/lib/text';
 import { Category, CategoryPayload } from '@/types/category';
 
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL || 'http://localhost:5000/api/v1';
 
 export const categoryServices = {
-  getCategories: (params?: { type?: string; isActive?: boolean }) =>
-    httpClient.get<Category[]>('/categories', params as Record<string, unknown>),
+  getCategories: async (params?: { type?: string; isActive?: boolean }) =>
+    normalizeText(await httpClient.get<Category[]>('/categories', params as Record<string, unknown>)),
 
-  getCategory: (idOrSlug: string) =>
-    httpClient.get<Category>(`/categories/${idOrSlug}`),
+  getCategory: async (idOrSlug: string) =>
+    normalizeText(await httpClient.get<Category>(`/categories/${idOrSlug}`)),
 
   createCategory: (data: CategoryPayload) =>
     httpClient.post<Category>('/categories', data),

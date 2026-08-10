@@ -93,18 +93,14 @@
   --color-emerald:   #0f766e;
 
 
-  /* ── Typography ──
-     Bangla-first stacks. The LATIN face is listed first on purpose: font
-     fallback is per-character, and each latin face is subset with a
-     unicode-range, so Latin brand names (Blue Mask, CR7) render in
-     Playfair/Inter while Bangla text falls through to the Bangla face.
-     Raw faces come from next/font as --font-latin-* / --font-bn-*
-     (see app/layout.tsx). */
-  --font-display: 'qayyum-book', 'Kalpurush', sans-serif;
-  --font-serif:   'qayyum-book', 'Kalpurush', sans-serif;
-  --font-sans:    var(--font-latin-sans),    var(--font-bn-sans),  ui-sans-serif, system-ui, sans-serif;
-  /* Bangla-only escape hatch, for text that must never use a Latin face. */
-  --font-bengali: var(--font-bn-sans), ui-sans-serif, system-ui, sans-serif;
+    /* ── Typography ──
+      Premium Latin + Bengali pairing. Inter handles body Latin text, Cinzel
+      handles display Latin text, and Adorsho Lipi is used for Bengali text.
+      The raw faces come from next/font and the Adorsho CDN in app/layout.tsx. */
+    --font-display: var(--font-latin-display), var(--font-bn-serif), serif;
+    --font-serif:   var(--font-latin-display), var(--font-bn-serif), serif;
+    --font-sans:    var(--font-latin-sans), var(--font-bn-sans), ui-sans-serif, system-ui, sans-serif;
+    --font-bengali: var(--font-bn-sans), var(--font-bn-serif), ui-sans-serif, system-ui, sans-serif;
 
   /* ── Radius (BRAND_GUIDELINES.md » 12–16 px) ── */
   --radius-btn:   12px;
@@ -504,5 +500,5 @@ body {
 .font-serif,
 .font-display,
 h1, h2, h3, h4, h5, h6 {
-  font-family: 'qayyum-book', 'Kalpurush', sans-serif !important;
+  font-family: var(--font-display), var(--font-bn-serif), serif !important;
 }
