@@ -6,13 +6,7 @@ import { ProductCard } from './ProductCard';
  * Horizontal, snap-scrolling rail for use on mobile / dense sections.
  * Cards keep a fixed min-width and scroll horizontally without a visible bar.
  */
-export function ProductRail({
-  products,
-  className,
-}: {
-  products: Product[];
-  className?: string;
-}) {
+export function ProductRail({ products, className }: { products: Product[]; className?: string }) {
   return (
     <div
       className={cn(
@@ -21,11 +15,10 @@ export function ProductRail({
       )}
     >
       {products.map((product) => (
-        <div key={product.slug} className="w-[78vw] max-w-75 shrink-0 snap-start sm:w-70">
-          <ProductCard product={product} className="h-full" />
+        <div key={product.slug} className='w-[78vw] max-w-75 shrink-0 snap-start sm:w-70'>
+          <ProductCard product={product} className='h-full' />
         </div>
       ))}
     </div>
   );
 }
-        <div key={product.slug} style={{ width: '78vw', maxWidth: 300 }} className="shrink-0 snap-start sm:w-70">
