@@ -106,9 +106,16 @@ export function CartDrawer() {
                         </button>
                       </div>
                       <div className="flex items-center gap-2">
-                        <span className="text-sm font-bold text-stone-900">
-                          ৳{item.price * item.quantity}
-                        </span>
+                        <div className="flex items-baseline gap-1.5">
+                          <span className="text-sm font-bold text-stone-900">
+                            ৳{item.price * item.quantity}
+                          </span>
+                          {Boolean(item.compareAtPrice) && Number(item.compareAtPrice) > item.price && (
+                            <span className="text-xs text-stone-400 line-through">
+                              ৳{Number(item.compareAtPrice) * item.quantity}
+                            </span>
+                          )}
+                        </div>
                         <button
                           onClick={() => dispatch(removeFromCart(item.id))}
                           className="text-stone-400 hover:text-red-500"

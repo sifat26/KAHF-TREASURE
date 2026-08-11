@@ -3,6 +3,7 @@ export interface ProductVariant {
   label: string;
   stock: number;
   priceOverride?: number | null;
+  compareAtPrice?: number | null;
   sku?: string | null;
 }
 

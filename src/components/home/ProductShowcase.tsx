@@ -58,28 +58,28 @@ export function ProductShowcase({
   if (!products.length) return null;
 
   return (
-    <section className='bg-[var(--color-background)] py-16 text-[var(--color-text-primary)] sm:py-24'>
+    <section className='bg-(--color-background) py-16 text-(--color-text-primary) sm:py-24'>
       <Container>
         <Reveal>
-          <div className='mb-10 flex flex-wrap items-end justify-between gap-4 border-b border-[var(--color-border)] pb-6'>
+          <div className='mb-10 flex flex-wrap items-end justify-between gap-4 border-b border-(--color-border) pb-6'>
             <div>
               {eyebrow && (
-                <span className='mb-2 block text-[0.7rem] font-bold tracking-[0.06em] text-[var(--color-gold)]'>
+                <span className='mb-2 block text-[0.7rem] font-bold tracking-[0.06em] text-(--color-gold)'>
                   {eyebrow}
                 </span>
               )}
-              <h2 className='font-serif text-3xl sm:text-4xl md:text-5xl font-bold tracking-tight text-[var(--color-text-primary)]'>
+              <h2 className='font-serif text-3xl font-bold tracking-tight text-(--color-text-primary) sm:text-4xl md:text-5xl'>
                 {title}
               </h2>
               {description && (
-                <p className='mt-2 max-w-xl text-sm text-[var(--color-text-secondary)] sm:text-base'>{description}</p>
+                <p className='mt-2 max-w-xl text-sm text-(--color-text-secondary) sm:text-base'>{description}</p>
               )}
             </div>
             {viewAllHref && (
               <ButtonLink
                 href={viewAllHref}
                 variant='link'
-                className='shrink-0 text-xs font-semibold tracking-[0.06em] text-[var(--color-gold)] transition-colors hover:text-[var(--color-gold-deep)] sm:text-sm'
+                className='shrink-0 text-xs font-semibold tracking-[0.06em] text-(--color-gold) transition-colors hover:text-(--color-gold-deep) sm:text-sm'
               >
                 {viewAllLabel} →
               </ButtonLink>
@@ -107,7 +107,7 @@ export function ProductShowcase({
             }}
           >
             {products.slice(0, mobileCount).map((product) => (
-              <div key={product.slug} className='w-[210px] xs:w-[240px] sm:w-[280px] shrink-0 snap-start'>
+              <div key={product.slug} className='w-[78vw] max-w-75 shrink-0 snap-start sm:w-70'>
                 <ProductCard product={product} className='w-full h-full' />
               </div>
             ))}
@@ -119,7 +119,7 @@ export function ProductShowcase({
               type='button'
               onClick={() => scroll('left')}
               disabled={!canLeft}
-              className='flex h-9 w-9 items-center justify-center rounded-full border border-[var(--color-accent)]/30 text-[var(--color-accent)] disabled:opacity-30 disabled:pointer-events-none hover:bg-[var(--color-accent)]/15 transition-all'
+              className='flex h-9 w-9 items-center justify-center rounded-full border border-(--color-accent)/30 text-(--color-accent) disabled:pointer-events-none disabled:opacity-30 hover:bg-(--color-accent)/15 transition-all'
               aria-label='বাঁ দিকে সরান'
             >
               <ChevronLeft size={18} />
@@ -128,7 +128,7 @@ export function ProductShowcase({
               type='button'
               onClick={() => scroll('right')}
               disabled={!canRight}
-              className='flex h-9 w-9 items-center justify-center rounded-full border border-[var(--color-accent)]/30 text-[var(--color-accent)] disabled:opacity-30 disabled:pointer-events-none hover:bg-[var(--color-accent)]/15 transition-all'
+              className='flex h-9 w-9 items-center justify-center rounded-full border border-(--color-accent)/30 text-(--color-accent) disabled:pointer-events-none disabled:opacity-30 hover:bg-(--color-accent)/15 transition-all'
               aria-label='ডান দিকে সরান'
             >
               <ChevronRight size={18} />

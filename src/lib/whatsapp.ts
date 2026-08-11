@@ -1,5 +1,6 @@
-import { waLink } from '@/data/site';
 import type { Product, ProductSize } from '@/data/products';
+import { contact, waLink } from '@/data/site';
+import type { Order } from '@/types/order';
 import { formatPrice, formatSize, toBanglaDigits } from './format';
 
 /**
@@ -51,4 +52,53 @@ export function orderBagUrl(lines: EnquiryLine[]): string {
   const totalLine = total > 0 ? `\n\nসম্ভাব্য মোট: ${formatPrice(total)}` : '';
   const message = `আসসালামু আলাইকুম, KAHF Treasure! আমি নিচের আতরগুলো অর্ডার করতে চাই:\n\n${items}${totalLine}\n\nস্টক আর ডেলিভারির বিষয়টি জানালে উপকৃত হব। ধন্যবাদ!`;
   return whatsappUrl(message);
+}
+
+/** Prefilled admin notification for a successfully placed order. */
+export function adminOrderUrl(
+  order: Pick<
+    Order,
+    | 'trackingNumber'
+    | 'customerName'
+    | 'phone'
+    | 'district'
+    | 'upazila'
+    | 'addressLine'
+    | 'postalCode'
+    | 'orderNote'
+    | 'items'
+    | 'totalAmount'
+    | 'paymentMethod'
+  >,
+): string {
+  const items = order.items
+    .map((item) => {
+      const variant = item.variantLabel ? ` (${item.variantLabel})` : '';
+      return `• ${item.title}${variant} × ${toBanglaDigits(item.quantity)} = ${formatPrice(item.totalPrice)}`;
+    })
+    .join('\n');
+
+  const postalLine = order.postalCode ? `\nপোস্ট কোড: ${order.postalCode}` : '';
+  const noteLine = order.orderNote ? `\nনোট: ${order.orderNote}` : '';
+  const message = [
+    'আসসালামু আলাইকুম, KAHF Treasure!',
+    'নতুন অর্ডার এসেছে:',
+    '',
+    `ট্র্যাকিং: ${order.trackingNumber}`,
+    `গ্রাহক: ${order.customerName}`,
+    `ফোন: ${order.phone}`,
+    `জেলা: ${order.district}`,
+    `উপজেলা: ${order.upazila}`,
+    `ঠিকানা: ${order.addressLine}${postalLine}`,
+    `পেমেন্ট: ${order.paymentMethod.toUpperCase()}`,
+    '',
+    items,
+    '',
+    `মোট: ${formatPrice(order.totalAmount)}`,
+    noteLine,
+  ]
+    .filter(Boolean)
+    .join('\n');
+
+  return `https://wa.me/${contact.whatsapp}?text=${encode(message)}`;
 }

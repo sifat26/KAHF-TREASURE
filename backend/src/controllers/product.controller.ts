@@ -12,6 +12,7 @@ const variantSchema = z.object({
   label: z.string(),
   stock: z.number().int().min(0).default(0),
   priceOverride: z.number().min(0).optional(),
+  compareAtPrice: z.number().min(0).optional(),
   sku: z.string().optional(),
 });
 

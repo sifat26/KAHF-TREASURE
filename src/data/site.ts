@@ -4,7 +4,7 @@ export const site = {
   tagline: 'খাঁটি সুবাসে আপনার পরিচয়',
   description:
     'KAHF Treasure — বিদেশ থেকে আনা খাঁটি পারফিউম অয়েল দিয়ে তৈরি অ্যালকোহল-মুক্ত আতর। কোনো রাসায়নিক নেই, কোনো প্রতারণা নেই — শুধু খাঁটি সুবাস, দীর্ঘস্থায়ী গন্ধ।',
-  url: 'https://kahftreasure.com',
+  url: 'https://kahf-treasure.vercel.app',
   ogImage: '/images/hero-perfume-bottle.png',
   locale: 'bn_BD',
 } as const;
@@ -54,7 +54,7 @@ export const footerNav = {
     { label: 'আমাদের গল্প', href: '/about' },
     { label: 'কেন আমরা', href: '/#why-choose-us' },
     { label: 'সাধারণ জিজ্ঞাসা', href: '/faq' },
-  { label: 'ব্লগ', href: '/blog' },
+    { label: 'ব্লগ', href: '/blog' },
     { label: 'যোগাযোগ করুন', href: '/#contact' },
   ],
   policies: [

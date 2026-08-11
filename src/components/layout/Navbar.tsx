@@ -103,26 +103,36 @@ export function Navbar() {
               {menuOpen ? <X size={22} /> : <Menu size={22} />}
             </button>
 
-            {/* Brand Logo with exact gold shield calligraphy emblem */}
-            <Link href='/' className='flex items-center gap-2 sm:gap-3 shrink-0 group py-1' aria-label={`${site.name} — হোম`}>
-              <div className="relative flex h-10 sm:h-12 w-10 sm:w-12 items-center justify-center rounded-xl bg-stone-950 p-1 shadow-md border border-amber-500/30 group-hover:border-amber-400 transition-all">
+            {/* Brand Logo — KAHF shield crest + full wordmark */}
+            <Link href='/' className='flex items-center gap-2.5 sm:gap-3 shrink-0 group py-1' aria-label={`${site.name} — হোম`}>
+              {/* Shield emblem in dark luxury frame */}
+              <div className='relative flex h-11 sm:h-12 w-10 sm:w-11 items-center justify-center rounded-xl bg-stone-950 p-1 border border-amber-500/30 shadow-md group-hover:border-amber-400/60 transition-all duration-300 group-hover:scale-105 shrink-0'>
                 <Image
-                  src='/images/logo-shield.png'
-                  alt='KAHF Treasure'
+                  src='/images/logo.jpg'
+                  alt='KAHF Treasure crest'
                   width={48}
                   height={52}
                   priority
-                  className='h-full w-auto object-contain filter drop-shadow-[0_2px_8px_rgba(212,175,55,0.4)] transform group-hover:scale-105 transition-transform'
+                  className='h-full w-auto object-contain filter drop-shadow-[0_2px_8px_rgba(200,169,106,0.4)]'
                 />
               </div>
 
-              {/* Brand Text */}
-              <div className='flex flex-col'>
-                <span className='font-serif text-base sm:text-[1.35rem] font-bold tracking-[0.14em] sm:tracking-[0.16em] text-[var(--color-accent-strong)] leading-tight group-hover:text-[var(--color-text-primary)] transition-colors'>
+              {/* Wordmark column */}
+              <div className='flex flex-col items-start leading-none'>
+                <span
+                  className='font-serif font-bold tracking-[0.16em] text-base sm:text-xl leading-none text-[var(--color-accent-strong)] group-hover:text-[var(--color-gold)] transition-colors'
+                >
                   KAHF
                 </span>
-                <span className='font-serif text-[0.55rem] sm:text-[0.65rem] tracking-[0.28em] sm:tracking-[0.32em] text-[var(--color-accent)] font-medium leading-none'>
+                <span
+                  className='font-serif font-semibold tracking-[0.3em] text-[0.6rem] sm:text-[0.68rem] leading-none mt-0.5 text-[var(--color-accent)]'
+                >
                   TREASURE
+                </span>
+                <span
+                  className='hidden sm:block text-[0.44rem] tracking-[0.14em] leading-none mt-1 font-medium uppercase text-[var(--color-muted)]'
+                >
+                  A DROP OF GOLD, THE EARTH TURNS ROYAL
                 </span>
               </div>
             </Link>

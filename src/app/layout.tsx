@@ -1,5 +1,5 @@
 import type { Metadata, Viewport } from 'next';
-import { Cinzel, Inter } from 'next/font/google';
+import { Amiri, Cinzel, Inter } from 'next/font/google';
 import { cn } from '@/lib/utils';
 import { site } from '@/data/site';
 import { Providers } from '@/providers/Providers';
@@ -11,6 +11,7 @@ import { ThemeProvider, themeInitScript } from '@/components/theme/ThemeProvider
 import { WhatsappFAB } from '@/components/ui/WhatsappFAB';
 import { OrganizationJsonLd, WebSiteJsonLd, LocalBusinessJsonLd } from '@/components/seo/JsonLd';
 import { GoogleAnalytics } from '@/components/seo/GoogleAnalytics';
+import { bengali } from './fonts';
 import './globals.css';
 
 const inter = Inter({ subsets: ['latin'], variable: '--font-latin-sans', display: 'swap' });
@@ -18,6 +19,12 @@ const cinzel = Cinzel({
   subsets: ['latin'],
   variable: '--font-latin-display',
   weight: ['400', '600', '700', '800', '900'],
+  display: 'swap',
+});
+const amiri = Amiri({
+  subsets: ['arabic'],
+  weight: ['400', '700'],
+  variable: '--font-arabic',
   display: 'swap',
 });
 
@@ -71,17 +78,12 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     <html
       lang='bn'
       suppressHydrationWarning
-      className={cn(inter.variable, cinzel.variable)}
-      style={{
-        ['--font-bn-sans' as any]: 'Adorsho Lipi, serif',
-        ['--font-bn-serif' as any]: 'Adorsho Lipi, serif',
-      }}
+      className={cn(inter.variable, cinzel.variable, bengali.variable)}
     >
       <head>
-        <link rel='stylesheet' href='https://fonts.maateen.me/adorsho-lipi/font.css' />
         <script dangerouslySetInnerHTML={{ __html: themeInitScript }} />
       </head>
-      <body className='min-h-dvh bg-canvas antialiased'>
+      <body className={cn('min-h-dvh bg-canvas antialiased', inter.variable, cinzel.variable, bengali.variable, amiri.variable)}>
         <OrganizationJsonLd />
         <WebSiteJsonLd />
         <LocalBusinessJsonLd />

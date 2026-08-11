@@ -21,10 +21,11 @@ export function ProductRail({
       )}
     >
       {products.map((product) => (
-        <div key={product.slug} className="w-[70%] shrink-0 snap-start sm:w-[280px]">
+        <div key={product.slug} className="w-[78vw] max-w-75 shrink-0 snap-start sm:w-70">
           <ProductCard product={product} className="h-full" />
         </div>
       ))}
     </div>
   );
 }
+        <div key={product.slug} style={{ width: '78vw', maxWidth: 300 }} className="shrink-0 snap-start sm:w-70">

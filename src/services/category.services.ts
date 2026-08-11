@@ -1,8 +1,6 @@
-import { httpClient, getToken } from '@/lib/httpClient';
+import { httpClient } from '@/lib/httpClient';
 import { normalizeText } from '@/lib/text';
 import { Category, CategoryPayload } from '@/types/category';
-
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL || 'http://localhost:5000/api/v1';
 
 export const categoryServices = {
   getCategories: async (params?: { type?: string; isActive?: boolean }) =>
@@ -20,14 +18,7 @@ export const categoryServices = {
   uploadCategoryImage: async (file: File): Promise<string> => {
     const fd = new FormData();
     fd.append('image', file);
-    const token = getToken();
-    const res = await fetch(`${API_BASE_URL}/upload/image`, {
-      method: 'POST',
-      headers: token ? { Authorization: `Bearer ${token}` } : {},
-      body: fd,
-    });
-    const data = await res.json();
-    if (!data.success) throw new Error(data.message || 'Image upload failed');
-    return data.data.url as string;
+    const res = await httpClient.upload<{ url: string }>('/upload/image', fd);
+    return res.data.url;
   },
 };

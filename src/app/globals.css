@@ -93,8 +93,16 @@
 
   /* ── Typography ──
       Premium Latin + Bengali pairing. Inter handles body Latin text, Cinzel
-      handles display Latin text, and Adorsho Lipi is used for Bengali text.
-      The raw faces come from next/font and the Adorsho CDN in app/layout.tsx. */
+      handles display Latin text, and Li Ador Noirrit handles all Bengali text.
+      Every raw face is self-hosted by next/font — Inter and Cinzel are declared
+      in app/layout.tsx, Li Ador Noirrit in app/fonts.ts (which owns
+      --font-bn-sans and documents why only 400 + 700 ship).
+
+      Li Ador Noirrit has no separate serif cut, so --font-bn-serif is an alias:
+      Bengali display text and Bengali body text are the same face, and the
+      Latin face ahead of it in each chain is what makes headings look different.
+      The alias exists so the chains below and ProductPurchase.tsx keep resolving. */
+  --font-bn-serif: var(--font-bn-sans);
   --font-display: var(--font-latin-display), var(--font-bn-serif), serif;
   --font-serif: var(--font-latin-display), var(--font-bn-serif), serif;
   --font-sans: var(--font-latin-sans), var(--font-bn-sans), ui-sans-serif, system-ui, sans-serif;

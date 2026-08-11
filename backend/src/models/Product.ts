@@ -5,6 +5,7 @@ export interface IProductVariant {
   label: string; // e.g. "3ml", "6ml", "12ml"
   stock: number;
   priceOverride?: number;
+  compareAtPrice?: number;
   sku?: string;
 }
 
@@ -39,6 +40,7 @@ const variantSchema = new Schema<IProductVariant>({
   label: { type: String, required: true },
   stock: { type: Number, required: true, default: 0, min: 0 },
   priceOverride: { type: Number, min: 0 },
+  compareAtPrice: { type: Number, min: 0 },
   sku: String,
 }, { _id: true });
 

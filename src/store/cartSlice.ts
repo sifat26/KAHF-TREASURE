@@ -1,4 +1,4 @@
-﻿// Google Analytics 4 e-commerce event tracking
+// Google Analytics 4 e-commerce event tracking
 import { trackEvent } from '@/components/seo/GoogleAnalytics';
 import { createSlice, type PayloadAction } from '@reduxjs/toolkit';
 
@@ -7,6 +7,7 @@ export interface CartVariant {
   label: string;
   stock: number;
   priceOverride?: number | null;
+  compareAtPrice?: number | null;
 }
 
 export interface CartItem {
@@ -16,6 +17,7 @@ export interface CartItem {
   image?: string;
   basePrice: number;
   price: number;
+  compareAtPrice?: number | null;
   quantity: number;
   variantId?: string;
   variantLabel?: string;
@@ -61,18 +63,18 @@ const cartSlice = createSlice({
         const availableSlots = Math.max(0, MAX_ORDER_ITEMS - totalQuantity);
         const nextQty = Math.min(action.payload.quantity, availableSlots);
         if (nextQty <= 0) return;
-            trackEvent('add_to_cart', {
-        currency: 'BDT',
-        value: action.payload.price * action.payload.quantity,
-        items: [{
-          item_id: action.payload.productId,
-          item_name: action.payload.title,
-          price: action.payload.price,
-          quantity: action.payload.quantity,
-          item_variant: action.payload.variantLabel,
-        }],
-      });
-      state.items.push({
+        trackEvent('add_to_cart', {
+          currency: 'BDT',
+          value: action.payload.price * action.payload.quantity,
+          items: [{
+            item_id: action.payload.productId,
+            item_name: action.payload.title,
+            price: action.payload.price,
+            quantity: action.payload.quantity,
+            item_variant: action.payload.variantLabel,
+          }],
+        });
+        state.items.push({
           ...action.payload,
           quantity: nextQty,
           id: variantId ? `${productId}-${variantId}` : `${productId}-default`,
@@ -106,9 +108,10 @@ const cartSlice = createSlice({
       variantId: string;
       variantLabel: string;
       price: number;
+      compareAtPrice?: number | null;
       maxStock?: number;
     }>) {
-      const { itemId, variantId, variantLabel, price, maxStock } = action.payload;
+      const { itemId, variantId, variantLabel, price, compareAtPrice, maxStock } = action.payload;
       const item = state.items.find(i => i.id === itemId);
       if (!item) return;
       const newId = `${item.productId}-${variantId}`;
@@ -124,6 +127,7 @@ const cartSlice = createSlice({
       item.variantId = variantId;
       item.variantLabel = variantLabel;
       item.price = price;
+      item.compareAtPrice = compareAtPrice;
       item.maxStock = maxStock;
       if (maxStock !== undefined && item.quantity > maxStock) {
         item.quantity = maxStock > 0 ? maxStock : 1;
@@ -144,4 +148,3 @@ export const {
 } = cartSlice.actions;
 
 export default cartSlice.reducer;
-

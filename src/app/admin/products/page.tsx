@@ -395,9 +395,13 @@ function ProductModal({
     product?.variants?.map((v) => ({
       label: v.label,
       stock: v.stock,
-      priceOverride: v.priceOverride || 0,
+      priceOverride: v.priceOverride ?? 0,
+      compareAtPrice: v.compareAtPrice ?? 0,
       sku: v.sku || '',
-    })) || [{ label: '3ml', stock: 0, priceOverride: 0, sku: '' }],
+    })) || [
+      { label: '3ml', stock: 10, priceOverride: 350, compareAtPrice: 450, sku: '' },
+      { label: '6ml', stock: 10, priceOverride: 650, compareAtPrice: 800, sku: '' },
+    ],
   );
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -431,8 +435,27 @@ function ProductModal({
       setError('ক্যাটাগরি নির্বাচন করুন');
       return;
     }
-    if (form.basePrice <= 0) {
-      setError('মূল দাম সঠিকভাবে লিখুন');
+
+    const mappedVariants = variants
+      .filter((v) => v.label.trim())
+      .map((v) => ({
+        label: v.label.trim(),
+        stock: Number(v.stock),
+        priceOverride: v.priceOverride ? Number(v.priceOverride) : undefined,
+        compareAtPrice: v.compareAtPrice ? Number(v.compareAtPrice) : undefined,
+        sku: v.sku.trim() || undefined,
+      }));
+
+    let basePriceNum = Number(form.basePrice);
+    if ((!basePriceNum || basePriceNum <= 0) && mappedVariants.length > 0) {
+      const validPrices = mappedVariants.map((v) => v.priceOverride || 0).filter((p) => p > 0);
+      if (validPrices.length > 0) {
+        basePriceNum = Math.min(...validPrices);
+      }
+    }
+
+    if (basePriceNum <= 0) {
+      setError('পণ্যের মূল্য নির্ধারণ করুন (মূল দাম অথবা ভ্যারিয়েন্টের বিক্রয় মূল্য)');
       return;
     }
 
@@ -444,7 +467,7 @@ function ProductModal({
         slug: form.slug.trim() || undefined,
         description: form.description || undefined,
         categoryId: form.categoryId,
-        basePrice: Number(form.basePrice),
+        basePrice: basePriceNum,
         compareAtPrice: form.compareAtPrice ? Number(form.compareAtPrice) : undefined,
         images: imageUrls,
         sku: form.sku.trim() || undefined,
@@ -459,14 +482,7 @@ function ProductModal({
         isOnOffer: form.isOnOffer,
         productOrder: Number(form.productOrder),
         lowStockThreshold: Number(form.lowStockThreshold),
-        variants: variants
-          .filter((v) => v.label.trim())
-          .map((v) => ({
-            label: v.label.trim(),
-            stock: Number(v.stock),
-            priceOverride: v.priceOverride ? Number(v.priceOverride) : undefined,
-            sku: v.sku.trim() || undefined,
-          })),
+        variants: mappedVariants,
       };
       if (product) {
         await productServices.updateProduct(product._id, payload);
@@ -483,7 +499,7 @@ function ProductModal({
 
   return (
     <div className='fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4 backdrop-blur-sm'>
-      <div className='max-h-[92vh] w-full max-w-2xl overflow-y-auto rounded-3xl bg-white shadow-2xl'>
+      <div className='max-h-[92vh] w-full max-w-3xl overflow-y-auto rounded-3xl bg-white shadow-2xl'>
         {/* Header */}
         <div className='sticky top-0 z-10 flex items-center justify-between rounded-t-3xl border-b border-stone-100 bg-white px-6 py-4'>
           <h2 className='text-lg font-bold text-stone-900'>{product ? 'পণ্য এডিট করুন' : 'নতুন পণ্য যোগ করুন'}</h2>
@@ -499,7 +515,7 @@ function ProductModal({
               label='শিরোনাম *'
               value={form.title}
               onChange={(v) => setForm({ ...form, title: v })}
-              placeholder='পণ্যের নাম লিখুন'
+              placeholder='পণ্যের নাম (যেমন: Vampire Blood)'
             />
             <FormInput
               label='স্লাগ (অটো)'
@@ -546,16 +562,18 @@ function ProductModal({
 
           <div className='grid gap-3 sm:grid-cols-3'>
             <FormInput
-              label='মূল দাম (৳) *'
+              label='মূল বিক্রয় দাম (৳)'
               type='number'
               value={String(form.basePrice)}
               onChange={(v) => setForm({ ...form, basePrice: Number(v) })}
+              placeholder='ডিফল্ট ৩৫০ (ভ্যারিয়েন্ট থাকলে স্বয়ংক্রিয়)'
             />
             <FormInput
-              label='তুলনামূলক দাম (৳)'
+              label='তুলনামূলক দাম / ডিসকাউন্ট (৳)'
               type='number'
               value={String(form.compareAtPrice)}
               onChange={(v) => setForm({ ...form, compareAtPrice: Number(v) })}
+              placeholder='যেমন: ৪৫০ (অফারের আগের দাম)'
             />
             <FormInput
               label='SKU'
@@ -645,60 +663,117 @@ function ProductModal({
           </div>
 
           {/* Variants */}
-          <div>
-            <div className='mb-2 flex items-center justify-between'>
-              <label className='text-xs font-semibold text-stone-600'>ভ্যারিয়েন্ট (সাইজ ও স্টক)</label>
+          <div className='rounded-2xl border border-stone-200 bg-stone-50/50 p-4'>
+            <div className='mb-3 flex items-center justify-between'>
+              <div>
+                <label className='text-xs font-bold text-stone-800 uppercase tracking-wider block'>
+                  সাইজ অনুযায়ী ভ্যারিয়েন্ট ও স্বতন্ত্র মূল্য
+                </label>
+                <p className='text-[11px] text-stone-500'>
+                  প্রতিটি সাইজের (যেমন 3ml, 6ml, 12ml) জন্য নিজস্ব বিক্রয় মূল্য ও ছাড়/পূর্বের দাম সেট করুন
+                </p>
+              </div>
               <button
-                onClick={() => setVariants([...variants, { label: '', stock: 0, priceOverride: 0, sku: '' }])}
-                className='text-xs font-semibold text-amber-700 hover:underline'
+                type='button'
+                onClick={() =>
+                  setVariants([...variants, { label: '', stock: 10, priceOverride: 0, compareAtPrice: 0, sku: '' }])
+                }
+                className='inline-flex items-center gap-1 rounded-lg bg-amber-700/10 px-3 py-1.5 text-xs font-bold text-amber-800 hover:bg-amber-700/20 transition'
               >
-                + ভ্যারিয়েন্ট যোগ করুন
+                <Plus className='h-3.5 w-3.5' /> সাইজ যোগ করুন
               </button>
             </div>
+
+            {/* Variant Table Header */}
+            <div className='hidden sm:grid sm:grid-cols-12 gap-2 mb-1.5 px-1 text-[11px] font-bold text-stone-500 uppercase tracking-wider'>
+              <div className='col-span-3'>সাইজ (যেমন 3ml)</div>
+              <div className='col-span-3'>বিক্রয় মূল্য (৳)</div>
+              <div className='col-span-3'>আগের দাম/ডিসকাউন্ট (৳)</div>
+              <div className='col-span-2'>স্টক</div>
+              <div className='col-span-1 text-center'>রিমুভ</div>
+            </div>
+
             <div className='space-y-2'>
               {variants.map((v, i) => (
-                <div key={i} className='flex gap-2 items-center'>
-                  <input
-                    type='text'
-                    placeholder='লেবেল (3ml, S, M)'
-                    value={v.label}
-                    onChange={(e) => {
-                      const nv = [...variants];
-                      nv[i].label = e.target.value;
-                      setVariants(nv);
-                    }}
-                    className='flex-1 rounded-lg border border-stone-200 px-3 py-2 text-sm outline-none focus:border-amber-400'
-                  />
-                  <input
-                    type='number'
-                    placeholder='স্টক'
-                    value={v.stock}
-                    min={0}
-                    onChange={(e) => {
-                      const nv = [...variants];
-                      nv[i].stock = Number(e.target.value);
-                      setVariants(nv);
-                    }}
-                    className='w-20 rounded-lg border border-stone-200 px-3 py-2 text-sm outline-none focus:border-amber-400'
-                  />
-                  <input
-                    type='number'
-                    placeholder='দাম (৳)'
-                    value={v.priceOverride}
-                    min={0}
-                    onChange={(e) => {
-                      const nv = [...variants];
-                      nv[i].priceOverride = Number(e.target.value);
-                      setVariants(nv);
-                    }}
-                    className='w-24 rounded-lg border border-stone-200 px-3 py-2 text-sm outline-none focus:border-amber-400'
-                  />
-                  <button
-                    onClick={() => setVariants(variants.filter((_, idx) => idx !== i))}
-                    className='rounded-lg p-2 text-stone-400 hover:bg-red-50 hover:text-red-500 transition'
-                  >
-                    <X className='h-4 w-4' />
-                  </button>
+                <div key={i} className='grid grid-cols-1 sm:grid-cols-12 gap-2 items-center rounded-xl bg-white p-2.5 border border-stone-200 shadow-sm'>
+                  {/* Size Label */}
+                  <div className='sm:col-span-3'>
+                    <label className='sm:hidden text-[10px] font-semibold text-stone-500 block mb-0.5'>সাইজ</label>
+                    <input
+                      type='text'
+                      placeholder='3ml / 6ml / 12ml'
+                      value={v.label}
+                      onChange={(e) => {
+                        const nv = [...variants];
+                        nv[i].label = e.target.value;
+                        setVariants(nv);
+                      }}
+                      className='w-full rounded-lg border border-stone-200 px-3 py-1.5 text-sm font-medium outline-none focus:border-amber-500'
+                    />
+                  </div>
+
+                  {/* Selling Price */}
+                  <div className='sm:col-span-3'>
+                    <label className='sm:hidden text-[10px] font-semibold text-stone-500 block mb-0.5'>বিক্রয় মূল্য (৳)</label>
+                    <input
+                      type='number'
+                      placeholder='বিক্রয় মূল্য'
+                      value={v.priceOverride || ''}
+                      min={0}
+                      onChange={(e) => {
+                        const nv = [...variants];
+                        nv[i].priceOverride = Number(e.target.value);
+                        setVariants(nv);
+                      }}
+                      className='w-full rounded-lg border border-stone-200 px-3 py-1.5 text-sm font-bold text-amber-900 outline-none focus:border-amber-500'
+                    />
+                  </div>
+
+                  {/* Compare At Price (Discount Original Price) */}
+                  <div className='sm:col-span-3'>
+                    <label className='sm:hidden text-[10px] font-semibold text-stone-500 block mb-0.5'>আগের দাম (৳)</label>
+                    <input
+                      type='number'
+                      placeholder='পূর্বের দাম (ঐচ্ছিক)'
+                      value={v.compareAtPrice || ''}
+                      min={0}
+                      onChange={(e) => {
+                        const nv = [...variants];
+                        nv[i].compareAtPrice = Number(e.target.value);
+                        setVariants(nv);
+                      }}
+                      className='w-full rounded-lg border border-stone-200 px-3 py-1.5 text-sm text-stone-500 outline-none focus:border-amber-500'
+                    />
+                  </div>
+
+                  {/* Stock */}
+                  <div className='sm:col-span-2'>
+                    <label className='sm:hidden text-[10px] font-semibold text-stone-500 block mb-0.5'>স্টক</label>
+                    <input
+                      type='number'
+                      placeholder='স্টক'
+                      value={v.stock}
+                      min={0}
+                      onChange={(e) => {
+                        const nv = [...variants];
+                        nv[i].stock = Number(e.target.value);
+                        setVariants(nv);
+                      }}
+                      className='w-full rounded-lg border border-stone-200 px-2.5 py-1.5 text-sm outline-none focus:border-amber-500'
+                    />
+                  </div>
+
+                  {/* Remove Button */}
+                  <div className='sm:col-span-1 flex justify-center'>
+                    <button
+                      type='button'
+                      onClick={() => setVariants(variants.filter((_, idx) => idx !== i))}
+                      className='rounded-lg p-1.5 text-stone-400 hover:bg-red-50 hover:text-red-500 transition'
+                      title='মুছে ফেলুন'
+                    >
+                      <X className='h-4 w-4' />
+                    </button>
+                  </div>
                 </div>
               ))}
             </div>

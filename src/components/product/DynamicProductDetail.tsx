@@ -1,17 +1,16 @@
-﻿'use client';
+'use client';
 
-import { useEffect, useState } from 'react';
-import { productServices } from '@/services/product.services';
-import type { Product, ProductVariant } from '@/types/product';
-import { useAppDispatch } from '@/store/hooks';
-import { addToCart, openCart } from '@/store/cartSlice';
-import { ProductBottle } from '@/components/ui/ProductBottle';
 import { Breadcrumbs } from '@/components/ui/Breadcrumbs';
 import { Container } from '@/components/ui/Container';
-import { Star, Plus, Minus, ShoppingBag, Truck, ShieldCheck, Clock } from 'lucide-react';
+import { ProductBottle } from '@/components/ui/ProductBottle';
 import { cn } from '@/lib/utils';
-import { trackEvent } from '@/components/seo/GoogleAnalytics';
+import { productServices } from '@/services/product.services';
+import { addToCart, openCart } from '@/store/cartSlice';
+import { useAppDispatch } from '@/store/hooks';
+import type { Product, ProductVariant } from '@/types/product';
+import { Clock, Minus, Plus, ShieldCheck, ShoppingBag, Star, Truck } from 'lucide-react';
 import Link from 'next/link';
+import { useCallback, useEffect, useState } from 'react';
 
 export function DynamicProductDetail({ slug, initialProduct }: { slug: string; initialProduct?: Product | null }) {
   const [product, setProduct] = useState<Product | null>(initialProduct || null);
@@ -22,8 +21,14 @@ export function DynamicProductDetail({ slug, initialProduct }: { slug: string; i
   const [quantity, setQuantity] = useState(1);
   const dispatch = useAppDispatch();
 
+  const selectDefaultVariant = useCallback((nextProduct: Product) => {
+    setSelectedVariant(nextProduct.variants?.[0] || null);
+  }, []);
+
   useEffect(() => {
     if (initialProduct) {
+      setProduct(initialProduct);
+      selectDefaultVariant(initialProduct);
       setLoading(false);
       return;
     }
@@ -34,14 +39,14 @@ export function DynamicProductDetail({ slug, initialProduct }: { slug: string; i
       .then((res) => {
         if (res.success && res.data) {
           setProduct(res.data);
-          setSelectedVariant(res.data.variants?.[0] || null);
+          selectDefaultVariant(res.data);
         } else {
           setError('পণ্য পাওয়া যায়নি');
         }
       })
       .catch(() => setError('পণ্য লোড করা যায়নি'))
       .finally(() => setLoading(false));
-  }, [slug]);
+  }, [initialProduct, selectDefaultVariant, slug]);
 
   if (loading) {
     return (
@@ -76,9 +81,22 @@ export function DynamicProductDetail({ slug, initialProduct }: { slug: string; i
     );
   }
 
-  const price = selectedVariant?.priceOverride || product.basePrice;
+  const price = selectedVariant?.priceOverride ?? product.basePrice;
+  const comparePrice = selectedVariant?.compareAtPrice ?? (selectedVariant ? undefined : product.compareAtPrice);
+  const hasDiscount = Boolean(comparePrice && Number(comparePrice) > price);
+  const discountPercent = hasDiscount ? Math.round(((Number(comparePrice) - price) / Number(comparePrice)) * 100) : 0;
+
   const stock = selectedVariant?.stock ?? 0;
   const inStock = stock > 0;
+  const hasVariants = (product.variants?.length ?? 0) > 0;
+  const canAddToCart = Boolean(selectedVariant && inStock);
+  const ctaLabel = !hasVariants
+    ? 'স্টক শেষ'
+    : !selectedVariant
+      ? 'একটি সাইজ বেছে নিন'
+      : inStock
+        ? 'কার্টে যোগ করুন'
+        : 'স্টক শেষ';
 
   const handleAddToCart = () => {
     dispatch(
@@ -88,6 +106,7 @@ export function DynamicProductDetail({ slug, initialProduct }: { slug: string; i
         image: product.images?.[0] || '',
         basePrice: product.basePrice,
         price,
+        compareAtPrice: comparePrice,
         quantity,
         variantId: selectedVariant?._id,
         variantLabel: selectedVariant?.label,
@@ -98,6 +117,7 @@ export function DynamicProductDetail({ slug, initialProduct }: { slug: string; i
           label: v.label,
           stock: v.stock,
           priceOverride: v.priceOverride,
+          compareAtPrice: v.compareAtPrice,
         })),
       }),
     );
@@ -196,11 +216,14 @@ export function DynamicProductDetail({ slug, initialProduct }: { slug: string; i
               </div>
             )}
 
-            {/* Price */}
-            <div className='flex items-baseline gap-3'>
-              <span className='text-3xl font-bold text-[var(--color-text-primary)]'>৳{price}</span>
-              {Boolean(product.compareAtPrice) && Number(product.compareAtPrice) > price && (
-                <span className='text-lg text-[var(--color-muted)] line-through'>৳{product.compareAtPrice}</span>
+            {/* Price Display with Discount */}
+            <div className='flex items-baseline gap-3 flex-wrap'>
+              <span className='text-3xl font-extrabold text-[var(--color-text-primary)]'>৳{price}</span>
+              {hasDiscount && <span className='text-lg text-[var(--color-muted)] line-through'>৳{comparePrice}</span>}
+              {hasDiscount && (
+                <span className='rounded-full bg-red-500/10 border border-red-500/30 px-2.5 py-0.5 text-xs font-bold text-red-600 dark:text-red-400'>
+                  {discountPercent}% ছাড়
+                </span>
               )}
             </div>
 
@@ -221,38 +244,61 @@ export function DynamicProductDetail({ slug, initialProduct }: { slug: string; i
             {/* Variant Selector */}
             {product.variants && product.variants.length > 0 && (
               <div>
-                <label className='mb-2 block text-sm font-semibold text-[var(--color-text-primary)]'>
-                  সাইজ নির্বাচন করুন
-                </label>
-                <div className='flex flex-wrap gap-2'>
-                  {product.variants.map((variant) => (
-                    <button
-                      key={variant._id || variant.label}
-                      onClick={() => {
-                        setSelectedVariant(variant);
-                        setQuantity(1);
-                      }}
-                      disabled={variant.stock === 0}
-                      className={cn(
-                        'rounded-lg border px-4 py-2 text-sm font-semibold transition',
-                        selectedVariant?._id === variant._id || selectedVariant?.label === variant.label
-                          ? 'border-[var(--color-accent)] bg-[var(--color-accent)]/10 text-[var(--color-accent-strong)]'
-                          : 'border-[var(--color-border)] text-[var(--color-text-secondary)] hover:border-[var(--color-accent)]',
-                        variant.stock === 0 && 'cursor-not-allowed opacity-40 line-through',
-                      )}
-                    >
-                      {variant.label}
-                      {variant.priceOverride && variant.priceOverride !== product.basePrice && (
-                        <span className='ml-1 text-xs'>৳{variant.priceOverride}</span>
-                      )}
-                    </button>
-                  ))}
+                <div className='mb-2 flex items-center justify-between'>
+                  <label className='text-sm font-semibold text-[var(--color-text-primary)]'>সাইজ নির্বাচন করুন</label>
+                  {selectedVariant && (
+                    <span className='text-xs font-semibold text-[var(--color-gold)]'>
+                      বাছাইকৃত: {selectedVariant.label}
+                    </span>
+                  )}
+                </div>
+                <div className='flex flex-wrap gap-2.5'>
+                  {product.variants.map((variant) => {
+                    const vPrice = variant.priceOverride ?? product.basePrice;
+                    const vComparePrice = variant.compareAtPrice ?? product.compareAtPrice;
+                    const vHasDiscount = Boolean(vComparePrice && Number(vComparePrice) > vPrice);
+                    const isSelected = selectedVariant?._id === variant._id || selectedVariant?.label === variant.label;
+
+                    return (
+                      <button
+                        key={variant._id || variant.label}
+                        type='button'
+                        onClick={() => {
+                          setSelectedVariant(variant);
+                          setQuantity(1);
+                        }}
+                        disabled={variant.stock === 0}
+                        className={cn(
+                          'flex flex-col items-center justify-center min-w-[5rem] rounded-xl border px-3.5 py-2.5 text-center transition shadow-sm',
+                          isSelected
+                            ? 'border-[var(--color-accent)] bg-[var(--color-accent)]/15 text-[var(--color-accent-strong)] ring-2 ring-[var(--color-accent)]/30 font-bold'
+                            : 'border-[var(--color-border)] text-[var(--color-text-secondary)] hover:border-[var(--color-accent)] hover:bg-[var(--color-surface)]',
+                          variant.stock === 0 && 'cursor-not-allowed opacity-40 line-through',
+                        )}
+                      >
+                        <span className='text-sm font-semibold'>{variant.label}</span>
+                        <div className='flex items-baseline gap-1 mt-1'>
+                          <span
+                            className={cn(
+                              'text-xs font-bold',
+                              isSelected ? 'text-[var(--color-accent-strong)]' : 'text-[var(--color-text-primary)]',
+                            )}
+                          >
+                            ৳{vPrice}
+                          </span>
+                          {vHasDiscount && (
+                            <span className='text-[10px] text-[var(--color-muted)] line-through'>৳{vComparePrice}</span>
+                          )}
+                        </div>
+                      </button>
+                    );
+                  })}
                 </div>
               </div>
             )}
 
             {/* Quantity + Add to Cart */}
-            <div className='flex items-center gap-3'>
+            <div className='flex flex-col gap-3 sm:flex-row sm:items-center'>
               <div className='flex items-center rounded-full border border-[var(--color-border)]'>
                 <button
                   onClick={() => setQuantity((q) => Math.max(1, q - 1))}
@@ -272,11 +318,11 @@ export function DynamicProductDetail({ slug, initialProduct }: { slug: string; i
               </div>
               <button
                 onClick={handleAddToCart}
-                disabled={!inStock}
-                className='flex flex-1 items-center justify-center gap-2 rounded-full bg-[var(--color-accent)] py-3 text-sm font-bold text-[var(--color-on-accent)] shadow-lg transition hover:brightness-110 disabled:opacity-50'
+                disabled={!canAddToCart}
+                className='flex flex-1 items-center justify-center gap-2 rounded-full bg-[var(--color-accent)] py-3 text-sm font-bold text-[var(--color-on-accent)] shadow-lg transition hover:brightness-110 disabled:cursor-not-allowed disabled:opacity-50'
               >
                 <ShoppingBag size={18} />
-                {inStock ? 'কার্টে যোগ করুন' : 'স্টক শেষ'}
+                {ctaLabel}
               </button>
             </div>
 
