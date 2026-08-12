@@ -1,6 +1,7 @@
 ﻿import { ApiResponse } from '@/types/api';
 
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL || 'http://localhost:5000/api/v1';
+const TOKEN_KEY = 'kahf_token';
 
 /**
  * Auth token management.
@@ -16,22 +17,26 @@ const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL || 'http://localhost:5
 
 /** @deprecated Token is now managed via httpOnly cookie. This always returns null. */
 export function getToken(): string | null {
-  return null;
+  if (typeof window === 'undefined') return null;
+
+  try {
+    return localStorage.getItem(TOKEN_KEY);
+  } catch {
+    return null;
+  }
 }
 
-/** @deprecated No-op. Token is set by the backend as an httpOnly cookie. */
-/** @deprecated No-op. Token is set by the backend as an httpOnly cookie. */
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-export function setToken(_: string): void {
-  // No-op — cookie is set by backend
-}
-{
-  // No-op — cookie is set by backend
+export function setToken(token: string): void {
+  if (typeof window === 'undefined') return;
+
+  localStorage.setItem(TOKEN_KEY, token);
 }
 
-/** @deprecated No-op. Call POST /auth/logout to clear the cookie. */
+/** @deprecated Removes the locally cached fallback token. */
 export function removeToken(): void {
-  // No-op — cookie is cleared by backend logout endpoint
+  if (typeof window === 'undefined') return;
+
+  localStorage.removeItem(TOKEN_KEY);
 }
 
 async function request<T>(endpoint: string, options: RequestInit = {}): Promise<ApiResponse<T>> {
@@ -41,9 +46,15 @@ async function request<T>(endpoint: string, options: RequestInit = {}): Promise<
   // For everything else, default to application/json.
   const isFormData = options.body instanceof FormData;
   const headers: Record<string, string> = isFormData ? {} : { 'Content-Type': 'application/json' };
+  const token = getToken();
+
+  if (token && !(options.headers as Record<string, string>)?.Authorization) {
+    headers.Authorization = `Bearer ${token}`;
+  }
 
   // Merge caller-supplied headers (but never inject Authorization ourselves —
-  // the httpOnly cookie is sent automatically by the browser).
+  // the httpOnly cookie is sent automatically by the browser, and we only use
+  // the stored fallback token when cookies are unavailable.
   const callerHeaders = (options.headers as Record<string, string>) || {};
   const mergedHeaders = { ...callerHeaders, ...headers };
 
@@ -57,6 +68,7 @@ async function request<T>(endpoint: string, options: RequestInit = {}): Promise<
   if (response.status === 401) {
     if (typeof window !== 'undefined') {
       localStorage.removeItem('kahf_user');
+      removeToken();
       const isAdminLoginPage = window.location.pathname === '/admin/login';
       if (window.location.pathname.startsWith('/admin') && !isAdminLoginPage) {
         window.location.href = '/admin/login';

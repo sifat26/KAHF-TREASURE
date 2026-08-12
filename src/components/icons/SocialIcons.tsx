@@ -1,7 +1,7 @@
 /**
- * Brand social glyphs not available in lucide (WhatsApp, Facebook, Instagram).
+ * Brand social glyphs (WhatsApp, Facebook, Instagram, Telegram, Twitter/X).
  * Centralised here so they are defined once and reused by Navbar, Footer,
- * Contact and the floating action button.
+ * Contact, ProductShareModal, and the floating action button.
  */
 
 type IconProps = { size?: number; className?: string };
@@ -18,6 +18,22 @@ export function FacebookIcon({ size = 20, className }: IconProps) {
   return (
     <svg width={size} height={size} viewBox="0 0 24 24" fill="currentColor" className={className} aria-hidden="true">
       <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z" />
+    </svg>
+  );
+}
+
+export function TelegramIcon({ size = 20, className }: IconProps) {
+  return (
+    <svg width={size} height={size} viewBox="0 0 24 24" fill="currentColor" className={className} aria-hidden="true">
+      <path d="M12 0C5.37 0 0 5.37 0 12s5.37 12 12 12 12-5.37 12-12S18.63 0 12 0zm5.562 8.161c-.18.717-.962 4.084-1.362 5.771-.168.714-.43 1.046-.684 1.07-.552.051-.971-.364-1.505-.714-.836-.547-1.308-.887-2.119-1.421-.937-.618-.329-.958.204-1.512.14-.145 2.569-2.355 2.616-2.556.006-.025.011-.12-.044-.17-.056-.049-.138-.032-.198-.018-.084.019-1.428.908-4.032 2.667-.382.263-.728.391-1.037.384-.342-.007-.999-.193-1.488-.352-.601-.195-1.079-.298-1.037-.629.022-.172.261-.348.716-.528 2.809-1.222 4.682-2.029 5.618-2.42 2.674-1.114 3.23-1.308 3.593-1.314.08 0 .258.02.373.114.097.08.124.187.135.263.01.076.022.25-.008.414z" />
+    </svg>
+  );
+}
+
+export function TwitterIcon({ size = 20, className }: IconProps) {
+  return (
+    <svg width={size} height={size} viewBox="0 0 24 24" fill="currentColor" className={className} aria-hidden="true">
+      <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z" />
     </svg>
   );
 }

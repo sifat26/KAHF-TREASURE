@@ -29,4 +29,9 @@ export default {
       (process.env.FRONTEND_URL?.startsWith('https://') ? 'none' : 'lax'),
     domain: process.env.COOKIE_DOMAIN || undefined,
   },
+  telegram: {
+    bot_token: process.env.TELEGRAM_BOT_TOKEN || '',
+    // Comma-separate multiple chat IDs to notify several admins.
+    chat_id: process.env.TELEGRAM_CHAT_ID || '',
+  },
 };

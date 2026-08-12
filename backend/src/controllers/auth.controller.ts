@@ -1,13 +1,13 @@
-﻿import { Response } from 'express';
-import bcrypt from 'bcryptjs';
+﻿import bcrypt from 'bcryptjs';
+import { Response } from 'express';
 import jwt from 'jsonwebtoken';
+import { z } from 'zod';
 import config from '../config';
-import { User } from '../models/User';
 import { AuthRequest } from '../middlewares/auth';
+import { User } from '../models/User';
+import { ApiError } from '../utils/ApiError';
 import { catchAsync } from '../utils/catchAsync';
 import { sendResponse } from '../utils/sendResponse';
-import { ApiError } from '../utils/ApiError';
-import { z } from 'zod';
 
 const TOKEN_COOKIE_NAME = 'kahf_token';
 
@@ -65,11 +65,9 @@ export const register = catchAsync(async (req: AuthRequest, res: Response) => {
   const hashedPassword = await bcrypt.hash(body.password, config.bcrypt_salt_rounds);
   const user = await User.create({ ...body, password: hashedPassword, role: 'customer' });
 
-  const token = jwt.sign(
-    { userId: user._id.toString(), role: user.role, email: user.email },
-    config.jwt.secret,
-    { expiresIn: config.jwt.expires_in as any }
-  );
+  const token = jwt.sign({ userId: user._id.toString(), role: user.role, email: user.email }, config.jwt.secret, {
+    expiresIn: config.jwt.expires_in as any,
+  });
 
   setAuthCookie(res, token);
 
@@ -78,6 +76,7 @@ export const register = catchAsync(async (req: AuthRequest, res: Response) => {
     success: true,
     message: 'Registration successful',
     data: {
+      token,
       user: { id: user._id, name: user.name, email: user.email, role: user.role },
     },
   });
@@ -92,11 +91,9 @@ export const login = catchAsync(async (req: AuthRequest, res: Response) => {
   const isMatch = await bcrypt.compare(body.password, user.password);
   if (!isMatch) throw new ApiError(401, 'Invalid credentials');
 
-  const token = jwt.sign(
-    { userId: user._id.toString(), role: user.role, email: user.email },
-    config.jwt.secret,
-    { expiresIn: config.jwt.expires_in as any }
-  );
+  const token = jwt.sign({ userId: user._id.toString(), role: user.role, email: user.email }, config.jwt.secret, {
+    expiresIn: config.jwt.expires_in as any,
+  });
 
   setAuthCookie(res, token);
 
@@ -105,6 +102,7 @@ export const login = catchAsync(async (req: AuthRequest, res: Response) => {
     success: true,
     message: 'Login successful',
     data: {
+      token,
       user: { id: user._id, name: user.name, email: user.email, role: user.role },
     },
   });
@@ -126,7 +124,7 @@ export const updateProfile = catchAsync(async (req: AuthRequest, res: Response) 
   const user = await User.findByIdAndUpdate(
     req.user!.userId,
     { $set: { ...(name && { name }), ...(phone && { phone }) } },
-    { new: true }
+    { new: true },
   ).select('-password');
   sendResponse(res, { statusCode: 200, success: true, message: 'Profile updated', data: user });
 });
@@ -136,7 +134,9 @@ export const addAddress = catchAsync(async (req: AuthRequest, res: Response) => 
   if (!user) throw new ApiError(404, 'User not found');
   user.addresses.push(req.body);
   if (req.body.isDefault) {
-    user.addresses.forEach(a => { a.isDefault = false; });
+    user.addresses.forEach((a) => {
+      a.isDefault = false;
+    });
   }
   await user.save();
   sendResponse(res, { statusCode: 201, success: true, message: 'Address added', data: user.addresses });
@@ -154,7 +154,9 @@ export const createAdmin = catchAsync(async (req: AuthRequest, res: Response) =>
   const hashedPassword = await bcrypt.hash(body.password, config.bcrypt_salt_rounds);
   const user = await User.create({ ...body, password: hashedPassword });
   sendResponse(res, {
-    statusCode: 201, success: true, message: 'Admin created',
+    statusCode: 201,
+    success: true,
+    message: 'Admin created',
     data: { id: user._id, name: user.name, email: user.email, role: user.role },
   });
 });

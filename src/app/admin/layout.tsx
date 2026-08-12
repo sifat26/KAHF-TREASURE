@@ -45,7 +45,8 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
     <div className="flex min-h-screen bg-stone-50">
       <AdminSidebar />
       <main className="flex-1 overflow-y-auto lg:ml-64">
-        <div className="p-4 sm:p-6 lg:p-8">
+        {/* pt-16 on mobile clears the fixed hamburger button (AdminSidebar); reset at lg where the sidebar is inline */}
+        <div className="p-4 pt-16 sm:p-6 sm:pt-16 lg:p-8 lg:pt-8">
           {children}
         </div>
       </main>

@@ -5,7 +5,7 @@ export const site = {
   description:
     'KAHF Treasure — বিদেশ থেকে আনা খাঁটি পারফিউম অয়েল দিয়ে তৈরি অ্যালকোহল-মুক্ত আতর। কোনো রাসায়নিক নেই, কোনো প্রতারণা নেই — শুধু খাঁটি সুবাস, দীর্ঘস্থায়ী গন্ধ।',
   url: 'https://kahf-treasure.vercel.app',
-  ogImage: '/images/hero-perfume-bottle.png',
+  ogImage: '/images/hero-banner.png',
   locale: 'bn_BD',
 } as const;
 
@@ -43,23 +43,15 @@ export const mainNav = [
 /** Footer navigation links structured for Footer.tsx */
 export const footerNav = {
   shop: [
-    { label: 'সবচেয়ে চাওয়া', href: '/collections/most-wanted' },
-    { label: 'নতুন এসেছে', href: '/collections/new-arrivals' },
     { label: 'সব আতর', href: '/shop' },
     { label: 'কালেকশন', href: '/collections' },
     { label: 'ব্লগ', href: '/blog' },
-    { label: 'প্যাকেজ ও অফার', href: '/#bundles' },
   ],
   company: [
     { label: 'আমাদের গল্প', href: '/about' },
-    { label: 'কেন আমরা', href: '/#why-choose-us' },
     { label: 'সাধারণ জিজ্ঞাসা', href: '/faq' },
-    { label: 'ব্লগ', href: '/blog' },
-    { label: 'যোগাযোগ করুন', href: '/#contact' },
   ],
   policies: [
-    { label: 'ডেলিভারি তথ্য', href: '/faq#shipping' },
-    { label: 'আসল পণ্যের গ্যারান্টি', href: '/about#guarantee' },
     { label: 'WhatsApp-এ অর্ডার', href: waLink, external: true },
     { label: 'অর্ডার ট্র্যাক করুন', href: '/track-order' },
   ],

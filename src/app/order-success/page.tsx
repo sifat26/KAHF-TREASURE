@@ -19,10 +19,11 @@ export default function OrderSuccessPage() {
   const adminEmailUrl = useMemo(() => {
     if (!order) return '';
 
-    const lines = order.items
+    const lines = (order.items || [])
       .map((item) => {
         const variant = item.variantLabel ? ` (${item.variantLabel})` : '';
-        return `• ${item.title}${variant} x ${item.quantity} = ৳${item.totalPrice.toLocaleString()}`;
+        const price = item.totalPrice ?? ((item.unitPrice ?? 0) * (item.quantity ?? 1));
+        return `• ${item.title}${variant} x ${item.quantity ?? 1} = ৳${price.toLocaleString()}`;
       })
       .join('\n');
 
@@ -44,7 +45,7 @@ export default function OrderSuccessPage() {
         '',
         lines,
         '',
-        `Total: ৳${order.totalAmount.toLocaleString()}`,
+        `Total: ৳${(order.totalAmount || 0).toLocaleString()}`,
         `Payment: ${(order.paymentMethod || 'cod').toUpperCase()}`,
       ]
         .filter(Boolean)

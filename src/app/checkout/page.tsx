@@ -1,13 +1,15 @@
-﻿'use client';
+'use client';
 
 import { couponServices } from '@/services/coupon.services';
 import { orderServices } from '@/services/order.services';
+import { districtNames, getDeliveryCharge, getDeliveryZoneLabel, getUpazilas } from '@/data/bd-geo';
+import { deleteAddress, getSavedAddresses, saveAddress, type SavedAddress } from '@/lib/address-storage';
 import { clearCart } from '@/store/cartSlice';
 import { useAppDispatch, useAppSelector } from '@/store/hooks';
-import { ArrowLeft, Loader2, X } from 'lucide-react';
+import { ArrowLeft, Loader2, MapPin, Trash2, X } from 'lucide-react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 
 export default function CheckoutPage() {
   const router = useRouter();
@@ -24,7 +26,8 @@ export default function CheckoutPage() {
     postalCode: '',
     orderNote: '',
   });
-  const [paymentMethod, setPaymentMethod] = useState<'cod' | 'bkash' | 'nagad'>('cod');
+  const [savedAddresses, setSavedAddresses] = useState<SavedAddress[]>([]);
+  const [saveForLater, setSaveForLater] = useState(true);
   const [couponCode, setCouponCode] = useState('');
   const [couponDiscount, setCouponDiscount] = useState(0);
   const [appliedCoupon, setAppliedCoupon] = useState<string | null>(null);
@@ -33,9 +36,44 @@ export default function CheckoutPage() {
   const [placingOrder, setPlacingOrder] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
+  // Load the customer's previously saved addresses (client-only).
+  useEffect(() => {
+    setSavedAddresses(getSavedAddresses());
+  }, []);
+
   const subtotal = useMemo(() => items.reduce((sum, item) => sum + item.price * item.quantity, 0), [items]);
-  const shipping = subtotal > 0 ? 60 : 0;
+  // Delivery charge depends on the selected district/upazila zone (৳70 / ৳90 / ৳110).
+  const shipping = getDeliveryCharge(formState.district, formState.upazila);
   const total = Math.max(0, subtotal - couponDiscount + shipping);
+
+  const upazilas = getUpazilas(formState.district);
+
+  // Highlight the saved address that matches the current form, if any.
+  const activeAddressId =
+    savedAddresses.find(
+      (a) =>
+        a.district === formState.district &&
+        a.upazila === formState.upazila &&
+        a.addressLine.trim() === formState.addressLine.trim() &&
+        a.phone.trim() === formState.phone.trim(),
+    )?.id ?? null;
+
+  const applySavedAddress = (a: SavedAddress) => {
+    setFormState((s) => ({
+      ...s,
+      customerName: a.customerName,
+      phone: a.phone,
+      email: a.email ?? '',
+      district: a.district,
+      upazila: a.upazila,
+      addressLine: a.addressLine,
+      postalCode: a.postalCode ?? '',
+    }));
+  };
+
+  const handleDeleteAddress = (id: string) => {
+    setSavedAddresses(deleteAddress(id));
+  };
 
   const handleApplyCoupon = async () => {
     const code = couponCode.trim().toUpperCase();
@@ -84,10 +122,22 @@ export default function CheckoutPage() {
         postalCode: formState.postalCode || undefined,
         orderNote: formState.orderNote || undefined,
         shipping,
-        paymentMethod,
+        paymentMethod: 'cod',
       });
 
       if (res.success && res.data) {
+        // Persist this address for reuse on the next order.
+        if (saveForLater) {
+          saveAddress({
+            customerName: formState.customerName,
+            phone: formState.phone,
+            email: formState.email || undefined,
+            district: formState.district,
+            upazila: formState.upazila,
+            addressLine: formState.addressLine,
+            postalCode: formState.postalCode || undefined,
+          });
+        }
         dispatch(clearCart());
         router.push(`/order-success?tracking=${res.data.trackingNumber}`);
       } else {
@@ -129,6 +179,46 @@ export default function CheckoutPage() {
         <form onSubmit={handlePlaceOrder} className='grid gap-6 lg:grid-cols-[1.5fr_1fr]'>
           {/* Left: Form */}
           <div className='space-y-6'>
+            {/* Saved addresses */}
+            {savedAddresses.length > 0 && (
+              <section className='rounded-3xl border border-stone-200 bg-white p-6'>
+                <h2 className='mb-4 flex items-center gap-2 text-lg font-semibold text-stone-900'>
+                  <MapPin className='h-4 w-4 text-amber-700' /> সংরক্ষিত ঠিকানা
+                </h2>
+                <div className='grid gap-3 sm:grid-cols-2'>
+                  {savedAddresses.map((a) => {
+                    const active = a.id === activeAddressId;
+                    return (
+                      <div
+                        key={a.id}
+                        className={`relative rounded-2xl border p-3 pr-9 text-left transition ${
+                          active ? 'border-amber-400 bg-amber-50' : 'border-stone-200 hover:border-amber-200'
+                        }`}
+                      >
+                        <button type='button' onClick={() => applySavedAddress(a)} className='block w-full text-left'>
+                          <p className='text-sm font-semibold text-stone-800'>{a.customerName}</p>
+                          <p className='text-xs text-stone-500'>{a.phone}</p>
+                          <p className='mt-1 text-xs text-stone-600'>
+                            {a.addressLine}, {a.upazila}, {a.district}
+                            {a.postalCode ? ` - ${a.postalCode}` : ''}
+                          </p>
+                          {active && <p className='mt-1 text-[11px] font-semibold text-amber-700'>✓ নির্বাচিত</p>}
+                        </button>
+                        <button
+                          type='button'
+                          onClick={() => handleDeleteAddress(a.id)}
+                          aria-label='ঠিকানা মুছুন'
+                          className='absolute right-2 top-2 rounded-full p-1.5 text-stone-400 hover:bg-stone-100 hover:text-red-500'
+                        >
+                          <Trash2 className='h-4 w-4' />
+                        </button>
+                      </div>
+                    );
+                  })}
+                </div>
+              </section>
+            )}
+
             <section className='rounded-3xl border border-stone-200 bg-white p-6'>
               <h2 className='mb-4 text-lg font-semibold text-stone-900'>ডেলিভারি তথ্য</h2>
               <div className='grid gap-4 sm:grid-cols-2'>
@@ -153,24 +243,35 @@ export default function CheckoutPage() {
                   />
                 </Field>
                 <Field label='জেলা *' required>
-                  <input
-                    type='text'
+                  <select
                     required
                     value={formState.district}
-                    onChange={(e) => setFormState((s) => ({ ...s, district: e.target.value }))}
+                    onChange={(e) => setFormState((s) => ({ ...s, district: e.target.value, upazila: '' }))}
                     className='kahf-input'
-                    placeholder='ঢাকা'
-                  />
+                  >
+                    <option value=''>জেলা নির্বাচন করুন</option>
+                    {districtNames.map((d) => (
+                      <option key={d} value={d}>
+                        {d}
+                      </option>
+                    ))}
+                  </select>
                 </Field>
-                <Field label='উপজেলা *' required>
-                  <input
-                    type='text'
+                <Field label='উপজেলা / এলাকা *' required>
+                  <select
                     required
+                    disabled={!formState.district}
                     value={formState.upazila}
                     onChange={(e) => setFormState((s) => ({ ...s, upazila: e.target.value }))}
-                    className='kahf-input'
-                    placeholder='ধানমন্ডি'
-                  />
+                    className='kahf-input disabled:cursor-not-allowed disabled:bg-stone-100 disabled:text-stone-400'
+                  >
+                    <option value=''>{formState.district ? 'উপজেলা/এলাকা নির্বাচন করুন' : 'আগে জেলা নির্বাচন করুন'}</option>
+                    {upazilas.map((u) => (
+                      <option key={u} value={u}>
+                        {u}
+                      </option>
+                    ))}
+                  </select>
                 </Field>
                 <Field label='ইমেইল (ঐচ্ছিক)'>
                   <input
@@ -191,62 +292,51 @@ export default function CheckoutPage() {
                   />
                 </Field>
                 <div className='sm:col-span-2'>
-                  <Field label='à¦ à¦¿à¦•à¦¾à¦¨à¦¾ *' required>
+                  <Field label='ঠিকানা *' required>
                     <textarea
                       required
                       rows={2}
                       value={formState.addressLine}
                       onChange={(e) => setFormState((s) => ({ ...s, addressLine: e.target.value }))}
                       className='kahf-input'
-                      placeholder='à¦¬à¦¾à¦¸à¦¾ à¦¨à¦®à§à¦¬à¦°, à¦°à¦¾à¦¸à§à¦¤à¦¾, à¦²à§à¦¯à¦¾à¦¨à§à¦¡à¦®à¦¾à¦°à§à¦•'
+                      placeholder='বাসা নম্বর, রাস্তা, ল্যান্ডমার্ক'
                     />
                   </Field>
                 </div>
                 <div className='sm:col-span-2'>
-                  <Field label='à¦…à¦°à§à¦¡à¦¾à¦° à¦¨à§‹à¦Ÿ (à¦à¦šà§à¦›à¦¿à¦•)'>
+                  <Field label='অর্ডার নোট (ঐচ্ছিক)'>
                     <textarea
                       rows={2}
                       value={formState.orderNote}
                       onChange={(e) => setFormState((s) => ({ ...s, orderNote: e.target.value }))}
                       className='kahf-input'
-                      placeholder='à¦¡à§‡à¦²à¦¿à¦­à¦¾à¦°à¦¿à¦° à¦†à¦—à§‡ à¦•à¦² à¦•à¦°à¦¬à§‡à¦¨'
+                      placeholder='ডেলিভারির আগে কল করবেন'
                     />
                   </Field>
                 </div>
               </div>
+
+              <label className='mt-4 flex cursor-pointer items-center gap-2 text-sm text-stone-600'>
+                <input
+                  type='checkbox'
+                  checked={saveForLater}
+                  onChange={(e) => setSaveForLater(e.target.checked)}
+                  className='h-4 w-4 accent-amber-700'
+                />
+                পরবর্তী অর্ডারের জন্য এই ঠিকানা সংরক্ষণ করুন
+              </label>
             </section>
 
             <section className='rounded-3xl border border-stone-200 bg-white p-6'>
               <h2 className='mb-4 text-lg font-semibold text-stone-900'>পেমেন্ট মেথড</h2>
-              <div className='space-y-2'>
-                {[
-                  { id: 'cod', label: 'ক্যাশ অন ডেলিভারি', note: 'পণ্য হাতে পেয়ে টাকা দিন' },
-                  { id: 'bkash', label: 'বিকাশ', note: 'বিকাশ পেমেন্ট পেজে রিডাইরেক্ট হবে' },
-                  { id: 'nagad', label: 'নগদ', note: 'নগদ পেমেন্ট পেজে রিডাইরেক্ট হবে' },
-                ].map((opt) => (
-                  <label
-                    key={opt.id}
-                    className={`flex cursor-pointer items-center gap-3 rounded-xl border p-3 transition ${
-                      paymentMethod === opt.id
-                        ? 'border-amber-400 bg-amber-50'
-                        : 'border-stone-200 hover:border-amber-200'
-                    }`}
-                  >
-                    <input
-                      type='radio'
-                      name='payment'
-                      value={opt.id}
-                      checked={paymentMethod === opt.id}
-                      onChange={(e) => setPaymentMethod(e.target.value as any)}
-                      className='h-4 w-4 accent-amber-700'
-                    />
-                    <div>
-                      <p className='text-sm font-semibold text-stone-800'>{opt.label}</p>
-                      <p className='text-xs text-stone-500'>{opt.note}</p>
-                    </div>
-                  </label>
-                ))}
+              <div className='flex items-center gap-3 rounded-xl border border-amber-400 bg-amber-50 p-3'>
+                <span className='flex h-4 w-4 shrink-0 items-center justify-center rounded-full border-[5px] border-amber-700' />
+                <div>
+                  <p className='text-sm font-semibold text-stone-800'>ক্যাশ অন ডেলিভারি</p>
+                  <p className='text-xs text-stone-500'>পণ্য হাতে পেয়ে টাকা পরিশোধ করুন</p>
+                </div>
               </div>
+              <p className='mt-2 text-xs text-stone-400'>এই মুহূর্তে শুধুমাত্র ক্যাশ অন ডেলিভারি চালু আছে।</p>
             </section>
           </div>
 
@@ -268,7 +358,7 @@ export default function CheckoutPage() {
                         <p className='text-[10px] text-stone-500'>×{item.quantity}</p>
                       </div>
                     </div>
-                    <p className='text-sm font-semibold text-stone-900'>à§³{item.price * item.quantity}</p>
+                    <p className='text-sm font-semibold text-stone-900'>৳{item.price * item.quantity}</p>
                   </div>
                 ))}
               </div>
@@ -325,8 +415,11 @@ export default function CheckoutPage() {
                 </div>
                 <div className='flex justify-between text-stone-500'>
                   <span>ডেলিভারি চার্জ</span>
-                  <span>৳{shipping}</span>
+                  <span>{formState.district ? `৳${shipping}` : '—'}</span>
                 </div>
+                {formState.district && (
+                  <p className='text-[11px] text-stone-400'>{getDeliveryZoneLabel(formState.district, formState.upazila)}</p>
+                )}
                 {couponDiscount > 0 && (
                   <div className='flex justify-between text-emerald-600'>
                     <span>ছাড়</span>
@@ -338,6 +431,11 @@ export default function CheckoutPage() {
                   <span>মোট</span>
                   <span>৳{total}</span>
                 </div>
+              </div>
+
+              <div className='mt-3 flex items-center gap-2 rounded-xl bg-stone-50 px-3 py-2 text-xs text-stone-500'>
+                <span aria-hidden>🚚</span>
+                <span>৩ - ৫ কর্মদিবসের মধ্যে ডেলিভার করা হবে</span>
               </div>
 
               {error && <div className='mt-3 rounded-xl bg-red-50 px-4 py-2 text-xs text-red-600'>{error}</div>}

@@ -8,6 +8,7 @@ import { sendResponse } from '../utils/sendResponse';
 import { ApiError } from '../utils/ApiError';
 import mongoose from 'mongoose';
 import { z } from 'zod';
+import { notifyNewOrder } from '../utils/notifications';
 
 const orderSchema = z.object({
   items: z.array(z.object({
@@ -113,6 +114,10 @@ export const createOrder = catchAsync(async (req: AuthRequest, res: Response) =>
     await Cart.findOneAndUpdate({ userId: req.user.userId }, { $set: { items: [] } });
   }
 
+  // Notify admin(s) on Telegram — fire-and-forget so a notification failure
+  // or slowness never blocks the customer's checkout response.
+  void notifyNewOrder(order);
+
   sendResponse(res, { statusCode: 201, success: true, message: 'Order placed', data: order });
 });
 
@@ -166,7 +171,7 @@ export const updateOrderStatus = catchAsync(async (req: AuthRequest, res: Respon
 
 export const trackOrder = catchAsync(async (req: AuthRequest, res: Response) => {
   const order = await Order.findOne({ trackingNumber: req.params.trackingNumber })
-    .select('trackingNumber customerName status paymentStatus statusHistories items.title items.quantity items.unitPrice items.image subtotal shipping discountAmount totalAmount paymentMethod createdAt');
+    .select('trackingNumber customerName phone district upazila addressLine postalCode orderNote status paymentStatus statusHistories items subtotal shipping discountAmount totalAmount paymentMethod createdAt');
   if (!order) throw new ApiError(404, 'Order not found');
   sendResponse(res, { statusCode: 200, success: true, message: 'Order tracked', data: order });
 });

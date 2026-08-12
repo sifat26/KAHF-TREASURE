@@ -9,6 +9,7 @@ import { availableSizes, formatPrice, formatSize, isOrderable, toBanglaDigits } 
 import { productLabel } from '@/lib/products';
 import { cn } from '@/lib/utils';
 import { orderProductUrl } from '@/lib/whatsapp';
+import { ProductShareButton } from '@/components/product/ProductShareModal';
 import { Check, Heart, Minus, Plus, Share2 } from 'lucide-react';
 import * as React from 'react';
 
@@ -178,10 +179,13 @@ export function ProductPurchase({ product }: { product: Product }) {
           />
           {wished ? 'সংরক্ষিত' : 'সংরক্ষণ করুন'}
         </button>
-        <button onClick={share} className='inline-flex items-center gap-2 text-muted transition-colors hover:text-ink'>
-          {copied ? <Check size={16} /> : <Share2 size={16} />}
-          {copied ? 'লিংক কপি হয়েছে' : 'শেয়ার করুন'}
-        </button>
+        <ProductShareButton
+          title={productLabel(product)}
+          description={product.description}
+          price={currentPrice}
+          image={product.images?.[0]}
+          slug={product.slug}
+        />
       </div>
     </div>
   );

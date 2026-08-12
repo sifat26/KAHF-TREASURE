@@ -1,4 +1,4 @@
-﻿import { productServices } from '@/services/product.services';
+import { productServices } from '@/services/product.services';
 import { DynamicProductDetail } from '@/components/product/DynamicProductDetail';
 import { ApiProductJsonLd, BreadcrumbJsonLd } from '@/components/seo/JsonLd';
 import { site } from '@/data/site';
@@ -12,27 +12,45 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
     const res = await productServices.getProduct(slug);
     if (res.success && res.data) {
       const p = res.data;
-      const ogImage = p.images?.[0] || `${site.url}/images/exact-attar-bottle.png`;
+      
+      let ogImageUrl = `${site.url}/images/hero-banner.png`;
+      if (p.images && p.images.length > 0 && p.images[0]) {
+        const img = p.images[0];
+        ogImageUrl = img.startsWith('http') ? img : `${site.url}${img.startsWith('/') ? '' : '/'}${img}`;
+      }
+
       const categoryName = typeof p.category === 'object' ? p.category?.name : 'আতর';
+      const description = p.description
+        ? p.description.length > 160 ? p.description.slice(0, 157) + '...' : p.description
+        : `${p.title} — ${site.name} থেকে ১০০% অ্যালকোহল-মুক্ত প্রিমিয়াম পারফিউম অয়েল আতর। দীর্ঘস্থায়ী সুবাস ও ঘ্রাণ।`;
+      const canonicalUrl = `${site.url}/products/${p.slug}`;
+
       return {
         title: p.title,
-        description: p.description || `${p.title} — ${site.name} থেকে ১০০% অ্যালকোহল-মুক্ত প্রিমিয়াম আতর।`,
+        description: description,
         keywords: [p.title, categoryName, 'আতর', 'attar', 'perfume oil', 'alcohol-free', site.name],
         alternates: { canonical: `/products/${p.slug}` },
         openGraph: {
-          type: 'website',
+          type: 'article',
           title: `${p.title} | ${site.name}`,
-          description: p.description || `${p.title} — প্রিমিয়াম আতর`,
-          url: `${site.url}/products/${p.slug}`,
-          images: [{ url: ogImage, width: 1200, height: 1200, alt: p.title }],
+          description: description,
+          url: canonicalUrl,
           siteName: site.name,
           locale: site.locale,
+          images: [
+            {
+              url: ogImageUrl,
+              width: 1200,
+              height: 630,
+              alt: `${p.title} — ${site.name}`,
+            },
+          ],
         },
         twitter: {
           card: 'summary_large_image',
           title: `${p.title} | ${site.name}`,
-          description: p.description || '',
-          images: [ogImage],
+          description: description,
+          images: [ogImageUrl],
         },
       };
     }

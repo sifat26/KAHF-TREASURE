@@ -24,7 +24,8 @@ export function toBanglaDigits(input: string | number): string {
  * agree, and BD e-commerce overwhelmingly writes ১,৪০০ rather than ১,৪০০.
  */
 export function formatPrice(amount: number): string {
-  return `৳${toBanglaDigits(amount.toLocaleString('en-US'))}`;
+  const num = typeof amount === 'number' && !Number.isNaN(amount) ? amount : 0;
+  return `৳${toBanglaDigits(num.toLocaleString('en-US'))}`;
 }
 
 /** Human-readable size label, e.g. "3ml" → "৩ মিলি". */

@@ -8,6 +8,7 @@ import { productServices } from '@/services/product.services';
 import { addToCart, openCart } from '@/store/cartSlice';
 import { useAppDispatch } from '@/store/hooks';
 import type { Product, ProductVariant } from '@/types/product';
+import { ProductShareButton } from '@/components/product/ProductShareModal';
 import { Clock, Minus, Plus, ShieldCheck, ShoppingBag, Star, Truck } from 'lucide-react';
 import Link from 'next/link';
 import { useCallback, useEffect, useState } from 'react';
@@ -182,16 +183,26 @@ export function DynamicProductDetail({ slug, initialProduct }: { slug: string; i
 
           {/* Details */}
           <div className='space-y-5'>
-            <div>
-              {product.isFeatured && (
-                <span className='mb-2 inline-block rounded-full bg-[var(--color-gold-tint)] px-3 py-0.5 text-xs font-bold text-[var(--color-text-primary)]'>
-                  ফিচার্ড
-                </span>
-              )}
-              <h1 className='font-serif text-2xl sm:text-3xl font-bold text-[var(--color-text-primary)]'>
-                {product.title}
-              </h1>
-              {product.brand && <p className='mt-1 text-sm text-[var(--color-text-tertiary)]'>{product.brand}</p>}
+            <div className='flex items-start justify-between gap-4'>
+              <div>
+                {product.isFeatured && (
+                  <span className='mb-2 inline-block rounded-full bg-[var(--color-gold-tint)] px-3 py-0.5 text-xs font-bold text-[var(--color-text-primary)]'>
+                    ফিচার্ড
+                  </span>
+                )}
+                <h1 className='font-serif text-2xl sm:text-3xl font-bold text-[var(--color-text-primary)]'>
+                  {product.title}
+                </h1>
+                {product.brand && <p className='mt-1 text-sm text-[var(--color-text-tertiary)]'>{product.brand}</p>}
+              </div>
+              <ProductShareButton
+                title={product.title}
+                description={product.description}
+                price={price}
+                image={product.images?.[0]}
+                slug={product.slug}
+                variant='icon'
+              />
             </div>
 
             {/* Rating */}
@@ -299,7 +310,8 @@ export function DynamicProductDetail({ slug, initialProduct }: { slug: string; i
 
             {/* Quantity + Add to Cart */}
             <div className='flex flex-col gap-3 sm:flex-row sm:items-center'>
-              <div className='flex items-center rounded-full border border-[var(--color-border)]'>
+              {/* self-start stops the pill from stretching to full width in the mobile flex-col layout */}
+              <div className='flex items-center self-start rounded-full border border-[var(--color-border)] sm:self-auto'>
                 <button
                   onClick={() => setQuantity((q) => Math.max(1, q - 1))}
                   className='flex h-10 w-10 items-center justify-center text-[var(--color-text-secondary)] hover:text-[var(--color-accent)]'
@@ -325,6 +337,16 @@ export function DynamicProductDetail({ slug, initialProduct }: { slug: string; i
                 {ctaLabel}
               </button>
             </div>
+
+            {/* Social Share Button */}
+            <ProductShareButton
+              title={product.title}
+              description={product.description}
+              price={price}
+              image={product.images?.[0]}
+              slug={product.slug}
+              variant='full'
+            />
 
             {/* Trust badges */}
             <div className='grid grid-cols-3 gap-3 border-t border-[var(--color-border)] pt-4'>

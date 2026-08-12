@@ -74,7 +74,8 @@ export function adminOrderUrl(
   const items = order.items
     .map((item) => {
       const variant = item.variantLabel ? ` (${item.variantLabel})` : '';
-      return `• ${item.title}${variant} × ${toBanglaDigits(item.quantity)} = ${formatPrice(item.totalPrice)}`;
+      const price = item.totalPrice ?? ((item.unitPrice ?? 0) * (item.quantity ?? 1));
+      return `• ${item.title}${variant} × ${toBanglaDigits(item.quantity ?? 1)} = ${formatPrice(price)}`;
     })
     .join('\n');
 
