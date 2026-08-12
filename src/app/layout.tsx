@@ -46,9 +46,26 @@ export const metadata: Metadata = {
   authors: [{ name: site.name, url: site.url }],
   creator: site.name,
   publisher: site.name,
+  icons: {
+    icon: [
+      { url: '/images/logo-shield.png', type: 'image/png' },
+      { url: '/images/logo.jpg', type: 'image/jpeg' },
+    ],
+    shortcut: ['/images/logo-shield.png'],
+    apple: [{ url: '/images/logo-shield.png', type: 'image/png' }],
+  },
   alternates: { canonical: '/' },
   openGraph: {
-    images: [{ url: `${site.url}${site.ogImage}`, width: 1200, height: 630, alt: `${site.name} — ${site.tagline}` }],
+    images: [
+      {
+        url: `${site.url}${site.ogImage}`,
+        secureUrl: `${site.url}${site.ogImage}`,
+        width: 1200,
+        height: 630,
+        type: 'image/png',
+        alt: `${site.name} — ${site.tagline}`,
+      },
+    ],
     type: 'website',
     locale: site.locale,
     url: site.url,

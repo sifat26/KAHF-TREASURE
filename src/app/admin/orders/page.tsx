@@ -102,7 +102,7 @@ export default function AdminOrdersPage() {
       <div className="mb-4 flex flex-wrap gap-2">
         <button
           onClick={() => setStatusFilter('')}
-          className={`rounded-full px-4 py-1.5 text-xs font-medium border transition ${!statusFilter ? 'bg-amber-700 text-white border-amber-700' : 'bg-white border-stone-200 text-stone-600 hover:border-amber-300'}`}
+          className={`rounded-full px-4 py-1.5 text-xs font-medium border transition ${!statusFilter ? 'bg-amber-600 text-white border-amber-600 shadow-xs' : 'bg-white border-stone-200 text-stone-600 hover:border-amber-300'}`}
         >
           সব
         </button>
@@ -110,7 +110,7 @@ export default function AdminOrdersPage() {
           const count = orders.filter(o => o.status === key).length;
           return (
             <button key={key} onClick={() => setStatusFilter(key)}
-              className={`flex items-center gap-1.5 rounded-full px-4 py-1.5 text-xs font-medium border transition ${statusFilter === key ? 'bg-amber-700 text-white border-amber-700' : 'bg-white border-stone-200 text-stone-600 hover:border-amber-300'}`}
+              className={`flex items-center gap-1.5 rounded-full px-4 py-1.5 text-xs font-medium border transition ${statusFilter === key ? 'bg-amber-600 text-white border-amber-600 shadow-xs' : 'bg-white border-stone-200 text-stone-600 hover:border-amber-300'}`}
             >
               {label}
               {count > 0 && statusFilter !== key && (
@@ -126,7 +126,7 @@ export default function AdminOrdersPage() {
         <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-stone-400" />
         <input type="text" value={search} onChange={e => setSearch(e.target.value)}
           placeholder="ট্র্যাকিং নম্বর, নাম, ফোন দিয়ে খুঁজুন..."
-          className="w-full rounded-lg border border-stone-200 bg-white py-2.5 pl-10 pr-3 text-sm outline-none focus:border-amber-400 focus:ring-2 focus:ring-amber-100" />
+          className="w-full rounded-lg border border-stone-200 bg-white py-2.5 pl-10 pr-3 text-sm outline-none transition focus:border-amber-500 focus:ring-2 focus:ring-amber-500/20" />
       </div>
 
       {loading ? (

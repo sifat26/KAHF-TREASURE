@@ -23,7 +23,7 @@ export default function AdminCouponsPage() {
       <div className="mb-6 flex items-center justify-between">
         <h1 className="text-2xl font-bold text-stone-900">কুপন ব্যবস্থাপনা</h1>
         <button onClick={() => setShowModal(true)}
-          className="flex items-center gap-2 rounded-lg bg-amber-700 px-4 py-2 text-sm font-semibold text-white hover:bg-amber-800">
+          className="flex items-center gap-2 rounded-lg bg-amber-600 px-4 py-2 text-sm font-semibold text-white hover:bg-amber-500 shadow-sm transition">
           <Plus className="h-4 w-4" /> নতুন কুপন
         </button>
       </div>
@@ -36,8 +36,8 @@ export default function AdminCouponsPage() {
             <div key={coupon._id} className="rounded-2xl border border-stone-200 bg-white p-4">
               <div className="flex items-start justify-between">
                 <div className="flex items-center gap-3">
-                  <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-amber-100">
-                    <Ticket className="h-5 w-5 text-amber-700" />
+                  <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-amber-50 text-amber-700 border border-amber-200/50">
+                    <Ticket className="h-5 w-5" />
                   </div>
                   <div>
                     <p className="font-bold text-stone-800">{coupon.code}</p>
@@ -95,8 +95,8 @@ function CouponModal({ onClose, onSaved }: { onClose: () => void; onSaved: () =>
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4">
-      <div className="w-full max-w-md rounded-3xl bg-white p-6">
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4 backdrop-blur-xs">
+      <div className="w-full max-w-md rounded-3xl bg-white p-6 shadow-2xl">
         <div className="mb-4 flex items-center justify-between">
           <h2 className="text-lg font-bold text-stone-900">নতুন কুপন</h2>
           <button onClick={onClose} className="rounded-full p-2 text-stone-400 hover:bg-stone-100"><X className="h-5 w-5" /></button>
@@ -104,39 +104,39 @@ function CouponModal({ onClose, onSaved }: { onClose: () => void; onSaved: () =>
         <div className="space-y-3">
           <div><label className="mb-1 block text-xs font-semibold text-stone-600">কোড *</label>
             <input value={form.code} onChange={e => setForm({ ...form, code: e.target.value.toUpperCase() })}
-              className="w-full rounded-lg border border-stone-200 px-3 py-2 text-sm uppercase outline-none focus:border-amber-400" placeholder="WELCOME10" /></div>
+              className="w-full rounded-lg border border-stone-200 px-3 py-2 text-sm uppercase outline-none transition focus:border-amber-500 focus:ring-2 focus:ring-amber-500/20" placeholder="WELCOME10" /></div>
           <div className="grid grid-cols-2 gap-3">
             <div><label className="mb-1 block text-xs font-semibold text-stone-600">টাইপ</label>
               <select value={form.type} onChange={e => setForm({ ...form, type: e.target.value as any })}
-                className="w-full rounded-lg border border-stone-200 px-3 py-2 text-sm outline-none focus:border-amber-400">
+                className="w-full rounded-lg border border-stone-200 px-3 py-2 text-sm outline-none transition focus:border-amber-500 focus:ring-2 focus:ring-amber-500/20">
                 <option value="percentage">শতাংশ</option><option value="fixed">নির্দিষ্ট</option>
               </select></div>
             <div><label className="mb-1 block text-xs font-semibold text-stone-600">মান *</label>
               <input type="number" value={form.value} onChange={e => setForm({ ...form, value: Number(e.target.value) })}
-                className="w-full rounded-lg border border-stone-200 px-3 py-2 text-sm outline-none focus:border-amber-400" /></div>
+                className="w-full rounded-lg border border-stone-200 px-3 py-2 text-sm outline-none transition focus:border-amber-500 focus:ring-2 focus:ring-amber-500/20" /></div>
           </div>
           <div className="grid grid-cols-2 gap-3">
             <div><label className="mb-1 block text-xs font-semibold text-stone-600">শুরু *</label>
               <input type="date" value={form.validFrom} onChange={e => setForm({ ...form, validFrom: e.target.value })}
-                className="w-full rounded-lg border border-stone-200 px-3 py-2 text-sm outline-none focus:border-amber-400" /></div>
+                className="w-full rounded-lg border border-stone-200 px-3 py-2 text-sm outline-none transition focus:border-amber-500 focus:ring-2 focus:ring-amber-500/20" /></div>
             <div><label className="mb-1 block text-xs font-semibold text-stone-600">শেষ *</label>
               <input type="date" value={form.validUntil} onChange={e => setForm({ ...form, validUntil: e.target.value })}
-                className="w-full rounded-lg border border-stone-200 px-3 py-2 text-sm outline-none focus:border-amber-400" /></div>
+                className="w-full rounded-lg border border-stone-200 px-3 py-2 text-sm outline-none transition focus:border-amber-500 focus:ring-2 focus:ring-amber-500/20" /></div>
           </div>
           <div className="grid grid-cols-2 gap-3">
             <div><label className="mb-1 block text-xs font-semibold text-stone-600">সর্বনিম্ন অর্ডার</label>
               <input type="number" value={form.minOrderAmount} onChange={e => setForm({ ...form, minOrderAmount: Number(e.target.value) })}
-                className="w-full rounded-lg border border-stone-200 px-3 py-2 text-sm outline-none focus:border-amber-400" /></div>
+                className="w-full rounded-lg border border-stone-200 px-3 py-2 text-sm outline-none transition focus:border-amber-500 focus:ring-2 focus:ring-amber-500/20" /></div>
             <div><label className="mb-1 block text-xs font-semibold text-stone-600">ব্যবহার সীমা</label>
               <input type="number" value={form.usageLimit} onChange={e => setForm({ ...form, usageLimit: Number(e.target.value) })}
-                className="w-full rounded-lg border border-stone-200 px-3 py-2 text-sm outline-none focus:border-amber-400" /></div>
+                className="w-full rounded-lg border border-stone-200 px-3 py-2 text-sm outline-none transition focus:border-amber-500 focus:ring-2 focus:ring-amber-500/20" /></div>
           </div>
         </div>
-        {error && <div className="mt-3 rounded-lg bg-red-50 px-3 py-2 text-xs text-red-600">{error}</div>}
+        {error && <div className="mt-3 rounded-lg bg-red-50 border border-red-100 px-3 py-2 text-xs text-red-600">{error}</div>}
         <div className="mt-4 flex gap-3">
           <button onClick={onClose} className="flex-1 rounded-lg border border-stone-200 py-2.5 text-sm font-medium text-stone-700 hover:bg-stone-50">বাতিল</button>
           <button onClick={handleSave} disabled={saving || !form.code || !form.validFrom || !form.validUntil}
-            className="flex-1 rounded-lg bg-amber-700 py-2.5 text-sm font-semibold text-white hover:bg-amber-800 disabled:opacity-50">
+            className="flex-1 rounded-lg bg-amber-600 py-2.5 text-sm font-semibold text-white hover:bg-amber-500 disabled:opacity-50 transition shadow-sm">
             {saving ? <Loader2 className="mx-auto h-4 w-4 animate-spin" /> : 'সংরক্ষণ'}
           </button>
         </div>

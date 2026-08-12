@@ -40,8 +40,10 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
           images: [
             {
               url: ogImageUrl,
+              secureUrl: ogImageUrl,
               width: 1200,
               height: 630,
+              type: 'image/png',
               alt: `${p.title} — ${site.name}`,
             },
           ],

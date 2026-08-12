@@ -183,7 +183,7 @@ export function ProductPurchase({ product }: { product: Product }) {
           title={productLabel(product)}
           description={product.description}
           price={currentPrice}
-          image={product.images?.[0]}
+          image={product.images?.[0] || product.image}
           slug={product.slug}
         />
       </div>

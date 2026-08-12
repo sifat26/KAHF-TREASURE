@@ -29,14 +29,14 @@ export function AdminSidebar() {
       {/* Mobile toggle */}
       <button
         onClick={() => setMobileOpen(!mobileOpen)}
-        className="fixed left-4 top-4 z-50 rounded-lg bg-amber-700 p-2 text-white lg:hidden"
+        className="fixed left-4 top-4 z-50 rounded-lg bg-amber-600 p-2 text-white shadow-lg lg:hidden hover:bg-amber-500"
       >
         {mobileOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
       </button>
 
       {/* Backdrop */}
       {mobileOpen && (
-        <div className="fixed inset-0 z-40 bg-black/40 lg:hidden" onClick={() => setMobileOpen(false)} />
+        <div className="fixed inset-0 z-40 bg-black/50 lg:hidden" onClick={() => setMobileOpen(false)} />
       )}
 
       {/* Sidebar */}
@@ -44,7 +44,7 @@ export function AdminSidebar() {
         mobileOpen ? 'translate-x-0' : '-translate-x-full'
       }`}>
         <div className="flex items-center gap-2 border-b border-stone-800 px-6 py-5">
-          <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-amber-600 font-bold text-white">K</div>
+          <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-amber-600 font-bold text-white shadow-md">K</div>
           <div>
             <p className="text-sm font-bold text-white">KAHF Treasure</p>
             <p className="text-[10px] text-stone-400">Admin Panel</p>
@@ -60,9 +60,9 @@ export function AdminSidebar() {
                 key={item.href}
                 href={item.href}
                 onClick={() => setMobileOpen(false)}
-                className={`flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm transition ${
+                className={`flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition ${
                   isActive
-                    ? 'bg-amber-700 text-white'
+                    ? 'bg-amber-600 text-white shadow-sm'
                     : 'text-stone-400 hover:bg-stone-800 hover:text-white'
                 }`}
               >

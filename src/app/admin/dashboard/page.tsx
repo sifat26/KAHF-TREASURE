@@ -174,12 +174,12 @@ export default function AdminDashboardPage() {
         <Link href="/admin/products?new=1"
           onClick={() => { /* trigger new product modal */ }}
           className="flex items-center gap-3 rounded-2xl border border-dashed border-amber-300 bg-amber-50 p-4 hover:bg-amber-100 transition group">
-          <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-amber-600 group-hover:bg-amber-700 transition">
+          <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-amber-600 group-hover:bg-amber-500 transition shadow-sm">
             <Plus className="h-5 w-5 text-white" />
           </div>
           <div>
-            <p className="font-semibold text-amber-900">নতুন পণ্য</p>
-            <p className="text-xs text-amber-700">পণ্য যোগ করুন</p>
+            <p className="font-semibold text-amber-950">নতুন পণ্য</p>
+            <p className="text-xs text-amber-800">পণ্য যোগ করুন</p>
           </div>
         </Link>
         <Link href="/admin/categories"

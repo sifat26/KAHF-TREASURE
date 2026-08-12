@@ -1,4 +1,4 @@
-﻿/**
+/**
  * DEPRECATED — Product catalogue seed reference. The canonical source of truth is the MongoDB database (accessed via the backend API at /api/v1/products). This file is kept ONLY as a seed reference for `backend/seed_products.mjs` and as a fallback type definition. Do NOT import product data from this file in components — use the API via `@/services/product.services` instead.
  *
  * Data mirrors docs/PRODUCT_CATALOG.md verbatim (names, prices in BDT, status).
@@ -92,6 +92,8 @@ export interface Product {
   prices: PriceBySize;
   description?: string;
   status: ProductStatus;
+  image?: string;
+  images?: string[];
 
   // ----- Merchandising flags -----
   bestSeller?: boolean;

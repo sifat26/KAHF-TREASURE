@@ -8,9 +8,9 @@ import { cn } from '@/lib/utils';
 
 export interface ProductShareProps {
   title: string;
-  description?: string;
-  price?: number;
-  image?: string;
+  description?: string | null;
+  price?: number | null;
+  image?: string | null;
   slug: string;
   variant?: 'button' | 'icon' | 'full';
   className?: string;

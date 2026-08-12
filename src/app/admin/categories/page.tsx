@@ -67,7 +67,7 @@ export default function AdminCategoriesPage() {
         </div>
         <button
           onClick={() => { setEditing(null); setShowModal(true); }}
-          className="flex items-center gap-2 rounded-lg bg-amber-700 px-4 py-2 text-sm font-semibold text-white hover:bg-amber-800 transition"
+          className="flex items-center gap-2 rounded-lg bg-amber-600 px-4 py-2 text-sm font-semibold text-white hover:bg-amber-500 transition shadow-sm"
         >
           <Plus className="h-4 w-4" /> নতুন ক্যাটাগরি
         </button>
@@ -76,12 +76,12 @@ export default function AdminCategoriesPage() {
       {/* Type filter */}
       <div className="mb-4 flex flex-wrap gap-2">
         <button onClick={() => setTypeFilter('')}
-          className={`rounded-full px-3 py-1 text-xs font-medium border transition ${!typeFilter ? 'bg-amber-700 text-white border-amber-700' : 'bg-white border-stone-200 text-stone-600 hover:border-amber-300'}`}>
+          className={`rounded-full px-3 py-1 text-xs font-medium border transition ${!typeFilter ? 'bg-amber-600 text-white border-amber-600' : 'bg-white border-stone-200 text-stone-600 hover:border-amber-300'}`}>
           সব
         </button>
         {Object.entries(TYPE_LABELS).map(([key, label]) => (
           <button key={key} onClick={() => setTypeFilter(key)}
-            className={`rounded-full px-3 py-1 text-xs font-medium border transition ${typeFilter === key ? 'bg-amber-700 text-white border-amber-700' : 'bg-white border-stone-200 text-stone-600 hover:border-amber-300'}`}>
+            className={`rounded-full px-3 py-1 text-xs font-medium border transition ${typeFilter === key ? 'bg-amber-600 text-white border-amber-600' : 'bg-white border-stone-200 text-stone-600 hover:border-amber-300'}`}>
             {label}
           </button>
         ))}
@@ -341,7 +341,7 @@ function CategoryModal({ category, categories, onClose, onSaved }: {
                 value={form.name}
                 onChange={e => setForm({ ...form, name: e.target.value })}
                 placeholder="যেমন: আতর, বই, পোশাক"
-                className="w-full rounded-lg border border-stone-200 px-3 py-2 text-sm outline-none focus:border-amber-400 focus:ring-2 focus:ring-amber-100"
+                className="w-full rounded-lg border border-stone-200 px-3 py-2 text-sm outline-none transition focus:border-amber-500 focus:ring-2 focus:ring-amber-500/20"
               />
             </div>
             <div>
@@ -350,7 +350,7 @@ function CategoryModal({ category, categories, onClose, onSaved }: {
                 value={form.slug}
                 onChange={e => setForm({ ...form, slug: e.target.value })}
                 placeholder="attar, books, clothing..."
-                className="w-full rounded-lg border border-stone-200 px-3 py-2 text-sm outline-none focus:border-amber-400 focus:ring-2 focus:ring-amber-100"
+                className="w-full rounded-lg border border-stone-200 px-3 py-2 text-sm outline-none transition focus:border-amber-500 focus:ring-2 focus:ring-amber-500/20"
               />
             </div>
           </div>
@@ -363,7 +363,7 @@ function CategoryModal({ category, categories, onClose, onSaved }: {
               value={form.description}
               onChange={e => setForm({ ...form, description: e.target.value })}
               placeholder="ক্যাটাগরির সংক্ষিপ্ত বিবরণ..."
-              className="w-full rounded-lg border border-stone-200 px-3 py-2 text-sm outline-none focus:border-amber-400 focus:ring-2 focus:ring-amber-100 resize-none"
+              className="w-full rounded-lg border border-stone-200 px-3 py-2 text-sm outline-none transition focus:border-amber-500 focus:ring-2 focus:ring-amber-500/20 resize-none"
             />
           </div>
 
@@ -374,7 +374,7 @@ function CategoryModal({ category, categories, onClose, onSaved }: {
               <select
                 value={form.type}
                 onChange={e => setForm({ ...form, type: e.target.value as any })}
-                className="w-full rounded-lg border border-stone-200 px-3 py-2 text-sm outline-none focus:border-amber-400 focus:ring-2 focus:ring-amber-100"
+                className="w-full rounded-lg border border-stone-200 px-3 py-2 text-sm outline-none transition focus:border-amber-500 focus:ring-2 focus:ring-amber-500/20"
               >
                 <option value="attar">আতর</option>
                 <option value="product">প্রোডাক্ট</option>
@@ -388,7 +388,7 @@ function CategoryModal({ category, categories, onClose, onSaved }: {
               <select
                 value={form.parentId}
                 onChange={e => setForm({ ...form, parentId: e.target.value })}
-                className="w-full rounded-lg border border-stone-200 px-3 py-2 text-sm outline-none focus:border-amber-400 focus:ring-2 focus:ring-amber-100"
+                className="w-full rounded-lg border border-stone-200 px-3 py-2 text-sm outline-none transition focus:border-amber-500 focus:ring-2 focus:ring-amber-500/20"
               >
                 <option value="">— কোনোটি না —</option>
                 {parentOptions.map(c => (
@@ -406,7 +406,7 @@ function CategoryModal({ category, categories, onClose, onSaved }: {
                 type="number"
                 value={form.order}
                 onChange={e => setForm({ ...form, order: Number(e.target.value) })}
-                className="w-full rounded-lg border border-stone-200 px-3 py-2 text-sm outline-none focus:border-amber-400 focus:ring-2 focus:ring-amber-100"
+                className="w-full rounded-lg border border-stone-200 px-3 py-2 text-sm outline-none transition focus:border-amber-500 focus:ring-2 focus:ring-amber-500/20"
               />
             </div>
             <label className="flex cursor-pointer items-center gap-2 pt-5 text-sm text-stone-600">
@@ -414,7 +414,7 @@ function CategoryModal({ category, categories, onClose, onSaved }: {
                 type="checkbox"
                 checked={form.isActive}
                 onChange={e => setForm({ ...form, isActive: e.target.checked })}
-                className="h-4 w-4 accent-amber-700 cursor-pointer"
+                className="h-4 w-4 accent-amber-600 cursor-pointer"
               />
               সক্রিয়
             </label>
@@ -437,7 +437,7 @@ function CategoryModal({ category, categories, onClose, onSaved }: {
             <button
               onClick={handleSave}
               disabled={saving || !form.name.trim() || uploading}
-              className="flex-1 rounded-lg bg-amber-700 py-2.5 text-sm font-semibold text-white hover:bg-amber-800 disabled:opacity-50 transition flex items-center justify-center gap-2"
+              className="flex-1 rounded-lg bg-amber-600 py-2.5 text-sm font-semibold text-white hover:bg-amber-500 disabled:opacity-50 transition flex items-center justify-center gap-2 shadow-sm"
             >
               {saving && <Loader2 className="h-4 w-4 animate-spin" />}
               {saving ? 'সংরক্ষণ হচ্ছে...' : 'সংরক্ষণ করুন'}

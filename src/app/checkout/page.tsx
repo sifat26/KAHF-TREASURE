@@ -1,9 +1,9 @@
 'use client';
 
-import { couponServices } from '@/services/coupon.services';
-import { orderServices } from '@/services/order.services';
 import { districtNames, getDeliveryCharge, getDeliveryZoneLabel, getUpazilas } from '@/data/bd-geo';
 import { deleteAddress, getSavedAddresses, saveAddress, type SavedAddress } from '@/lib/address-storage';
+import { couponServices } from '@/services/coupon.services';
+import { orderServices } from '@/services/order.services';
 import { clearCart } from '@/store/cartSlice';
 import { useAppDispatch, useAppSelector } from '@/store/hooks';
 import { ArrowLeft, Loader2, MapPin, Trash2, X } from 'lucide-react';
@@ -265,7 +265,9 @@ export default function CheckoutPage() {
                     onChange={(e) => setFormState((s) => ({ ...s, upazila: e.target.value }))}
                     className='kahf-input disabled:cursor-not-allowed disabled:bg-stone-100 disabled:text-stone-400'
                   >
-                    <option value=''>{formState.district ? 'উপজেলা/এলাকা নির্বাচন করুন' : 'আগে জেলা নির্বাচন করুন'}</option>
+                    <option value=''>
+                      {formState.district ? 'উপজেলা/এলাকা নির্বাচন করুন' : 'আগে জেলা নির্বাচন করুন'}
+                    </option>
                     {upazilas.map((u) => (
                       <option key={u} value={u}>
                         {u}
@@ -418,7 +420,9 @@ export default function CheckoutPage() {
                   <span>{formState.district ? `৳${shipping}` : '—'}</span>
                 </div>
                 {formState.district && (
-                  <p className='text-[11px] text-stone-400'>{getDeliveryZoneLabel(formState.district, formState.upazila)}</p>
+                  <p className='text-[11px] text-stone-400'>
+                    {getDeliveryZoneLabel(formState.district, formState.upazila)}
+                  </p>
                 )}
                 {couponDiscount > 0 && (
                   <div className='flex justify-between text-emerald-600'>

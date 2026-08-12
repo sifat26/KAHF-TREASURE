@@ -49,7 +49,7 @@ export default function AdminReviewsPage() {
                     <span className="rounded-full bg-emerald-100 px-3 py-1 text-xs font-medium text-emerald-700">অনুমোদিত</span>
                   ) : (
                     <button onClick={() => handleApprove(review._id, true)}
-                      className="flex items-center gap-1 rounded-full bg-amber-700 px-3 py-1 text-xs font-medium text-white hover:bg-amber-800">
+                      className="flex items-center gap-1 rounded-full bg-amber-600 px-3 py-1 text-xs font-medium text-white hover:bg-amber-500 shadow-xs transition">
                       <Check className="h-3 w-3" /> অনুমোদন
                     </button>
                   )}

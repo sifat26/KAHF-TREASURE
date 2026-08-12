@@ -102,7 +102,7 @@ export default function AdminProductsPage() {
             setEditingProduct(null);
             setShowModal(true);
           }}
-          className='flex items-center gap-2 rounded-lg bg-amber-700 px-4 py-2 text-sm font-semibold text-white hover:bg-amber-800 transition shadow-sm'
+          className='flex items-center gap-2 rounded-lg bg-amber-600 px-4 py-2 text-sm font-semibold text-white hover:bg-amber-500 transition shadow-sm'
         >
           <Plus className='h-4 w-4' /> নতুন পণ্য
         </button>
@@ -819,7 +819,7 @@ function ProductModal({
             <button
               onClick={handleSave}
               disabled={saving || uploading}
-              className='flex-1 rounded-lg bg-amber-700 py-2.5 text-sm font-semibold text-white hover:bg-amber-800 disabled:opacity-50 transition flex items-center justify-center gap-2'
+              className='flex-1 rounded-lg bg-amber-600 py-2.5 text-sm font-semibold text-white hover:bg-amber-500 disabled:opacity-50 transition flex items-center justify-center gap-2 shadow-sm'
             >
               {saving && <Loader2 className='h-4 w-4 animate-spin' />}
               {saving ? 'সংরক্ষণ হচ্ছে...' : product ? 'আপডেট করুন' : 'পণ্য যোগ করুন'}
@@ -852,7 +852,7 @@ function FormInput({
         value={value}
         onChange={(e) => onChange(e.target.value)}
         placeholder={placeholder}
-        className='w-full rounded-lg border border-stone-200 px-3 py-2 text-sm outline-none focus:border-amber-400 focus:ring-2 focus:ring-amber-100'
+        className='w-full rounded-lg border border-stone-200 px-3 py-2 text-sm outline-none transition focus:border-amber-500 focus:ring-2 focus:ring-amber-500/20'
       />
     </div>
   );
