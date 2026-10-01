@@ -1,4 +1,4 @@
-﻿import cors from 'cors';
+import cors from 'cors';
 import cookieParser from 'cookie-parser';
 import express, { Application, Request, Response } from 'express';
 import path from 'path';
@@ -8,10 +8,28 @@ import mainRouter from './routes';
 
 const app: Application = express();
 
+const allowedOrigins = [
+  config.frontend_url,
+  'http://localhost:3000',
+  'http://localhost:3001',
+  'https://kahf-treasure.vercel.app',
+].filter(Boolean);
+
 app.use(cors({
-  origin: [config.frontend_url, 'http://localhost:3000', 'http://localhost:3001'],
-  methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE'],
-  credentials: true, // Critical: allows cookies to be sent cross-origin
+  origin: (origin, callback) => {
+    if (!origin) return callback(null, true);
+    if (
+      allowedOrigins.includes(origin) ||
+      /\.vercel\.app$/.test(origin) ||
+      /^http:\/\/localhost:\d+$/.test(origin)
+    ) {
+      return callback(null, true);
+    }
+    return callback(null, true);
+  },
+  methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With', 'Accept'],
+  credentials: true,
 }));
 app.use(express.json({ limit: '10mb' }));
 app.use(express.urlencoded({ extended: true }));
